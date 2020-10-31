@@ -64,6 +64,60 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/31/blog5/" class="article-date">
+  <time datetime="2020-10-31T12:00:08.000Z" itemprop="datePublished">2020-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/31/blog5/">C语言学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.字符数组</p>
+<p>1.若不对字符数组进行初始化，则数组中各元素的值是不可预知的。</p>
+<p>2.若花括号内提供的字符数组个数多余数组长度，则会产生编译错误的信息。</p>
+<p>3.若花括号内提供的字符数组个数少余数组长度，则编译器将这些字符优先赋值给前面的元素，其余元素取值（’\0’）。</p>
+<p>4.用字符串常量直接赋值时，可省略花括号，用“”覆盖字符串常量。用字符常量逐个赋初值，时花括号不可省略，且各个字符由’’覆盖，字符间用逗号隔开。</p>
+<p>5.C语言中，字符串是以字符’\0’结尾，故它会额外占据数组一格内存。</p>
+<p>6.使用%c格式说明符进行逐个字符的输入/输出；使用%s格式说明符进行字符串的输入/输出。</p>
+<p>7.当一个字符表示为字符串变量名时，其本身就是该字符串的首地址，即scanf（）函数输入时无需再使加取地址符“&amp;”。</p>
+<p>8.使用字符串函数时要在程序开头用“#include&lt;string.h&gt;”命令将头文件&lt;string.h&gt;包括进来。</p>
+<p>二.新函数</p>
+<p>a 字符串复制函数strcpy（）； 用法：若strcpy（字符数组1，字符数组2），将字符串1/字符数组2连同结束标志’\0’复制到字符数组1中。</p>
+<p>b 字符串连续函数strcat（） ；用法：若strcpy（字符数组1，字符数组2），链接两个字符串，把字符串2连接到字符串1后面，再把得到的结果放在字符串1中。</p>
+<p>c  字符串比较函数strcmp（） ； 用法：若strcmp（字符串1，字符串2）</p>
+<p>d 求字符串长度strlen（）；用法：若strlen（字符串），检测字符串中字符的个数，不包括’\0’。</p>
+<p>e 大写字母转换小写字母函数strlwr（）。</p>
+<p>f 小写字母换号大写字母函数strupr（）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/31/blog5/" data-id="ckgxr1ilr0000l4vu5a3p7sii" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/22/blog4/" class="article-date">
@@ -220,6 +274,7 @@
         <hr>
 <p>title: “搭建的博客”<br>date: 2020-10-01 21:32:41<br>tags:<br>description:<br>1.用git bash进行hexo init指令时一定要认清楚文件夹，是对hexo文件夹进行格式化，我刚刚开始做的时候对blog文件夹一直做格式化导致耗费了很久时间<br>2.在复制个人github地址后粘贴在congig时可能会混杂许多空格，这些空格会影响你执行hexo d指令，也就是说无法将本地文件部署到个人网页上</p>
 <p>3.生产新博客：hexo new blogx</p>
+<p>4.写blog的时候要使用编码UTF-8,否则传输到hexo网页上会显示乱码</p>
 
       
     </div>
@@ -247,7 +302,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li></ul>
     </div>
   </div>
 
@@ -257,7 +312,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a>
     </div>
   </div>
 
@@ -277,6 +332,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2020/10/31/blog5/">C语言学习</a>
+          </li>
         
           <li>
             <a href="/2020/10/22/blog4/">C语言学习</a>
