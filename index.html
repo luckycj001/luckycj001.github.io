@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/09/blog7/" class="article-date">
+  <time datetime="2020-11-09T11:00:22.000Z" itemprop="datePublished">2020-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/09/blog7/">C语言学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.函数</p>
+<p>1.系统运行C语言程序时，从主函数开始计算，当遇到自定义函数时，转到自定义函数进行运算，最后回到主函数完成运算。</p>
+<p>2.非主函数的其他函数之间可以相互调用。一个函数调用另一个函数，前者称为主调函数，后者称为被调函数。</p>
+<p>3.函数的定义：</p>
+<p>类型标识符 函数名（）</p>
+<p>{</p>
+<p>​     函数体</p>
+<p>}</p>
+<p>4.类型标识符的作用是定义函数体执行完之后，函数返回值的类型。若省略类型标识符，系统默认函数返回值类型为int型。如果函数无返回值，则用void来定义函数的返回值。</p>
+<p>5.函数体一般用return语句来结束。当程序执行到return语句时，先计算表达式的值，然后程序的流程返回到调用该函数的地方，并将表达式的值作为函数值返回给主调函数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/09/blog7/" data-id="ckhaih2t50000l4vu24ub2274" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog6" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/01/blog6/" class="article-date">
@@ -95,6 +143,7 @@
 <p>二.新的关键词</p>
 <p>1.const是C语言中的一个关键词，他限定一个变量不允许被改变。使用const在一定程度上提高程序的安全性和可靠性。</p>
 <p>2.enum是枚举类型的引导字，用于声明枚举类型。</p>
+<p>3.typedef用于声明一种新类型名来代替旧类型名。</p>
 <p>三.共用体</p>
 <p>1.共用体类型是一种多个不同类型共享储蓄空间的构造类型，即共用体变量的所有成员占同一个储蓄空间。</p>
 <p>2.共用体变量所占空间的大小取决于占储蓄空间最大的成员，而不是各个成员的储蓄空间之和，这点是与结构体变量有着本质上的不同。</p>
@@ -106,7 +155,11 @@
 <p>   {     枚举值1[=整型常数1]，枚举值2[=整型常数2]….   }；</p>
 <p>2.括号内的“=整型常数”可以省略。如果省略，编译程序按照顺序给每个枚举元素一个对应的整数值，整数值从0开始，后续元素顺序加1.</p>
 <p>3.在C语言中，枚举变量的值不能直接进行输入和输出，只能间接地实现输出和输入的操作。例如使用switch（）语句。</p>
-<p>4.</p>
+<p>4.不能把枚举常量对应的序号直接赋值给枚举变量。如枚举变量=1。</p>
+<p>5.可以用强制类型转换为枚举变量赋值，如：枚举变量=（enum 枚举名）（1）。</p>
+<p>五.自定义类型名</p>
+<p>1.语法格式：typedef  类型名 新类型名</p>
+<p>2.特别的，用typedef语法定义数组类型名，如：typedef int appay[10]//定义appay为有十个元素的整型数组类型名。</p>
 
       
     </div>
@@ -364,7 +417,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -374,7 +427,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -396,6 +449,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/09/blog7/">C语言学习</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/01/blog6/">C语言学习</a>
           </li>
         
@@ -409,10 +466,6 @@
         
           <li>
             <a href="/2020/10/18/blog3/">C语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/04/blog2/">近半个月学习总结</a>
           </li>
         
       </ul>

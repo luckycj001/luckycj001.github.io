@@ -15,7 +15,7 @@
 <meta property="og:description" content="一.结构体 1.成员的类型可以是另一个结构体的类型，如：存在struct  a  b，即意味b是struct  a型。 2.如果两个结构体的成员类型，名称，个数相同，但结构体名不同，也是两个不同的结构类型。 3.成员名可以和程序中的变量名相同，二者不代表同一对象。如：程序中可以定义“int num”，同时还可以在struct结构中定义”int num“。 4.初值内容用“{}”括起来，各组数据用“">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-11-01T01:37:48.000Z">
-<meta property="article:modified_time" content="2020-11-04T13:05:05.781Z">
+<meta property="article:modified_time" content="2020-11-09T10:56:37.581Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="第四章汇总（3）">
 <meta name="twitter:card" content="summary">
@@ -98,6 +98,7 @@
 <p>二.新的关键词</p>
 <p>1.const是C语言中的一个关键词，他限定一个变量不允许被改变。使用const在一定程度上提高程序的安全性和可靠性。</p>
 <p>2.enum是枚举类型的引导字，用于声明枚举类型。</p>
+<p>3.typedef用于声明一种新类型名来代替旧类型名。</p>
 <p>三.共用体</p>
 <p>1.共用体类型是一种多个不同类型共享储蓄空间的构造类型，即共用体变量的所有成员占同一个储蓄空间。</p>
 <p>2.共用体变量所占空间的大小取决于占储蓄空间最大的成员，而不是各个成员的储蓄空间之和，这点是与结构体变量有着本质上的不同。</p>
@@ -109,7 +110,11 @@
 <p>   {     枚举值1[=整型常数1]，枚举值2[=整型常数2]….   }；</p>
 <p>2.括号内的“=整型常数”可以省略。如果省略，编译程序按照顺序给每个枚举元素一个对应的整数值，整数值从0开始，后续元素顺序加1.</p>
 <p>3.在C语言中，枚举变量的值不能直接进行输入和输出，只能间接地实现输出和输入的操作。例如使用switch（）语句。</p>
-<p>4.</p>
+<p>4.不能把枚举常量对应的序号直接赋值给枚举变量。如枚举变量=1。</p>
+<p>5.可以用强制类型转换为枚举变量赋值，如：枚举变量=（enum 枚举名）（1）。</p>
+<p>五.自定义类型名</p>
+<p>1.语法格式：typedef  类型名 新类型名</p>
+<p>2.特别的，用typedef语法定义数组类型名，如：typedef int appay[10]//定义appay为有十个元素的整型数组类型名。</p>
 
       
     </div>
@@ -124,6 +129,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2020/11/09/blog7/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          C语言学习
+        
+      </div>
+    </a>
   
   
     <a href="/2020/10/31/blog5/" id="article-nav-older" class="article-nav-link-wrap">
@@ -147,7 +161,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -157,7 +171,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -179,6 +193,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/09/blog7/">C语言学习</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/01/blog6/">C语言学习</a>
           </li>
         
@@ -192,10 +210,6 @@
         
           <li>
             <a href="/2020/10/18/blog3/">C语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/04/blog2/">近半个月学习总结</a>
           </li>
         
       </ul>
