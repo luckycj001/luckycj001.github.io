@@ -64,6 +64,87 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog9" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/10/blog9/" class="article-date">
+  <time datetime="2020-11-10T13:00:12.192Z" itemprop="datePublished">2020-11-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>title: MYSQL<br>date: 2020-11-10 21:00:12<br>tags: sql注入基本知识</p>
+<h3 id="一-判断是否存在sql注入的方法"><a href="#一-判断是否存在sql注入的方法" class="headerlink" title="一.判断是否存在sql注入的方法"></a>一.判断是否存在sql注入的方法</h3><h4 id="1-基础中的基础：get单引号判断"><a href="#1-基础中的基础：get单引号判断" class="headerlink" title="1.基础中的基础：get单引号判断"></a>1.基础中的基础：get单引号判断</h4><p>在地址栏网址后加**?id=1<strong>，显示正常；加</strong>?id=1’<strong>，显示错误。则说明存在sql注入点。且</strong>‘**的url编码是%27.</p>
+<h4 id="2-get-and判断"><a href="#2-get-and判断" class="headerlink" title="2.get and判断"></a>2.get and判断</h4><p>输入<code>?id=-1 and 1=1</code>    正常；</p>
+<p>输入<code>?id=-1&#39;and 1=2</code>    报错；存在sql。</p>
+<p>总结：在请求字符串或id参数后加<strong>’</strong>，是一种基本检测是否存在sql注入的方法。</p>
+<h4 id="3-Or、xor判断"><a href="#3-Or、xor判断" class="headerlink" title="3.Or、xor判断"></a>3.Or、xor判断</h4><p>同get and判断</p>
+<h4 id="4-sql运算符判断"><a href="#4-sql运算符判断" class="headerlink" title="4.sql运算符判断"></a>4.sql运算符判断</h4><h4 id="5-通过sleep函数演示显示的形式进行判断"><a href="#5-通过sleep函数演示显示的形式进行判断" class="headerlink" title="5.通过sleep函数演示显示的形式进行判断"></a>5.通过sleep函数演示显示的形式进行判断</h4><h4 id="6-服务端返回错误形式"><a href="#6-服务端返回错误形式" class="headerlink" title="6.服务端返回错误形式"></a>6.服务端返回错误形式</h4><h4 id="7-了解post、get、编码"><a href="#7-了解post、get、编码" class="headerlink" title="7.了解post、get、编码"></a>7.了解post、get、编码</h4><p><code>#</code> 是sql语句中的注释符；</p>
+<p><code>+</code> 在http请求中表示空格；</p>
+<p><code>--</code> 后面的语句相当于被注释掉,不执行后面的sql语句；</p>
+<p><code>--+</code>代表闭合sql查询语句，如果没加，无法形成有效的mysql语句。</p>
+<p>在post参数中，要加空格符时，直接输入空格符即可；用+会被http请求转义为%23编码；</p>
+<p>在get请求中，如果想使用空格，需要用空格符编码<code>%20</code>来替代，不然会请求报错；如果使用#，则#后面的参数不会提交到服务器，但如果使用编码%23即可提交到服务器。</p>
+<h5 id="常见的url编码："><a href="#常见的url编码：" class="headerlink" title="常见的url编码："></a>常见的url编码：</h5><p>空格 ：<code>%20</code> ；           + ：%2b；          &lt; ：%3c；            &gt; ：%3e</p>
+<h4 id="8-sql注入常用mysql函数"><a href="#8-sql注入常用mysql函数" class="headerlink" title="8.sql注入常用mysql函数"></a>8.sql注入常用mysql函数</h4><p>1.order by：该函数对结果集进行排序，用于猜测字段数。例如输入?id=1’ order by 3 –+显示正常；输入?id=1’ order by 4 –+显示错误。故得出在?id=1查看的表用3个字段</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/10/blog9/" data-id="ckhc2dj4v0001jcvu4cwg4s9q" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog8" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/09/blog8/" class="article-date">
+  <time datetime="2020-11-09T13:29:45.000Z" itemprop="datePublished">2020-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/09/blog8/">MYSQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1.MYSQL注入在线靶场<a target="_blank" rel="noopener" href="https://www.anquanlong.com/lab_detail?lab_id=3&amp;lib=1">https://www.anquanlong.com/lab_detail?lab_id=3&amp;lib=1</a></p>
+<p>   个人用phpstudy搭建本地靶场。</p>
+<p>2.更改root密码时应该同时修改网址的根目录下对应文件中的密码。如sql-connections文件中。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/09/blog8/" data-id="ckhc2dj4p0000jcvufkc32rvx" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog7" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/09/blog7/" class="article-date">
@@ -417,7 +498,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -427,7 +508,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -449,6 +530,14 @@
       <ul>
         
           <li>
+            <a href="/2020/11/10/blog9/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/09/blog8/">MYSQL</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/09/blog7/">C语言学习</a>
           </li>
         
@@ -458,14 +547,6 @@
         
           <li>
             <a href="/2020/10/31/blog5/">C语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/22/blog4/">C语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/18/blog3/">C语言学习</a>
           </li>
         
       </ul>
