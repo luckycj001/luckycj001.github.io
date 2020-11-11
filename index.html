@@ -89,7 +89,7 @@
 <p>在post参数中，要加空格符时，直接输入空格符即可；用+会被http请求转义为%23编码；</p>
 <p>在get请求中，如果想使用空格，需要用空格符编码<code>%20</code>来替代，不然会请求报错；如果使用#，则#后面的参数不会提交到服务器，但如果使用编码%23即可提交到服务器。</p>
 <h5 id="常见的url编码："><a href="#常见的url编码：" class="headerlink" title="常见的url编码："></a>常见的url编码：</h5><p>空格 ：<code>%20</code> ；           + ：%2b；          &lt; ：%3c；            &gt; ：%3e</p>
-<h4 id="8-sql注入常用mysql函数"><a href="#8-sql注入常用mysql函数" class="headerlink" title="8.sql注入常用mysql函数"></a>8.sql注入常用mysql函数</h4><p>1.order by：该函数对结果集进行排序，用于猜测字段数。例如输入?id=1’ order by 3 –+显示正常；输入?id=1’ order by 4 –+显示错误。故得出在?id=1查看的表用3个字段</p>
+<h4 id="8-sql注入常用mysql函数"><a href="#8-sql注入常用mysql函数" class="headerlink" title="8.sql注入常用mysql函数"></a>8.sql注入常用mysql函数</h4><p>1.order by：该函数对结果集进行排序，用于猜测字段数。例如输入?id=1’ order by 3 –+显示正常；输入?id=1’ order by 4 –+显示错误。故得出在?id=1查看的表有3个字段</p>
 
       
     </div>
@@ -167,16 +167,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一.函数</p>
-<p>1.系统运行C语言程序时，从主函数开始计算，当遇到自定义函数时，转到自定义函数进行运算，最后回到主函数完成运算。</p>
+        <h4 id="一-函数"><a href="#一-函数" class="headerlink" title="一.函数"></a>一.函数</h4><p>1.系统运行C语言程序时，从主函数开始计算，当遇到自定义函数时，转到自定义函数进行运算，最后回到主函数完成运算。</p>
 <p>2.非主函数的其他函数之间可以相互调用。一个函数调用另一个函数，前者称为主调函数，后者称为被调函数。</p>
-<p>3.函数的定义：</p>
+<p>3.<strong>函数的定义：</strong></p>
 <p>类型标识符 函数名（）</p>
 <p>{</p>
 <p>​     函数体</p>
 <p>}</p>
 <p>4.类型标识符的作用是定义函数体执行完之后，函数返回值的类型。若省略类型标识符，系统默认函数返回值类型为int型。如果函数无返回值，则用void来定义函数的返回值。</p>
-<p>5.函数体一般用return语句来结束。当程序执行到return语句时，先计算表达式的值，然后程序的流程返回到调用该函数的地方，并将表达式的值作为函数值返回给主调函数。</p>
+<p>5.函数体一般用return语句来结束，格式如return （表达式）。当程序执行到return语句时，先计算表达式的值，然后程序的流程返回到调用该函数的地方，并将表达式的值作为函数值返回给主调函数。</p>
+<p>6.<strong>函数的参数传递。</strong>a.函数间值传递时，形参的值在被调函数中会改变，而实参的值保持不变。（根本原因是这两者的数据地址不同）</p>
+<p>​                                  b.实参的作用是把函数中的具体数值传递给被调用的函数。且实参个数与顺序要和形参相同，实参和形参对应的数据类型也相同。</p>
+<p>具体使用如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"> void swap(char x,char y)&#x2F;&#x2F;x,y为形参</span><br><span class="line"> &#123;</span><br><span class="line"> 	char ch;</span><br><span class="line"> 	ch&#x3D;x;</span><br><span class="line"> 	x&#x3D;y;</span><br><span class="line"> 	y&#x3D;ch;</span><br><span class="line"> &#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	char ch1&#x3D;&#39;a&#39;,ch2&#x3D;&#39;b&#39;;</span><br><span class="line">	printf(&quot;before:ch1&#x3D;%c ch2&#x3D;%c\n&quot;,ch1,ch2);</span><br><span class="line">	swap(ch1,ch2);&#x2F;&#x2F;此处的ch1，ch2都是实参</span><br><span class="line">	printf(&quot;after:ch1&#x3D;%c ch2&#x3D;%c\n&quot;,ch1,ch2);</span><br><span class="line">	return 0;</span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>输出的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before:ch1&#x3D;a ch2&#x3D;b</span><br><span class="line">after:ch1&#x3D;a ch2&#x3D;b</span><br></pre></td></tr></table></figure>
+
+<h4 id="二-地址传递"><a href="#二-地址传递" class="headerlink" title="二.地址传递"></a>二.地址传递</h4><p><strong>表示地址值的形式有</strong>：<u>数组名</u>（注意是数组名不是数组，如数组a[0]则取不到实参地址），&amp;变量，字符串，指针变量。</p>
+<p>当使用上述方式进行值传递时，可使形参和实参的地址相同。则当形参的值发生改变时，实参的值也随之发生改变，即数据具有双向性。如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	double efunn(double a[2]);</span><br><span class="line">	double b[2],average;</span><br><span class="line">	b[0]&#x3D;15.6;</span><br><span class="line">	b[1]&#x3D;b[0]&#x2F;2;</span><br><span class="line">	printf(&quot;1--in main:b[0]&#x3D;%3.1f b[1]&#x3D;%3.1f\n&quot;,b[0],b[1]);</span><br><span class="line">	average&#x3D;efunn(b);&#x2F;&#x2F;b为数组名</span><br><span class="line">	printf(&quot;average&#x3D;%3.1f\n&quot;,average);</span><br><span class="line">	printf(&quot;3--in main:b[0]&#x3D;%3.1f b[1]&#x3D;%3.1f\n&quot;,b[0],b[1]);</span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">    double efunn(double a[2])&#x2F;&#x2F;形参数组可不用定义元素个数，但使用形参数组时要注意不能超过实参数组个数，否则会报错。</span><br><span class="line">&#123;</span><br><span class="line">	double sum,aver;</span><br><span class="line">	sum&#x3D;a[0]+a[1];</span><br><span class="line">	a[0]&#x3D;a[0]+2.5;</span><br><span class="line">	a[1]&#x3D;a[1]+5.8;</span><br><span class="line">	aver&#x3D;sum&#x2F;2;</span><br><span class="line">	printf(&quot;2-in function:a[0]&#x3D;%3.1f a[1]&#x3D;%3.1f\n&quot;,a[0],a[1]);</span><br><span class="line">	return (aver);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1--in main:b[0]&#x3D;15.6 b[1]&#x3D;7.8</span><br><span class="line">2-in function:a[0]&#x3D;18.1 a[1]&#x3D;13.6</span><br><span class="line">average&#x3D;11.7</span><br><span class="line">3--in main:b[0]&#x3D;18.1 b[1]&#x3D;13.6</span><br></pre></td></tr></table></figure>
+
+<h3 id="二维数组与一维数组的关系："><a href="#二维数组与一维数组的关系：" class="headerlink" title="二维数组与一维数组的关系："></a>二维数组与一维数组的关系：</h3><p>a[m] [n] =a[i*n+j]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (i&#x3D;0;i&lt;m;i++)</span><br><span class="line">    for (j&#x3D;0;j&lt;n;j++)</span><br><span class="line">		a[i*n+j]</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -472,6 +489,7 @@
 <p>title: “搭建的博客”<br>date: 2020-10-01 21:32:41<br>tags:<br>description:<br>1.用git bash进行hexo init指令时一定要认清楚文件夹，是对hexo文件夹进行格式化，我刚刚开始做的时候对blog文件夹一直做格式化导致耗费了很久时间<br>2.在复制个人github地址后粘贴在congig时可能会混杂许多空格，这些空格会影响你执行hexo d指令，也就是说无法将本地文件部署到个人网页上</p>
 <p>3.生产新博客：hexo new blogx</p>
 <p>4.写blog的时候要使用编码UTF-8,否则传输到hexo网页上会显示乱码</p>
+<p>5.用hexo g；hexo d指令上传博客时要在**<u>hexo文件</u>**下建立的hexo bash中输入。</p>
 
       
     </div>
