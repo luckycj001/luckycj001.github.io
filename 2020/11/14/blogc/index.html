@@ -5,15 +5,25 @@
   
 
   
-  <title>Tag: 第三章汇总 | Hexo</title>
+  <title>MYSQL | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/index.html">
+  <meta name="description" content="一.寻找sql注入点 根据标题提示该sql注入点为单引号。输入?id&#x3D;1’返回值错误；输入?id&#x3D;1返回值正常。故存在注入点。 注（自己的摸索）：发现输入id&#x3D;非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。 二.查询字段数 利用order by语句。?id&#x3D;1%27%20order%20by%20n–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL">
+<meta property="og:url" content="http://example.com/2020/11/14/blogc/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一.寻找sql注入点 根据标题提示该sql注入点为单引号。输入?id&#x3D;1’返回值错误；输入?id&#x3D;1返回值正常。故存在注入点。 注（自己的摸索）：发现输入id&#x3D;非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。 二.查询字段数 利用order by语句。?id&#x3D;1%27%20order%20by%20n–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:/Users/Lenovo/AppData/Roaming/Typora/typora-user-images/image-20201114212043135.png">
+<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114221447.png">
+<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114220424.png">
+<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114220840.png">
+<meta property="article:published_time" content="2020-11-14T13:07:05.000Z">
+<meta property="article:modified_time" content="2020-11-14T15:13:23.535Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="sql注入基本知识lesson1">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/Lenovo/AppData/Roaming/Typora/typora-user-images/image-20201114212043135.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -62,40 +72,71 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/10/18/blog3/" class="archive-article-date">
-  <time datetime="2020-10-18T08:15:25.000Z" itemprop="datePublished">Oct 18</time>
+        <section id="main"><article id="post-blogc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/14/blogc/" class="article-date">
+  <time datetime="2020-11-14T13:07:05.000Z" itemprop="datePublished">2020-11-14</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/18/blog3/">C语言学习</a>
+    <h1 class="article-title" itemprop="name">
+      MYSQL
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.寻找sql注入点</p>
+<p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
+<p>注（自己的摸索）：发现输入id=非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。</p>
+<p>二.查询字段数</p>
+<p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：输入?id=1%27%20order%20by%201–+，返回正常，如图：</p>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20201114212043135.png"></p>
+<p>输入?id=1%27%20order%20by%204–+，返回异常，如图：</p>
+<p><img src="C:\Users\Lenovo\Desktop\QQ图片20201114221447.png"></p>
+<p>当输入到第n-1个正常，第n个不正常时，说明拥有n-1个字段数。</p>
+<p>注：字段数就是sql数据库中存在变量数的个数。</p>
+<p>三.union select看返回值</p>
+<p>1.利用union select语句查看字段数返回值。?id=-1%27union%20select%201,2,3–+。得到如图反馈：<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220424.png"></p>
+<p>由图可以观察到只有2,3代表的回显位能被观察到，即用户从浏览器上反馈看见的只有2,3回显位。</p>
+<p>2.利用union select语句查看数据库返回值。</p>
+<p>输入?id=-1%27union%20select%201,database(),2–+.得<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220840.png"></p>
+<p>由此可知：database的名称为security。</p>
+<p>注意使用union select</p>
+<p>四.</p>
 
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/14/blogc/" data-id="ckhhu33m80000lsvucbjyg4x9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/11/10/blogb/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
 
 </section>
         

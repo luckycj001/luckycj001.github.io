@@ -64,6 +64,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blogc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/14/blogc/" class="article-date">
+  <time datetime="2020-11-14T13:07:05.000Z" itemprop="datePublished">2020-11-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/14/blogc/">MYSQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.寻找sql注入点</p>
+<p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
+<p>注（自己的摸索）：发现输入id=非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。</p>
+<p>二.查询字段数</p>
+<p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：输入?id=1%27%20order%20by%201–+，返回正常，如图：</p>
+<p><img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20201114212043135.png"></p>
+<p>输入?id=1%27%20order%20by%204–+，返回异常，如图：</p>
+<p><img src="C:\Users\Lenovo\Desktop\QQ图片20201114221447.png"></p>
+<p>当输入到第n-1个正常，第n个不正常时，说明拥有n-1个字段数。</p>
+<p>注：字段数就是sql数据库中存在变量数的个数。</p>
+<p>三.union select看返回值</p>
+<p>1.利用union select语句查看字段数返回值。?id=-1%27union%20select%201,2,3–+。得到如图反馈：<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220424.png"></p>
+<p>由图可以观察到只有2,3代表的回显位能被观察到，即用户从浏览器上反馈看见的只有2,3回显位。</p>
+<p>2.利用union select语句查看数据库返回值。</p>
+<p>输入?id=-1%27union%20select%201,database(),2–+.得<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220840.png"></p>
+<p>由此可知：database的名称为security。</p>
+<p>注意使用union select</p>
+<p>四.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/14/blogc/" data-id="ckhhu33m80000lsvucbjyg4x9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blogb" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/10/blogb/" class="article-date">
@@ -76,7 +132,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>title: MYSQL<br>date: 2020-11-10 21:00:12<br>tags: sql注入基本知识</p>
+        <p>title: MYSQL<br>date: 2020-11-10 21:00:12<br>tags: sql注入基本知识lesson1</p>
 <h3 id="一-判断是否存在sql注入的方法"><a href="#一-判断是否存在sql注入的方法" class="headerlink" title="一.判断是否存在sql注入的方法"></a>一.判断是否存在sql注入的方法</h3><h4 id="1-基础中的基础：get单引号判断"><a href="#1-基础中的基础：get单引号判断" class="headerlink" title="1.基础中的基础：get单引号判断"></a>1.基础中的基础：get单引号判断</h4><p>在地址栏网址后加**?id=1<strong>，显示正常；加</strong>?id=1’<strong>，显示错误。则说明存在sql注入点。且</strong>‘**的url编码是%27.</p>
 <h4 id="2-get-and判断"><a href="#2-get-and判断" class="headerlink" title="2.get and判断"></a>2.get and判断</h4><p>输入<code>?id=-1 and 1=1</code>    正常；</p>
 <p>输入<code>?id=-1&#39;and 1=2</code>    报错；存在sql。</p>
@@ -88,8 +144,10 @@
 <p><code>--+</code>代表闭合sql查询语句，如果没加，无法形成有效的mysql语句。</p>
 <p>在post参数中，要加空格符时，直接输入空格符即可；用+会被http请求转义为%23编码；</p>
 <p>在get请求中，如果想使用空格，需要用空格符编码<code>%20</code>来替代，不然会请求报错；如果使用#，则#后面的参数不会提交到服务器，但如果使用编码%23即可提交到服务器。</p>
-<h5 id="常见的url编码："><a href="#常见的url编码：" class="headerlink" title="常见的url编码："></a>常见的url编码：</h5><p>空格 ：<code>%20</code> ；           + ：%2b；          &lt; ：%3c；            &gt; ：%3e</p>
+<h5 id="常见的url编码："><a href="#常见的url编码：" class="headerlink" title="常见的url编码："></a>常见的url编码：</h5><p>空格 ：<code>%20</code> ；           + ：%2B；          &lt; ：%3C；            &gt; ：%3E         ‘ :   %27</p>
 <h4 id="8-sql注入常用mysql函数"><a href="#8-sql注入常用mysql函数" class="headerlink" title="8.sql注入常用mysql函数"></a>8.sql注入常用mysql函数</h4><p>1.order by：该函数对结果集进行排序，用于猜测字段数。例如输入?id=1’ order by 3 –+显示正常；输入?id=1’ order by 4 –+显示错误。故得出在?id=1查看的表有3个字段</p>
+<h4 id="二-确认字段数"><a href="#二-确认字段数" class="headerlink" title="二.确认字段数"></a>二.确认字段数</h4><p>确认字段数可以使用order by语句，例如：?id=1’ order by 4 %23 时报错!</p>
+<p><img src="C:\Users\Lenovo\Desktop\QQ图片20201114204904.png"></p>
 
       
     </div>
@@ -519,7 +577,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -529,7 +587,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" style="font-size: 10px;">sql注入基本知识lesson1</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -551,6 +609,10 @@
       <ul>
         
           <li>
+            <a href="/2020/11/14/blogc/">MYSQL</a>
+          </li>
+        
+          <li>
             <a href="/2020/11/10/blogb/">(no title)</a>
           </li>
         
@@ -564,10 +626,6 @@
         
           <li>
             <a href="/2020/11/01/blog6/">C语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2020/10/31/blog5/">C语言学习</a>
           </li>
         
       </ul>
