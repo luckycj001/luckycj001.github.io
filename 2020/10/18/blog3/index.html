@@ -15,7 +15,7 @@
 <meta property="og:description" content="1.if语句：只有当表达式成立时才会执行该if后的语句，且if与跟随语句之间无”;”隔开。 2.if-else语句:当存在多个if-else语句时，最近的if-else两两配对。 3.swich语句:a.switch()括号内的整型表达式也可以是字符型变量的表达式。 ​                      b.当执行完某个语句组后遇到break，则跳出此switch结构，执行下一代码指令。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-18T08:15:25.000Z">
-<meta property="article:modified_time" content="2020-11-11T11:00:31.244Z">
+<meta property="article:modified_time" content="2020-11-16T12:14:29.508Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="第三章汇总">
 <meta name="twitter:card" content="summary">
@@ -94,6 +94,9 @@
 <p>3.swich语句:a.switch()括号内的整型表达式也可以是字符型变量的表达式。</p>
 <p>​                      b.当执行完某个语句组后遇到break，则跳出此switch结构，执行下一代码指令。</p>
 <p>4.while语句:先进行条件判断，再执行循环语句。</p>
+<p>while语句的一个小妙用，例如：(当a自减到0时即会停止循环)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a&#x3D;3;</span><br><span class="line">while(a) a--;</span><br></pre></td></tr></table></figure>
+
 <p>5.do-while语句:先执行循环语句，在进行条件判断。当遇到单独属于do-while结构中的break时会跳出do-while语句。</p>
 <p>6.for语句:执行for(表达式1;表达式2;表达式3;)时，先执行表达式1和2，再执行循环体，最后执行表达式3。以此循环。</p>
 <p>7.else-if语句：从表达式一开始计算，当遇到表达式n成立时，跳出该if镶嵌语句。</p>

