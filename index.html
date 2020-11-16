@@ -254,6 +254,21 @@
 <p>a[m] [n] =a[i*n+j]，具体为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (i&#x3D;0;i&lt;m;i++)</span><br><span class="line">    for (j&#x3D;0;j&lt;n;j++)</span><br><span class="line">		a[i*n+j]</span><br></pre></td></tr></table></figure>
 
+<h4 id="三-变量"><a href="#三-变量" class="headerlink" title="三.变量"></a>三.变量</h4><p>1.局部变量：在一个复合语句当中定义的一个变量；全局变量：在函数外部定义的变量，也称为外部变量。当全局变量与局部变量重名时，局部变量有效，而全局变量失效。</p>
+<p>2.动态变量：auto| auto int a=1 相当于int a=1 ；</p>
+<p>   静态变量：static|用类型变量在被调用后不会清除，其值会被保留；</p>
+<p>   寄存器变量：register</p>
+<h5 id="关键词extern"><a href="#关键词extern" class="headerlink" title="关键词extern:"></a>关键词extern:</h5><p>当外部变量不在文件开头定义时，则仅限于定义处到文件结束范围之内使用该变量，若要在作用域范围之外使用全局变量，则可以使用extern关键词来声明外部变量。</p>
+<h4 id="四-宏定义"><a href="#四-宏定义" class="headerlink" title="四.宏定义"></a>四.宏定义</h4><p>1.宏定义是指将一个标识符（又称为宏名）定义为一个字符串。在执行代码时，所有宏名的值都为该字符串。</p>
+<p>2.宏定义不是c程序语言，不必在句尾加封号，且要在函数代码块外声明定义。</p>
+<p>3.被双引号括起来的标识符（变量名）即使与宏名一样，也不会被宏定义替换。</p>
+<p>4.使用带参宏定义时要注意，宏定义不会对形参进行计算，这就要注意形参参与加减乘除时的整体性，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#define square1(x) x*x</span><br><span class="line">int square (int x)</span><br><span class="line">&#123;   return (x*x);</span><br><span class="line"> &#125; </span><br><span class="line"> int main()</span><br><span class="line"> &#123;</span><br><span class="line"> 	int m&#x3D;10;</span><br><span class="line"> 	printf(&quot;10的平方为:%d&#x3D;%d\n&quot;,square(10),square1(10));</span><br><span class="line"> 	printf(&quot;11的平方为:%d!&#x3D;%d\n&quot;,square(10+1),square1(10+1));</span><br><span class="line"> 	printf(&quot;11的平方为:%d!&#x3D;%d\n&quot;,square(++m),square1(++m));</span><br><span class="line"> 	return 0;</span><br><span class="line">  &#125; </span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10的平方为:100&#x3D;100</span><br><span class="line">11的平方为:121!&#x3D;21</span><br><span class="line">11的平方为:169!&#x3D;144</span><br></pre></td></tr></table></figure>
+
+<p>5.宏定义时，字符串可以是任何类型的数据。</p>
 
       
     </div>
