@@ -64,30 +64,21 @@
       <div class="outer">
         <section id="main">
   
-    <article id="MYSQL-blogd" class="article article-type-MYSQL" itemscope itemprop="blogPost">
+    <article id="post-blogd" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/16/blogd/" class="article-date">
-  <time datetime="2020-11-16T14:04:05.000Z" itemprop="datePublished">2020-11-16</time>
+  <time datetime="2020-11-16T14:04:05.797Z" itemprop="datePublished">2020-11-16</time>
 </a>
     
   </div>
   <div class="article-inner">
     
     
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/16/blogd/">d</a>
-    </h1>
-  
-
-      </header>
-    
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="一-找注入点"><a href="#一-找注入点" class="headerlink" title="一.找注入点"></a>一.找注入点</h4><p>由题目提示：注入点为整数。</p>
-<p>试探：输入?id=1返回正常；输入?id=0返回异常；故该处存在sql注入点。</p>
+        <p>title: MYSQL<br>date: 2020-11-16 22:04:05<br>tags: sql注入基本知识lesson2，lesson3，lesson4</p>
+<h4 id="一-找注入点"><a href="#一-找注入点" class="headerlink" title="一.找注入点"></a>一.找注入点</h4><p>由题目提示：注入点为整数。</p>
+<p>试探：输入?id=1返回正常；输入?id=0返回异常；且输入?id=0 or 1=1–+得到的返回值正确。故该处存在sql注入点。</p>
 <p>二.判断字段数</p>
 <p>输入?id=1 order by n–+直到输入n=4时返回错误。故数据库中存在3个字段。</p>
 <p>三.爆开数据库：得到数据库名</p>
@@ -107,8 +98,6 @@
       <a data-url="http://example.com/2020/11/16/blogd/" data-id="ckhnhe9q90000sovuewpu5mo5" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson2%EF%BC%8Clesson3%EF%BC%8Clesson4/" rel="tag">sql注入基本知识lesson2，lesson3，lesson4</a></li></ul>
-
     </footer>
   </div>
   
@@ -141,7 +130,8 @@
         <p>前言：这是第二次写lesson1的blog，万事开头难。</p>
 <p>一.寻找sql注入点</p>
 <p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
-<p>注（自己的摸索）：发现输入id=非正整数如（?id=-1）时，页面返回为空。则说明这些返回为合理的错误形式，可利用来掩护sql注入。</p>
+<p>注：1.（自己的摸索）：发现输入id=非正整数如（?id=-1）时，页面返回为空。这是因为这些数值不在数据库范围之内，故返回为空。</p>
+<p>2.不是所有引起报错的点都是注入点，也可能是由于单纯的语法错误导致了页面报错。而当存在一个真正的注入点时，输入?id=0+注入点+or and 1=1–+语句返回值正常，反之报错。</p>
 <p>二.查询字段数</p>
 <p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：</p>
 <p>输入?id=1%27%20order%20by%201–+，返回正常。</p>
@@ -628,7 +618,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson2%EF%BC%8Clesson3%EF%BC%8Clesson4/" rel="tag">sql注入基本知识lesson2，lesson3，lesson4</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -638,7 +628,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" style="font-size: 10px;">sql注入基本知识lesson1</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson2%EF%BC%8Clesson3%EF%BC%8Clesson4/" style="font-size: 10px;">sql注入基本知识lesson2，lesson3，lesson4</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" style="font-size: 10px;">sql注入基本知识lesson1</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -660,7 +650,7 @@
       <ul>
         
           <li>
-            <a href="/2020/11/16/blogd/">d</a>
+            <a href="/2020/11/16/blogd/">(no title)</a>
           </li>
         
           <li>
