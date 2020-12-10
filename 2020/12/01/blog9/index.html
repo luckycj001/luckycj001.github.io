@@ -15,7 +15,7 @@
 <meta property="og:description" content="一.指针与指针变量 1.指针就是变量的地址。 2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。 注：a.一个指针变量只能指向类型相同的变量。 ​        b.如果存在“int i， *p&#x3D;&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-12-01T13:08:21.000Z">
-<meta property="article:modified_time" content="2020-12-01T13:53:42.210Z">
+<meta property="article:modified_time" content="2020-12-08T14:22:42.786Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="指针">
 <meta name="twitter:card" content="summary">
@@ -94,6 +94,18 @@
 <p>2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。</p>
 <p>注：a.一个指针变量只能指向类型相同的变量。</p>
 <p>​        b.如果存在“int i， *p=&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i；&amp; *p等价于&amp;i等价于p。观察发现指针运算符和取地址符共同作用时，会相互抵消。</p>
+<p>二.指针运算</p>
+<p>1.指针运算符“ * ”与自增，自减运算符均为单目运算，运算级相同，则运算方向为自右向东。</p>
+<p>三.指针和二维数组</p>
+<p>1.假设a为二维数组，a既是数组名也是二维数组的首地址，相当于a[0] [0]。a+1表示a[1] [0];*a+1表示a[0] [1]。</p>
+<p>2.假设有程序语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5] , (*p)[5],i,j;</span><br><span class="line">p&#x3D;a;</span><br></pre></td></tr></table></figure>
+
+<p>则存在以下等阶：<em>（p[i]+j)  等于 * (* (p+i)+j)   等于  (</em>(p+i ) )[j] 等于  p[i] [j] 等于  a[i] [j] 。</p>
+<p>3.假设有程序语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5],i,j,*p[3];</span><br><span class="line">for (i&#x3D;0;i&lt;3;i++) p[i]&#x3D;a[i];&#x2F;&#x2F;p[i] 相当于每一行的首地址</span><br></pre></td></tr></table></figure>
+
+<p>则存在以下等阶：*(p[i]+j) 等于 *( *(p+i)+j)  等于 ( *(p+i )) [ j ] 等于 p[i] [j] 等于 a[i] [j]。</p>
 
       
     </div>

