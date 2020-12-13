@@ -5,19 +5,19 @@
   
 
   
-  <title>C语言学习第六章 | Hexo</title>
+  <title>lesson9、lesson10 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一.指针与指针变量 1.指针就是变量的地址。 2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。 注：a.一个指针变量只能指向类型相同的变量。 ​        b.如果存在“int i， *p&#x3D;&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i">
+  <meta name="description" content="lesson9这题很有意思，我发现不管输入什么，返回值都是you are in，于是我查看源代码—— 123456789101112131415161718if($row)	&amp;#123;  	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;	  	echo &#39;You are">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C语言学习第六章">
-<meta property="og:url" content="http://example.com/2020/12/01/blog9/index.html">
+<meta property="og:title" content="lesson9、lesson10">
+<meta property="og:url" content="http://example.com/2020/12/13/blog%20j/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一.指针与指针变量 1.指针就是变量的地址。 2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。 注：a.一个指针变量只能指向类型相同的变量。 ​        b.如果存在“int i， *p&#x3D;&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i">
+<meta property="og:description" content="lesson9这题很有意思，我发现不管输入什么，返回值都是you are in，于是我查看源代码—— 123456789101112131415161718if($row)	&amp;#123;  	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;	  	echo &#39;You are">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-12-01T13:08:21.000Z">
-<meta property="article:modified_time" content="2020-12-08T14:22:42.786Z">
+<meta property="article:published_time" content="2020-12-13T14:20:36.000Z">
+<meta property="article:modified_time" content="2020-12-13T14:52:08.968Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="指针">
+<meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -67,10 +67,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-blog9" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-blog j" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/12/01/blog9/" class="article-date">
-  <time datetime="2020-12-01T13:08:21.000Z" itemprop="datePublished">2020-12-01</time>
+    <a href="/2020/12/13/blog%20j/" class="article-date">
+  <time datetime="2020-12-13T14:20:36.000Z" itemprop="datePublished">2020-12-13</time>
 </a>
     
   </div>
@@ -81,7 +81,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      C语言学习第六章
+      lesson9、lesson10
     </h1>
   
 
@@ -89,31 +89,25 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>一.指针与指针变量</p>
-<p>1.指针就是变量的地址。</p>
-<p>2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。</p>
-<p>注：a.一个指针变量只能指向类型相同的变量。</p>
-<p>​        b.如果存在“int i， *p=&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i；&amp; *p等价于&amp;i等价于p。观察发现指针运算符和取地址符共同作用时，会相互抵消。</p>
-<p>二.指针运算</p>
-<p>1.指针运算符“ * ”与自增，自减运算符均为单目运算，运算级相同，则运算方向为自右向东。</p>
-<p>三.指针和二维数组</p>
-<p>1.假设a为二维数组，a既是数组名也是二维数组的首地址，相当于a[0] [0]。a+1表示a[1] [0];*a+1表示a[0] [1]。</p>
-<p>2.假设有程序语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5] , (*p)[5],i,j;</span><br><span class="line">p&#x3D;a;</span><br></pre></td></tr></table></figure>
+        <h4 id="lesson9"><a href="#lesson9" class="headerlink" title="lesson9"></a>lesson9</h4><p>这题很有意思，我发现不管输入什么，返回值都是you are in，于是我查看源代码——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">if($row)</span><br><span class="line">	&#123;</span><br><span class="line">  	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;	</span><br><span class="line">  	echo &#39;You are in...........&#39;;</span><br><span class="line">  	echo &quot;&lt;br&gt;&quot;;</span><br><span class="line">    	echo &quot;&lt;&#x2F;font&gt;&quot;;</span><br><span class="line">  	&#125;</span><br><span class="line">	else </span><br><span class="line">	&#123;</span><br><span class="line">	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;</span><br><span class="line">	echo &#39;You are in...........&#39;;</span><br><span class="line">	&#x2F;&#x2F;print_r(mysql_error());</span><br><span class="line">	&#x2F;&#x2F;echo &quot;You have an error in your SQL syntax&quot;;</span><br><span class="line">	echo &quot;&lt;&#x2F;br&gt;&lt;&#x2F;font&gt;&quot;;	</span><br><span class="line">	echo &#39;&lt;font color&#x3D; &quot;#0000ff&quot; font size&#x3D; 3&gt;&#39;;	</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>则存在以下等阶：<em>（p[i]+j)  等于 * (* (p+i)+j)   等于  (</em>(p+i ) )[j] 等于  p[i] [j] 等于  a[i] [j] 。</p>
-<p>3.假设有程序语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5],i,j,*p[3];</span><br><span class="line">for (i&#x3D;0;i&lt;3;i++) p[i]&#x3D;a[i];&#x2F;&#x2F;p[i] 相当于每一行的首地址</span><br></pre></td></tr></table></figure>
+<p>我们可以看到不论输入结果正确与否输出都为you are in</p>
+<p>通过题目我们知道注入点为 ’</p>
+<p>于是我觉得可以利用时间盲注，通过延时判断语句正确与否，于是输入爆库语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39; and If(substr(database(),1,1)&#x3D;&#39;e&#39;,sleep(5),1)--+</span><br></pre></td></tr></table></figure>
 
-<p>则存在以下等阶：*(p[i]+j) 等于 *( *(p+i)+j)  等于 ( *(p+i )) [ j ] 等于 p[i] [j] 等于 a[i] [j]。</p>
+<p>发现可行，那么剩下的内容和lesson8就一模一样了。</p>
+<h4 id="lesson10"><a href="#lesson10" class="headerlink" title="lesson10"></a>lesson10</h4><p>这题基于lesson9，但注入点有别于lesson9为 ‘’</p>
+<p>其余的也一样了。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/01/blog9/" data-id="cki601dkv0001g8vuai3w25vy" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/13/blog%20j/" data-id="ckin8z7340002ysvu5ichau76" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8C%87%E9%92%88/" rel="tag">指针</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/" rel="tag">mysql</a></li></ul>
 
     </footer>
   </div>
@@ -121,19 +115,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/12/07/blog%20h/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          mysql
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/11/29/blog%20g/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2020/12/13/blog%20i/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">MYSQL</div>
+      <div class="article-nav-title">lessen8</div>
     </a>
   
 </nav>
