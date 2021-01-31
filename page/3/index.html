@@ -64,6 +64,65 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/22/blog4/" class="article-date">
+  <time datetime="2020-10-22T13:19:02.000Z" itemprop="datePublished">2020-10-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/22/blog4/">第四章汇总（1）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.   一维数组</p>
+<p>1.a 数组名不能与变量名一样；b 可以在定义变量名的同时定义数组；</p>
+<p>​            c  “[]”中的数据只能是整型常量，不能是变量，且若为整型常量即可在其中加减；</p>
+<p>​            d  数组下标是从0开始的，且数组最后一个元素的下标为该数组元素个数减一；</p>
+<p>​            e  C语言中只能逐个使用数组中的元素，不能一次性引用多个元素，如：a[2]=1，意为将1的值赋值给该数组的第二个元素；</p>
+<p>​            f  若未给数组中元素赋值，则其输出结果为不确定值；</p>
+<p>​            g 当所赋初值个数多余该数组的元素个数时，在编译时出错，无结果；当所赋初值个数少于该数组的元素个数时，会自动给未赋值的元素赋值为0。</p>
+<ol start="2">
+<li><p>a 产生随机数：利用rand()函数，其原型为int rand(void)。要产生[n,m]范围内随机整数，要利用公式(int)(n+(m-n)*rand()/RAND_MAX)</p>
+<p>b  初始化随机数发生器：srand()，其函数原型为void srand(unsigned int seed)。seed是随机数种子，为了产生不可预见的随机数，通常用time(0)返回的值作为随机种子。而函数time(0)包含在头文件&lt;time.h&gt;中。</p>
+</li>
+</ol>
+<p>二.   二维数组</p>
+<ol>
+<li>初始化二维数组时，可省略第一维的长度，但第二维长度不能忽略。</li>
+<li>按顺序赋值并且省略第一维的长度时，数组第一维的大小按以下规则决定。设有n个初值数据，第二维长度为m，由于可能只对部分数据赋值，n/m不一定会被整除，因此第一维的大小通常为(int)(n/m+1).</li>
+<li>矩阵转置：将一个二维数组的行和列元素进行互换。即将二维数组a中的第i行第j列元素赋给二位数组b中的第j行第i列。</li>
+</ol>
+<p>三.字符串函数</p>
+<p>strcmp(字符串1,字符串2)</p>
+<p>用法：两个字符串自左向右一个个比对，直到出现不同的字符或遇到‘\0’为止。（若字符串第一个字符比对就不同，那么即停止比对）。函数的返回值——a.若字符串1=字符串2，那么返回值为0；b.若字符串1&gt;字符串2，那么返回值为正整数；c.若字符串1&lt;字符串2，那么返回值为负整数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/22/blog4/" data-id="ckkcnrnff000v2ovu9rll5f81" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/18/blog3/" class="article-date">
@@ -237,6 +296,10 @@
       <ul>
         
           <li>
+            <a href="/2021/01/31/12/">12</a>
+          </li>
+        
+          <li>
             <a href="/2021/01/30/lesson11/">lesson11</a>
           </li>
         
@@ -250,10 +313,6 @@
         
           <li>
             <a href="/2021/01/25/PHP%E8%AF%AD%E6%B3%95/">PHP语法</a>
-          </li>
-        
-          <li>
-            <a href="/2020/12/24/blog9/">C语言的解题思路</a>
           </li>
         
       </ul>
