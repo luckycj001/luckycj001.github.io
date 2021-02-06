@@ -7,12 +7,12 @@
   
   <title>lesson25-28a | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 那么这关我们就以双写绕过">
+  <meta name="description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 {">
 <meta property="og:type" content="article">
 <meta property="og:title" content="lesson25-28a">
 <meta property="og:url" content="http://example.com/2021/02/04/lesson25-28a/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 那么这关我们就以双写绕过">
+<meta property="og:description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 {">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/.com//1.png">
 <meta property="og:image" content="http://example.com/.com//2.png">
@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://example.com/.com//10.png">
 <meta property="og:image" content="http://example.com/.com//11.png">
 <meta property="article:published_time" content="2021-02-04T08:26:27.000Z">
-<meta property="article:modified_time" content="2021-02-04T15:52:23.438Z">
+<meta property="article:modified_time" content="2021-02-06T05:25:27.537Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
@@ -111,6 +111,20 @@
 <p>我们查看源码：</p>
 <p><img src="/.com//1.png" alt="1"></p>
 <p>这里的or和and采用了i正则匹配，大小写都无法绕过。</p>
+<p>{               <strong>拓展一下PHP正则表达式的模式修饰符</strong></p>
+<ul>
+<li>i</li>
+</ul>
+<p>​       如果设定此修正符，模式中的字符将同时匹配大小写字母。</p>
+<ul>
+<li><p>m<br>当设定了此修正符，“行起始”和“行结束”除了匹配整个字符串开头和结束外，还分别匹配其中的换行符的之后和之前。</p>
+</li>
+<li><p>s<br>如果设定了此修正符，模式中的圆点元字符（.）匹配所有的字符，包括换行符。没有此设定的话，则不包括换行符。</p>
+</li>
+<li><p>x<br>如果设定了此修正符，模式中的空白字符除了被转义的或在字符类中的以外完全被忽略，在未转义的字符类之外的 #以及下一个换行符之间的所有字符，包括两头，也都被忽略。</p>
+</li>
+</ul>
+<p>}</p>
 <p><strong>那么这关我们就以双写绕过的方式为例。</strong></p>
 <p>查看源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">&#x27;$id&#x27;</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
@@ -169,11 +183,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2021/02/05/lesson29/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/02/05/lesson29-31/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          lesson29
+          lesson29-31
         
       </div>
     </a>
@@ -232,7 +246,15 @@
       <ul>
         
           <li>
-            <a href="/2021/02/05/lesson29/">lesson29</a>
+            <a href="/2021/02/06/lesson38/">lesson38</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/06/lesson32-37/">lesson32-37</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/lesson29-31/">lesson29-31</a>
           </li>
         
           <li>
@@ -241,14 +263,6 @@
         
           <li>
             <a href="/2021/02/03/lesson24/">lesson24</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/03/lesson23/">lesson23</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/03/lesson21-22/">lesson21-22</a>
           </li>
         
       </ul>

