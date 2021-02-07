@@ -5,20 +5,24 @@
   
 
   
-  <title>近半个月学习总结 | Hexo</title>
+  <title>lesson38-45 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="第一单元1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。2.”lf”为输出double数据时的修饰符。3.多输代码，熟练scanf，printf语句(基础函数)。4.printf函数输出时”c”表示输出单个字符，而”s”表示输出字符串。5.使用dev c++编写用对象流实现输入输出代码时，要注意头文件应表达为，且在int main()之前添加”using neme">
+  <meta name="description" content="background——堆叠注入：在 SQL 中，;(分号)是用来表示一条 sql 语句的结束。试想一下我们在 ; 结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。但对于不同数据库（mysql，sqlserver，oracle等）来说，除oracle不允许外，其他数据库我们可以在一条sql语句后紧接着构造下一条sql语句。 这里可能会有一个问题——uni">
 <meta property="og:type" content="article">
-<meta property="og:title" content="近半个月学习总结">
-<meta property="og:url" content="http://example.com/2020/10/04/blog2/index.html">
+<meta property="og:title" content="lesson38-45">
+<meta property="og:url" content="http://example.com/2021/02/06/lesson38-45/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="第一单元1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。2.”lf”为输出double数据时的修饰符。3.多输代码，熟练scanf，printf语句(基础函数)。4.printf函数输出时”c”表示输出单个字符，而”s”表示输出字符串。5.使用dev c++编写用对象流实现输入输出代码时，要注意头文件应表达为，且在int main()之前添加”using neme">
+<meta property="og:description" content="background——堆叠注入：在 SQL 中，;(分号)是用来表示一条 sql 语句的结束。试想一下我们在 ; 结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。但对于不同数据库（mysql，sqlserver，oracle等）来说，除oracle不允许外，其他数据库我们可以在一条sql语句后紧接着构造下一条sql语句。 这里可能会有一个问题——uni">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-10-04T02:23:06.000Z">
-<meta property="article:modified_time" content="2021-01-30T14:52:49.717Z">
+<meta property="og:image" content="http://example.com/.com//1.png">
+<meta property="og:image" content="http://example.com/.com//2.png">
+<meta property="og:image" content="http://example.com/.com//3.jpg">
+<meta property="article:published_time" content="2021-02-06T14:44:20.000Z">
+<meta property="article:modified_time" content="2021-02-07T10:52:51.675Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="C语言学习">
+<meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -67,10 +71,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-blog2" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-lesson38-45" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2020/10/04/blog2/" class="article-date">
-  <time datetime="2020-10-04T02:23:06.000Z" itemprop="datePublished">2020-10-04</time>
+    <a href="/2021/02/06/lesson38-45/" class="article-date">
+  <time datetime="2021-02-06T14:44:20.000Z" itemprop="datePublished">2021-02-06</time>
 </a>
     
   </div>
@@ -81,7 +85,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      近半个月学习总结
+      lesson38-45
     </h1>
   
 
@@ -89,18 +93,43 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>第一单元<br>1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。<br>2.”lf”为输出double数据时的修饰符。<br>3.多输代码，熟练scanf，printf语句(基础函数)。<br>4.printf函数输出时”c”表示输出单个字符，而”s”表示输出字符串。<br>5.使用dev c++编写用对象流实现输入输出代码时，要注意头文件应表达为<iostream>，<iomanip>且在int main()之前添加”using nemespce std”。<br>6.C语言中关键字不能用作变量名。</iomanip></iostream></p>
-<p>7.scanf函数语句中不能对其进行格式化。如scanf（“%.3f”，&amp;a），这是错误格式。</p>
-<p>8.注意除数！如一个数除2和除2.0得到的答案完全不同。除以2的话会当成整型变量运算，除以2.0的话则按照实型变量计算。</p>
-<p>第二单元<br>1.”/“运算，若除数与被除数均为整数型数据，则结果也为整数型。若要保留小数，则需用以下三种格式:”1.0/1”,”1/1.0”,”1.0/1.0”。<br>2.”%”，操作数必须为整数，且运算结果答案与左侧数据符号一致。<br>3.自增自减。a.无论运算符号在整型变量的前后，运算后该整型变量的值都相同。<br>            b.运算符仅能用于整型变量，不能用于常量和表达式。<br>4.关系运算符主导的表达式的结果只有”1”,”0”两种，即计算机只判断真伪。<br>5.赋值运算符的左侧只能是变量，不能是常量和表达式。</p>
+        <h1 id="background——堆叠注入："><a href="#background——堆叠注入：" class="headerlink" title="background——堆叠注入："></a>background——堆叠注入：</h1><p>在 SQL 中，<code>;(分号)</code>是用来表示一条 sql 语句的结束。试想一下我们在 <code>; </code>结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。但对于不同数据库（mysql，sqlserver，oracle等）来说，除oracle不允许外，其他数据库我们可以在一条sql语句后紧接着构造下一条sql语句。</p>
+<p><strong>这里可能会有一个问题——union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？</strong>(1)区别就在于 union 或者 union all 执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是 任意的语句。 </p>
+<p>(2)堆叠注入不会像联合注入那样受第一句sql语句影响。我们知道联合注入要满足第一句sql语句错误的条件下才会执行后面我们构造的sql语句，而堆叠注入没有这个问题。</p>
+<p>(3)在我们的 web 系统中，因为代码通常只返回一个查询结果，因此，堆叠注入第 二个语句产生错误或者结果时只能被忽略，我们在前端界面是无法看到返回结果的。因此，在读取数据时，我们建议使用 union（联合）注入。例以lesson38的一个payload为例：?id=0’ union select 1,2,database();create table test like users–+这样我们可以前台获取数据信息，后台篡改数据信息，实现“双管齐下”。</p>
+<p><strong>sp：关于数据库的一些增删改查在另一篇博客已经专门介绍了，这里不多赘述。</strong></p>
+<h2 id="lesson38："><a href="#lesson38：" class="headerlink" title="lesson38："></a>lesson38：</h2><p>认识一下新函数：</p>
+<ul>
+<li><p>mysqli_connect()函数：<br>功能：打开一个到 MySQL 服务器的新的连接。<br>语法：mysqli_connect(host,username,password,dbname,port,socket)；<img src="/.com//1.png" alt="1"></p>
+</li>
+<li><p>mysqli_select_db()函数：<br>作用：用于更改连接的默认数据库。<br>语法：mysqli_select_db(connection,dbname)<img src="/.com//2.png" alt="2"></p>
+</li>
+<li><p>mysqli_multi_query()函数：<br>语法：mysqli_multi_query(connection,query)；</p>
+<p>功能：执行一个或多个针对数据库的查询。多个查询用分号进行分隔。<img src="/.com//3.jpg" alt="3"></p>
+<p><strong>注：这个函数是可实现堆叠注入的重要因素！</strong></p>
+</li>
+<li><p>mysql_store_result()函数：<br>功能：用于将mysqli_query()查询的结果集存储到变量中</p>
+</li>
+<li><p>mysqli_more_results()函数：<br>语法：mysqli_more_results(connection);<br>参数：connection——必需。规定要使用的mysql连接<br>功能：检查一个多查询是否有更多的结果。</p>
+</li>
+<li><p>mysqli_fetch_row() 函数：</p>
+<p>语法：mysqli_fetch_row(result)；</p>
+<p>参数：result——必须。规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果  集标识符。</p>
+<p>功能：从结果集中取得一行，并作为枚举数组返回。</p>
+</li>
+</ul>
+<h2 id="lesson39-amp-40-amp-41："><a href="#lesson39-amp-40-amp-41：" class="headerlink" title="lesson39&amp;40&amp;41："></a>lesson39&amp;40&amp;41：</h2><p>就改变了id闭合方式，注意注入类型变化即可，其余与lesson38一致。</p>
+<h2 id="lesson42："><a href="#lesson42：" class="headerlink" title="lesson42："></a>lesson42：</h2><p>这关可以用二阶注入，但是没必要，因为我们输入的密码没有被过滤，我们可以用报错注入，延时注入。或者用我们新学的堆叠注入。</p>
+<p>在我们使用堆叠注入时虽然页面返回错误，但是我们在数据库中查找，还是可以看到我们的payload执行l。</p>
+<h2 id="lesson43-amp-44-amp-45："><a href="#lesson43-amp-44-amp-45：" class="headerlink" title="lesson43&amp;44&amp;45："></a>lesson43&amp;44&amp;45：</h2><p>就改变了id闭合方式，注意注入类型变化即可，其余与lesson42一致。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/04/blog2/" data-id="ckkrqc5cd000sn4vu8dyt5w6j" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/06/lesson38-45/" data-id="ckkv16ros00017svucytebh26" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
 
     </footer>
   </div>
@@ -108,19 +137,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2020/10/18/blog3/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/02/07/lesson46/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          第三章汇总
+          lesson46
         
       </div>
     </a>
   
   
-    <a href="/2020/10/01/blog1/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2021/02/06/lesson32-37/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title"></div>
+      <div class="article-nav-title">lesson32-37</div>
     </a>
   
 </nav>
