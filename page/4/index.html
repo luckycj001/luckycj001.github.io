@@ -64,6 +64,125 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/01/blog6/" class="article-date">
+  <time datetime="2020-11-01T01:37:48.000Z" itemprop="datePublished">2020-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/01/blog6/">第四章汇总（3）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.结构体</p>
+<p>1.成员的类型可以是另一个结构体的类型，如：存在struct  a  b，即意味b是struct  a型。</p>
+<p>2.如果两个结构体的成员类型，名称，个数相同，但结构体名不同，也是两个不同的结构类型。</p>
+<p>3.成员名可以和程序中的变量名相同，二者不代表同一对象。如：程序中可以定义“int num”，同时还可以在struct结构中定义”int num“。</p>
+<p>4.初值内容用“{}”括起来，各组数据用“，”隔开，并且数据应与结构体类型定义时的成员个数相等，类型一致。</p>
+<p>5.如果初值个数少于结构体成员个数，则自动为无初值的成员赋值0；若多余则编译错误。</p>
+<p>二.新的关键词</p>
+<p>1.const是C语言中的一个关键词，他限定一个变量不允许被改变。使用const在一定程度上提高程序的安全性和可靠性。</p>
+<p>2.enum是枚举类型的引导字，用于声明枚举类型。</p>
+<p>3.typedef用于声明一种新类型名来代替旧类型名。</p>
+<p>三.共用体</p>
+<p>1.共用体类型是一种多个不同类型共享储蓄空间的构造类型，即共用体变量的所有成员占同一个储蓄空间。</p>
+<p>2.共用体变量所占空间的大小取决于占储蓄空间最大的成员，而不是各个成员的储蓄空间之和，这点是与结构体变量有着本质上的不同。</p>
+<p>3.对共用体的某一成员赋值，会覆盖其他成员原来的数据，原来成员的值就不存在了，因此，共用体变量中起作用的是最后一次存入的成员变量的值。例如：</p>
+<p>x.a=10;x.b=20;printf(“%d%f”,x.a,x.b);       输出结果为：0  20.0</p>
+<p>四.枚举类型</p>
+<p>1.enum 语法格式：</p>
+<p>   enum  枚举名</p>
+<p>   {     枚举值1[=整型常数1]，枚举值2[=整型常数2]….   }；</p>
+<p>2.括号内的“=整型常数”可以省略。如果省略，编译程序按照顺序给每个枚举元素一个对应的整数值，整数值从0开始，后续元素顺序加1.</p>
+<p>3.在C语言中，枚举变量的值不能直接进行输入和输出，只能间接地实现输出和输入的操作。例如使用switch（）语句。</p>
+<p>4.不能把枚举常量对应的序号直接赋值给枚举变量。如枚举变量=1。</p>
+<p>5.可以用强制类型转换为枚举变量赋值，如：枚举变量=（enum 枚举名）（1）。</p>
+<p>五.自定义类型名</p>
+<p>1.语法格式：typedef  类型名 新类型名</p>
+<p>2.特别的，用typedef语法定义数组类型名，如：typedef int appay[10]//定义appay为有十个元素的整型数组类型名。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/01/blog6/" data-id="ckkrqc5ch0010n4vu04uy8lg2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/31/blog5/" class="article-date">
+  <time datetime="2020-10-31T12:00:08.000Z" itemprop="datePublished">2020-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/31/blog5/">第四章汇总（2）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.字符数组</p>
+<p>1.若不对字符数组进行初始化，则数组中各元素的值是不可预知的。</p>
+<p>2.若花括号内提供的字符数组个数多余数组长度，则会产生编译错误的信息。</p>
+<p>3.若花括号内提供的字符数组个数少余数组长度，则编译器将这些字符优先赋值给前面的元素，其余元素取值（’\0’）。</p>
+<p>4.用字符串常量直接赋值时，可省略花括号，用“”覆盖字符串常量。用字符常量逐个赋初值，时花括号不可省略，且各个字符由’’覆盖，字符间用逗号隔开。</p>
+<p>5.C语言中，字符串是以字符’\0’结尾，故它会额外占据数组一格内存。</p>
+<p>6.使用%c格式说明符进行逐个字符的输入/输出；使用%s格式说明符进行字符串的输入/输出。</p>
+<p>7.当一个字符表示为字符串变量名时，其本身就是该字符串的首地址，即scanf（）函数输入时无需再使加取地址符“&amp;”。</p>
+<p>8.使用字符串函数时要在程序开头用“#include&lt;string.h&gt;”命令将头文件&lt;string.h&gt;包括进来。</p>
+<p>9.引用字符要用“ ‘’ ”。</p>
+<p>二.新函数</p>
+<p>a 字符串复制函数strcpy（）； 用法：若strcpy（字符数组1，字符数组2），将字符串1/字符数组2连同结束标志’\0’复制到字符数组1中。</p>
+<p>b 字符串连续函数strcat（） ；用法：若strcpy（字符数组1，字符数组2），链接两个字符串，把字符串2连接到字符串1后面，再把得到的结果放在字符串1中。</p>
+<p>c  字符串比较函数strcmp（） ； 用法：若strcmp（字符串1，字符串2）</p>
+<p>d 求字符串长度strlen（）；用法：若strlen（字符串），检测字符串中字符的个数，不包括’\0’。</p>
+<p>e 大写字母转换小写字母函数strlwr（）。</p>
+<p>f 小写字母换号大写字母函数strupr（）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/31/blog5/" data-id="ckkrqc5cf000wn4vufv9p0f09" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/22/blog4/" class="article-date">
@@ -296,7 +415,15 @@
       <ul>
         
           <li>
-            <a href="/2021/02/07/lesson46/">lesson46</a>
+            <a href="/2021/02/09/upload-labs-pass1/">upload-labs-pass1</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/08/blog54/">blog</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/07/lesson46-53/">lesson46-53</a>
           </li>
         
           <li>
@@ -305,14 +432,6 @@
         
           <li>
             <a href="/2021/02/06/lesson32-37/">lesson32-37</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/05/lesson29-31/">lesson29-31</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/04/lesson25-28a/">lesson25-28a</a>
           </li>
         
       </ul>
