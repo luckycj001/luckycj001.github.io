@@ -64,6 +64,96 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DVWA—JS" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/18/DVWA%E2%80%94JS/" class="article-date">
+  <time datetime="2021-03-18T10:52:29.000Z" itemprop="datePublished">2021-03-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>javascript一种常用于页面代码中，用来实现动态效果的脚本语言。由于JS是存储在客户端，所以过分依赖JS代码逻辑，容易被攻击者获取代码后，进行数据伪造。</p>
+<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p>先提交默认数据<img src="/.com//1.png" alt="1"></p>
+<p>提交<code>success</code><img src="/.com//2.png" alt="2"></p>
+<p>无效的token怎么回事呢？查看网页源码</p>
+<p><img src="/.com//3.png" alt="3"></p>
+<p><img src="/.com//4.png" alt="4"></p>
+<p>我们看到token由前端生成，与服务器无关，但是前端的token是根据<code>ChangeMe</code>来生成的，而服务器要的token是根据<code>success</code>生成的。</p>
+<p>利用控制台执行代码</p>
+<p><img src="/.com//5.png" alt="5"></p>
+<p><img src="/.com//6.png" alt="6"></p>
+<p>我们将箭号所指的token的值用上面弹框中的值替换<img src="/.com//7.png" alt="7"></p>
+<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-2905900.html">http://www.bubuko.com/infodetail-2905900.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/18/DVWA%E2%80%94JS/" data-id="ckmw2g50g00005cvudszj8688" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-DVWA—CSP" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/18/DVWA%E2%80%94CSP/" class="article-date">
+  <time datetime="2021-03-18T10:40:08.000Z" itemprop="datePublished">2021-03-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/18/DVWA%E2%80%94CSP/">CSP</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Content-Security-Policy指的是内容安全检测，又称网页安全政策，CSP的实质就是白名单制度。</p>
+<p>Content-Security-Policy（内容安全策略）是指HTTP返回报文头中的标签，浏览器会根据标签中的内容，判断哪些资源可以加载或执行。是为了缓解潜在的跨站脚本问题（XSS）。原来应对XSS攻击时，主要采用函数过滤、转义输入中的特殊字符、标签、文本来规避攻击。CSP的实质就是白名单制度，开发人员明确告诉客户端，哪些外部资源可以加载和执行。开发者只需要提供配置，实现和执行全部由浏览器完成。简而言之就是在前端添加一些标签，告诉浏览器哪些资源可以加载访问。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/18/DVWA%E2%80%94CSP/" data-id="ckmw2g50w00015cvu7eipfu7b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-bugku" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/03/16/bugku/" class="article-date">
@@ -88,8 +178,8 @@
       
         <h1 id="web11："><a href="#web11：" class="headerlink" title="web11："></a>web11：</h1><p> 这题的题目是：网站被黑了 黑客会不会留下后门</p>
 <p>那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件<img src="/.com//1.png" alt="1"></p>
-<p>访问<img src="/.com//2.png" alt="2"></p>
-<p>用bp抓包爆破</p>
+<p>访问shell.php<img src="/.com//2.png" alt="2"></p>
+<p>用bp抓包爆破可知密码为<code>hack</code></p>
 <p><img src="/.com//3.png" alt="3"></p>
 <p>pass为hack，登入<img src="/.com//4.png" alt="4"></p>
 <h1 id="web13："><a href="#web13：" class="headerlink" title="web13："></a>web13：</h1><p>题目叫我们看看源码，我们看看源码：</p>
@@ -99,6 +189,53 @@
 
 <p>提交字符串<code>67d709b2b54aa2aa648cf6e87a7114f1</code></p>
 <p><img src="/.com//6.png" alt="6"></p>
+<h1 id="web16："><a href="#web16：" class="headerlink" title="web16："></a>web16：</h1><p>进入环境后发现就一串数字，其他什么也没有，检查网页源码，抓包看回显都没有什么线索，又用御剑扫描网页后台</p>
+<p><img src="/.com//7.png" alt="7"></p>
+<p>发现一个.bak拓展名（bak这种备份文件在我们平常使用绘图、编程软件时都会默认创建备份文件，如cad文件修改后会产生bak文件，wps、word等文件修改后也都会产生bak备份文件，这样可以保证当源文件不小心被删掉或者出现故障导致无故自动退出时，还可以从bak备份文件继续编辑，减少了不少误操作带来的损失。）的文件，结合描述的信息：备份是个好习惯，我们可以猜测这个.bak拓展名文件应该有东西</p>
+<p>下载文件并打开<img src="/.com//35@%25PWPHHUMJX79WMRZM%5B_5.png" alt="img"></p>
+<p>我们可以看到key1和key2本身不能相等，但是被md5编码后两者要相等才能得到flag。</p>
+<p>总的来说这是一道文件包含漏洞+绕过字符串过滤+绕过md5编码的题</p>
+<p>我们用双写绕过字符串过滤，利用md5()函数无法处理数组（如果传入的为数组，会返回NULL，所以两个数组经过加密后得到的都是NULL,也就是相等的。）达成if条件。</p>
+<p>因此我们的payload是<code>?kekeyy1[]=1&amp;kekeyy2[]=2</code></p>
+<p><img src="/.com//8.png" alt="8"></p>
+<h1 id="Web20"><a href="#Web20" class="headerlink" title="Web20"></a>Web20</h1><p>打开题目地址发现是一堆乱码，我还以为乱码里面有内容，分析了一通，结果什么也没有。</p>
+<p>注意到url栏filename的值好像被编码了，base64解码得keys.txt。<img src="/.com//12.png" alt="12"></p>
+<ul>
+<li>变量line的值为多少就返回指定文件中第几行，无值时默认返回第0行</li>
+</ul>
+<p>一般index.php都会存在源码，编码index.php</p>
+<p><img src="/.com//13.png" alt="13"></p>
+<p>返回index.php第一行源码，只要不断更改line的值最终就可以获得完整的index.php源码（因为我不会写python脚本）</p>
+<p>index.php源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    </span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">$file=base64_decode(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;filename&#x27;</span>])?$_GET[<span class="string">&#x27;filename&#x27;</span>]:<span class="string">&quot;&quot;</span>);</span><br><span class="line">$line=<span class="keyword">isset</span>($_GET[<span class="string">&#x27;line&#x27;</span>])?intval($_GET[<span class="string">&#x27;line&#x27;</span>]):<span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>($file==<span class="string">&#x27;&#x27;</span>) header(<span class="string">&quot;location:index.php?line=&amp;filename=a2V5cy50eHQ=&quot;</span>);</span><br><span class="line">$file_list = <span class="keyword">array</span>(</span><br><span class="line"><span class="string">&#x27;0&#x27;</span> =&gt;<span class="string">&#x27;keys.txt&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;1&#x27;</span> =&gt;<span class="string">&#x27;index.php&#x27;</span>,</span><br><span class="line">);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_COOKIE[<span class="string">&#x27;margin&#x27;</span>]) &amp;&amp; $_COOKIE[<span class="string">&#x27;margin&#x27;</span>]==<span class="string">&#x27;margin&#x27;</span>)&#123;</span><br><span class="line">$file_list[<span class="number">2</span>]=<span class="string">&#x27;keys.php&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(in_array($file, $file_list))&#123;</span><br><span class="line">$fa = file($file);</span><br><span class="line"><span class="keyword">echo</span> $fa[$line];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们看到当cookie内容为参数margin=margin时，file_list数组会多一个键值<code>keys.php</code>，然后通过in_array函数检测我们上传的文件名是否在file_list数组中，是则发送key.php文件的内容。</p>
+<p>因此我们构造cookie：margin=margin，令filename的值为key.php  base64编码后的值。<img src="/.com//14.png" alt="14"></p>
+<h1 id="web21"><a href="#web21" class="headerlink" title="web21"></a>web21</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/.com//9.png" alt="9"></p>
+<p>发现有一个1p.html文件，打开是一段HTML代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span> <span class="attr">LANGUAGE</span>=<span class="string">&quot;Javascript&quot;</span>&gt;</span></span><br><span class="line">&lt;!--</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> Words =<span class="string">&quot;%3Cscript%3Ewindow.location.href%3D&#x27;http%3A%2F%2Fwww.bugku.com&#x27;%3B%3C%2Fscript%3E%20%0A%3C!--JTIyJTNCaWYoISUyNF9HRVQlNUInaWQnJTVEKSUwQSU3QiUwQSUwOWhlYWRlcignTG9jYXRpb24lM0ElMjBoZWxsby5waHAlM0ZpZCUzRDEnKSUzQiUwQSUwOWV4aXQoKSUzQiUwQSU3RCUwQSUyNGlkJTNEJTI0X0dFVCU1QidpZCclNUQlM0IlMEElMjRhJTNEJTI0X0dFVCU1QidhJyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJ2InJTVEJTNCJTBBaWYoc3RyaXBvcyglMjRhJTJDJy4nKSklMEElN0IlMEElMDllY2hvJTIwJ25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJyUzQiUwQSUwOXJldHVybiUyMCUzQiUwQSU3RCUwQSUyNGRhdGElMjAlM0QlMjAlNDBmaWxlX2dldF9jb250ZW50cyglMjRhJTJDJ3InKSUzQiUwQWlmKCUyNGRhdGElM0QlM0QlMjJidWdrdSUyMGlzJTIwYSUyMG5pY2UlMjBwbGF0ZWZvcm0hJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuKCUyNGIpJTNFNSUyMGFuZCUyMGVyZWdpKCUyMjExMSUyMi5zdWJzdHIoJTI0YiUyQzAlMkMxKSUyQyUyMjExMTQlMjIpJTIwYW5kJTIwc3Vic3RyKCUyNGIlMkMwJTJDMSkhJTNENCklMEElN0IlMEElMDklMjRmbGFnJTIwJTNEJTIwJTIyZmxhZyU3QioqKioqKioqKioqJTdEJTIyJTBBJTdEJTBBZWxzZSUwQSU3QiUwQSUwOXByaW50JTIwJTIybmV2ZXIlMjBuZXZlciUyMG5ldmVyJTIwZ2l2ZSUyMHVwJTIwISEhJTIyJTNCJTBBJTdEJTBBJTBBJTBBJTNGJTNF--%3E&quot;</span> </span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">OutWord</span>(<span class="params"></span>)</span></span></span><br><span class="line">&#123;</span><br><span class="line"><span class="javascript"><span class="keyword">var</span> NewWords;</span></span><br><span class="line"><span class="javascript">NewWords = <span class="built_in">unescape</span>(Words);</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.write(NewWords);</span></span><br><span class="line">&#125; </span><br><span class="line">OutWord();</span><br><span class="line"><span class="javascript"><span class="comment">// --&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HTML</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们看到word一大串字符串很可疑，结合后面的unescape()函数，断定这里被编码了</p>
+<p>用burp解码，顺序为url解码，base64解码，再url解码</p>
+<p><img src="/.com//10.png" alt="10"></p>
+<p>最终得</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--<span class="string">&quot;;if(!<span class="subst">$_GET</span>[&#x27;id&#x27;])</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	header(&#x27;Location: hello.php?id=1&#x27;);</span></span><br><span class="line"><span class="string">	exit();</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$id</span>=<span class="subst">$_GET</span>[&#x27;id&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$a</span>=<span class="subst">$_GET</span>[&#x27;a&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$b</span>=<span class="subst">$_GET</span>[&#x27;b&#x27;];</span></span><br><span class="line"><span class="string">if(stripos(<span class="subst">$a</span>,&#x27;.&#x27;))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	echo &#x27;no no no no no no no&#x27;;</span></span><br><span class="line"><span class="string">	return ;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$data</span> = @file_get_contents(<span class="subst">$a</span>,&#x27;r&#x27;);</span></span><br><span class="line"><span class="string">if(<span class="subst">$data</span>==&quot;</span>bugku is a nice plateform!<span class="string">&quot; and <span class="subst">$id</span>==0 and strlen(<span class="subst">$b</span>)&gt;5 and eregi(&quot;</span><span class="number">111</span><span class="string">&quot;.substr(<span class="subst">$b</span>,0,1),&quot;</span><span class="number">1114</span><span class="string">&quot;) and substr(<span class="subst">$b</span>,0,1)!=4)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	<span class="subst">$flag</span> = &quot;</span>flag&#123;***********&#125;<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	print &quot;</span>never never never give up !!!<span class="string">&quot;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">?&gt;--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>file_get_contents() 函数：把整个文件读入一个字符串中。</p>
+</li>
+<li><p>eregi()</p>
+<p>作用：不分大小写的正则表达式匹配——在 <code>string</code> 中寻找与给定的正则表达式 <code>pattern</code> 所匹配的子串。</p>
+<p>语法：ereg ( string <code>$pattern</code> , string <code>$string</code> , array <code>&amp;$regs</code> = ? ) </p>
+</li>
+</ul>
+<p>代码审计：当id为空时，网页自动跳转到指定文件；参数<code>a</code>中不得有<code>.</code>，否则输出‘no’（这限制了我们直接导入文件）；接着将a的值赋值给参数data；if条件规定：data的值为<code>bugku is a nice plateform!</code>，id的值为0，b值的长度大于5，然后<code>111</code>和b值的第一个字符结合与<code>1114</code>进行匹配，并且b值的第一个字符不能是4。</p>
+<p>ereg和eregi的截断漏洞：%00截断及遇到%00则默认为字符串的结束。因此我们构造b=%0023456</p>
+<p>php中会把id=0当成id=nothing，也就是空白。那么这题<code>!$_GET[&#39;id&#39;]</code>和<code>$id==0</code>明显冲突矛盾，这时我们要想到PHP在处理哈希字符串时，会利用”!=”或”==”来对哈希值进行比较，它把每一个以”0E”开头的哈希值都解释为0，所以如果两个不同的密码经过哈希以后，其哈希值都是以”0E”开头的，那么PHP将会认为他们相同，都是0。因此我们可以构造：<code>?id=0e1</code></p>
+<p>由于if条件规定：data的值为<code>bugku is a nice plateform!</code>因此我们可以利用php://input获取post上传数据的特点，</p>
+<p>令<code>?a=php://input</code>并post数据<code>bugku is a nice plateform!</code></p>
+<p>综上所述：payload=?id=0e1&amp;a=php://input&amp;b=%0023456 并post数据<code>bugku is a nice plateform!</code></p>
+<p><img src="/.com//11.png" alt="11"></p>
 
       
     </div>
@@ -306,9 +443,9 @@
 
 
   
-    <article id="post-攻防世界web进阶" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-攻防世界web进阶1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/" class="article-date">
+    <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/" class="article-date">
   <time datetime="2021-03-12T09:23:20.000Z" itemprop="datePublished">2021-03-12</time>
 </a>
     
@@ -320,7 +457,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/">攻防世界web进阶</a>
+      <a class="article-title" href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/">攻防世界web进阶</a>
     </h1>
   
 
@@ -365,11 +502,140 @@
 <p>用burp抓包，对id进行爆破，发现当id=2333时爆出flag<img src="/.com//12.png" alt="12"></p>
 <p>但是这题有一点不明白，就是为什么题目说：云平台报表中心收集了设备管理基础服务的数据，但是数据被删除了，只有一处留下了入侵者的痕迹。为什么痕迹是id的值？</p>
 <h1 id="Web-php-include"><a href="#Web-php-include" class="headerlink" title="Web_php_include"></a>Web_php_include</h1><p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45844670/article/details/108180309">https://blog.csdn.net/weixin_45844670/article/details/108180309</a></p>
+<h1 id="warmup"><a href="#warmup" class="headerlink" title="warmup"></a>warmup</h1><p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/yybzzz/article/details/104971608">https://blog.csdn.net/yybzzz/article/details/104971608</a></p>
+<h1 id="unserialize3"><a href="#unserialize3" class="headerlink" title="unserialize3"></a>unserialize3</h1><p>恶补了一下反序列化操作与序列序列化操作。参考资料：<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/167721.html">https://www.freebuf.com/articles/web/167721.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44677409/article/details/93884388">https://blog.csdn.net/weixin_44677409/article/details/93884388</a></p>
+<p>我这边就简单的概括一下：</p>
+<p>序列化——将变量或对象转换成字符串的过程。</p>
+<p>反序列化——将字符串转换成变量或对象的过程。</p>
+<p>如图序列化后<img src="/.com//14.png" alt="14"></p>
+<p><strong>魔术方法（）：</strong></p>
+<p>_construct()：创建对象时初始化<br>_destruction()：结束时销毁对象<br>_toString()：对象被当作字符串时使用<br>_sleep()：序列化对象之前调用<br>_wakeup()：反序列化对象之前调用<br>_call()：调用对象不存在时使用<br>_get()：调用私有属性时使用</p>
+<p>注：</p>
+<p>1.的魔术方法必须声明为 <code>public</code></p>
+<p>2.public属性序列化后格式为：数据类型:属性名长度:”属性名”。</p>
+<p>了解了上述这些我们就可以开始答题啦</p>
+<p><img src="/.com//13.png" alt="13"></p>
+<p>我们看到<code>wakeup()</code>函数，再结合题目<code>unseriasize3</code>可以得知这是一道反序列化操作的题，</p>
+<p>根据前两行代码可知存在一个数组名<code>xctf</code>，键数<code>1</code>，键名<code>flag</code>，键值<code>111</code>的数组，</p>
+<p>在__wakeup()魔术方法中，在反序列化前会自动调用 _wakeup方法，强制输出<code>bad requests</code>，因此我们要绕过之</p>
+<p><strong>解题关键：当序列化字符串中表示对象属性个数（键数）的值大于实际的属性个数（键数）时会跳过__wakeup的执行</strong></p>
+<p>构造字符串<code>?code=O:4:&quot;xctf&quot;:2:&#123;s:4:&quot;flag&quot;;s:3:&quot;111&quot;;&#125;</code>绕过__wakeup方法</p>
+<p><img src="/.com//15.png" alt="15"></p>
+<h1 id="supersqli"><a href="#supersqli" class="headerlink" title="supersqli"></a>supersqli</h1><p>打开题目地址发现是SQL注入的题，先拿sqlmap跑了一下，发现只能跑出数据库名，再下去就跑不动了，于是只能回来乖乖手工注入。</p>
+<p>输入<code>1&#39;</code>报错<img src="/.com//16.png" alt="16"></p>
+<p>输入<code>1&#39; and &#39;1&#39;=&#39;1</code>，正常；</p>
+<p>输入<code>1&#39; and &#39;1&#39;=&#39;2</code>，异常；</p>
+<p>因此注入类型为<code>&#39;</code>。</p>
+<p>尝试union联合注入，发现过滤了许多单词</p>
+<p><img src="/.com//17.png" alt="17"></p>
+<p>因此避免使用含<code>select</code>语句的方式好像也只有堆叠注入了</p>
+<p>参考博客：<a target="_blank" rel="noopener" href="https://www.freesion.com/article/82681150614/">https://www.freesion.com/article/82681150614/</a>       ；<a target="_blank" rel="noopener" href="https://blog.csdn.net/rfrder/article/details/108583338">https://blog.csdn.net/rfrder/article/details/108583338</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/" data-id="ckmenmra3000bncvubn5q2y1s" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/" data-id="ckmw2g51n00035cvu7bccgo3d" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-攻防世界web进阶2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B62/" class="article-date">
+  <time datetime="2021-03-12T09:23:20.000Z" itemprop="datePublished">2021-03-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B62/">攻防世界web进阶</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="NewsCenter"><a href="#NewsCenter" class="headerlink" title="NewsCenter"></a>NewsCenter</h1><h1 id="Web-php-unserialize"><a href="#Web-php-unserialize" class="headerlink" title="Web_php_unserialize"></a>Web_php_unserialize</h1><p>打开题目地址，就看到了源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> $file = <span class="string">&#x27;index.php&#x27;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$file</span>) </span>&#123; </span><br><span class="line">        <span class="keyword">$this</span>-&gt;file = $file; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">echo</span> @highlight_file(<span class="keyword">$this</span>-&gt;file, <span class="literal">true</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;file != <span class="string">&#x27;index.php&#x27;</span>) &#123; </span><br><span class="line">            <span class="comment">//the secret is in the fl4g.php</span></span><br><span class="line">            <span class="keyword">$this</span>-&gt;file = <span class="string">&#x27;index.php&#x27;</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">&#x27;var&#x27;</span>])) &#123; </span><br><span class="line">    $var = base64_decode($_GET[<span class="string">&#x27;var&#x27;</span>]); </span><br><span class="line">    <span class="keyword">if</span> (preg_match(<span class="string">&#x27;/[oc]:\d+:/i&#x27;</span>, $var)) &#123; </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">&#x27;stop hacking!&#x27;</span>); </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        @unserialize($var); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    highlight_file(<span class="string">&quot;index.php&quot;</span>); </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>正则表达式：<code>&#39;/[oc]:\d+:/i&#39;</code></p>
+<p><strong>/XXXX/</strong>      ——  php的正则表达式需要放在<code>//</code> 之间</p>
+<p><strong>i</strong>                  ——修饰符，表示忽略大小写</p>
+<p><strong>[oc]</strong>             ——匹配o和c: </p>
+<p><strong>\d</strong>                ——匹配一个数字</p>
+<p><strong>\d+</strong>              ——匹配多个数字</p>
+<p>代码审计：服务器get获得var的值，先对var的值base64解码，然后正则匹配判断是否存在<code>O：数字</code>或<code>C：数字</code>，若不存在则在反序列之前执行__wakeup()魔术方法。</p>
+<p>那么我们需要绕过正则匹配和__wakeup()</p>
+<p><code>O:+4:</code>——绕过正则匹配</p>
+<p>O:+4:”Demo”:<strong>1</strong>:{s:10:”Demofile”;s:8:”fl4g.php”;}——把1换成2绕过__wakeup()</p>
+<p>最后对payload进行base64encode，得：TzorNDoiRGVtbyI6Mjp7czoxMDoiAERlbW8AZmlsZSI7czo4OiJmbDRnLnBocCI7fQ==</p>
+<p>最后有一个问题没搞懂：“Demofile”只有8位，而前面字段却写了10，这是因为private型变量序列化之后会变成“\x00 + 类名 + \x00 + 变量名”形式。？？？？？？？？？？？？？？？？？？？</p>
+<p>TzorNDoiRGVtbyI6Mjp7czoxMDoiIERlbW8gZmlsZSI7czo4OiJmbDRnLnBocCI7fQ==         错</p>
+<p>TzorNDoiRGVtbyI6Mjp7czoxMDoiAERlbW8AZmlsZSI7czo4OiJmbDRnLnBocCI7fQ==        对</p>
+<h1 id="NaNNaNNaNNaN-Batman"><a href="#NaNNaNNaNNaN-Batman" class="headerlink" title="NaNNaNNaNNaN-Batman"></a>NaNNaNNaNNaN-Batman</h1><p>下载附件1<code>web100.txt</code>，打开发现是乱码<img src="/.com//1.png" alt="1"></p>
+<p>用浏览器打开，发现一个输入框</p>
+<p><img src="/.com//2.png" alt="2"></p>
+<p>但是输入什么都没反应，查阅资料：</p>
+<p>eval函数，这是执行函数；这里执行了<code>_</code>变量中的内容(<code>_</code>等于$函数的内容,也就是单引号之间内容)，但是，要注意的是，它并没有执行$()函数，仅仅执行了字符串而已（从而导致乱码），因而页面html页面没有任何显示，只显示了input标签的内容，但是我们想让源代码正常显示出来，不进行执行，那么，我们就用到了alert弹窗（将eval函数改为alert），将乱码的$()函数源码完整显示出来</p>
+<p><img src="/.com//3.png" alt="3"></p>
+<p>整理得：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function $()</span><br><span class="line">&#123;</span><br><span class="line">var e=document.getElementById(&quot;c&quot;).value;</span><br><span class="line">if(e.length==16)</span><br><span class="line">if(e.match(/^be0f23/)!=null)</span><br><span class="line">if(e.match(/233ac/)!=null)</span><br><span class="line">if(e.match(/e98aa$/)!=null)</span><br><span class="line">if(e.match(/c7be9/)!=null)</span><br><span class="line">&#123;</span><br><span class="line">var t=[&quot;fl&quot;,&quot;s_a&quot;,&quot;i&quot;,&quot;e&#125;&quot;];</span><br><span class="line">var n=[&quot;a&quot;,&quot;_h0l&quot;,&quot;n&quot;];</span><br><span class="line">var r=[&quot;g&#123;&quot;,&quot;e&quot;,&quot;_0&quot;];</span><br><span class="line">var i=[&quot;it&#x27;&quot;,&quot;_&quot;,&quot;n&quot;];</span><br><span class="line">var s=[t,n,r,i];</span><br><span class="line">for(var o=0;o<span class="tag">&lt;<span class="name">13;++o)&#123;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">document.write</span>(<span class="attr">s</span>[<span class="attr">o</span>%<span class="attr">4</span>][<span class="attr">0</span>]);<span class="attr">s</span>[<span class="attr">o</span>%<span class="attr">4</span>]<span class="attr">.splice</span>(<span class="attr">0</span>,<span class="attr">1</span>)&#125;</span></span><br><span class="line"><span class="tag">      &#125;</span></span><br><span class="line"><span class="tag">      &#125;</span></span><br><span class="line">      document.write(&#x27;&lt;input id=&quot;c&quot;&gt;&lt;button onclick=$()&gt;Ok&lt;/button&gt;&#x27;);</span><br><span class="line">delete _</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>新函数：</p>
+<p><strong>splice()</strong> </p>
+<p>功能：从数组中添加/删除项目，然后返回被删除的项目。</p>
+<p>语法：<code>arrayObject.splice(index,howmany,item1,.....,itemX)</code></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">index</td>
+<td align="left">必需。整数，规定添加/删除项目的位置，使用负数可从数组结尾处规定位置。</td>
+</tr>
+<tr>
+<td align="left">howmany</td>
+<td align="left">必需。要删除的项目数量。如果设置为 0，则不会删除项目。</td>
+</tr>
+<tr>
+<td align="left">item1, …, itemX</td>
+<td align="left">可选。向数组添加的新项目。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p>法1：输入符合条件的<code>e</code>，令其执行后续代码</p>
+<ul>
+<li><p>正则表达式：</p>
+<p>^表示开头一定要匹配到be0f23，$表示结尾一定要匹配到e98aa，其它的只要匹配到就好，没有位置要求<br>于是我们构造e的值：<code>be0f233ac7be98aa</code></p>
+</li>
+</ul>
+<p>在输入框内输入e的值：</p>
+<p><img src="/.com//image-20210327221653190.png" alt="image-20210327221653190"></p>
+<p>法2：直接看后半段源码，循环推理也可得e的值。但是我感觉有点麻烦。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B62/" data-id="ckmw2g51q00045cvuh4i425z8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
@@ -663,363 +929,11 @@
 
 
   
-    <article id="post-DVWA—CSRF" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/03/04/DVWA%E2%80%94CSRF/" class="article-date">
-  <time datetime="2021-03-04T10:16:08.000Z" itemprop="datePublished">2021-03-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/04/DVWA%E2%80%94CSRF/">DVWA—Cross Site Request Forgery (CSRF)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前言：</p>
-<p>CSRF，全称Cross-site request forgery，译为跨站请求伪造，是指利用受害者尚未失效的身份认证信息（cookie、会话等），诱骗其点击恶意链接或者访问包含攻击代码的页面，在受害人不知情的情况下以受害者的身份向（身份认证信息所对应的）服务器发送请求，从而完成非法操作（如转账、改密等）。CSRF与XSS最大的区别就在于，CSRF并没有盗取cookie而是直接利用。需要注意的是，受害者需要使用含有效cookie的浏览器访问攻击者的页面时才会触发csrf攻击。</p>
-<p><img src="/.com//1.png" alt="1"></p>
-<h1 id="Low"><a href="#Low" class="headerlink" title="Low:"></a>Low:</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $pass_new  = $_GET[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">    $pass_conf = $_GET[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Do the passwords match?</span></span><br><span class="line">    <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">        <span class="comment">// They do!</span></span><br><span class="line">        $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $pass_new ) : ((trigger_error(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">        $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update the database</span></span><br><span class="line">        $insert = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . dvwaCurrentUser() . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">        $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for the user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Issue with passwords matching</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到服务器没有任何的防CSRF机制。那么我们可以构造404网页进行访问欺骗，编写test.html，内容为：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;http://localhost:81/vulnerabilities/csrf/?password_new=password&amp;password_conf=password&amp;Change=Change#&quot;</span> <span class="attr">border</span>=<span class="string">&quot;0&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display:none;&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>404<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>file not found.<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>当受害者点击test.html时，就相当于攻击者利用受害者的cookie（即利用受害者的身份）进行了修改受害者账户密码这样一个操作。服务器那边会误以为是受害者自己下达的改密码的指令，而受害者会以为自己点到了一个失效的url，页面返回404,，但是其实这时受害者的密码已经被悄悄更改。可想而知CSRF的危害性多么大。</p>
-<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Checks to see where the request came from</span></span><br><span class="line">    <span class="keyword">if</span>( stripos( $_SERVER[ <span class="string">&#x27;HTTP_REFERER&#x27;</span> ] ,$_SERVER[ <span class="string">&#x27;SERVER_NAME&#x27;</span> ]) !== <span class="literal">false</span> ) &#123;</span><br><span class="line">        <span class="comment">// Get input</span></span><br><span class="line">        $pass_new  = $_GET[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">        $pass_conf = $_GET[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Do the passwords match?</span></span><br><span class="line">        <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">            <span class="comment">// They do!</span></span><br><span class="line">            $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $pass_new ) : ((trigger_error(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">            $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Update the database</span></span><br><span class="line">            $insert = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . dvwaCurrentUser() . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">            $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for the user</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Issue with passwords matching</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Didn&#x27;t come from a trusted source</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;That request didn&#x27;t look correct.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到服务器检查变量 HTTP_REFERER（http包头的Referer参数的值，表示来源地址）中是否包含SERVER_NAME（http包头的Host参数的值），以抵御CSRF攻击。</p>
-<p>我们先在原页面上提交修改密码请求，burp抓包：<img src="/.com//2.png" alt="2"></p>
-<p>再模拟CSRF攻击，burp抓包：<img src="/.com//3.png" alt="3"></p>
-<p>我们可以看到如果按照low级别的CSRF攻击是肯定不可能攻击成功的，因为它缺少了Referer的值。因此我们需要手动添加</p>
-<p>Referer: localhost:81</p>
-<h1 id="High"><a href="#High" class="headerlink" title="High:"></a>High:</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Change&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $pass_new  = $_GET[ <span class="string">&#x27;password_new&#x27;</span> ];</span><br><span class="line">    $pass_conf = $_GET[ <span class="string">&#x27;password_conf&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Do the passwords match?</span></span><br><span class="line">    <span class="keyword">if</span>( $pass_new == $pass_conf ) &#123;</span><br><span class="line">        <span class="comment">// They do!</span></span><br><span class="line">        $pass_new = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $pass_new ) : ((trigger_error(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">        $pass_new = md5( $pass_new );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Update the database</span></span><br><span class="line">        $insert = <span class="string">&quot;UPDATE `users` SET password = &#x27;<span class="subst">$pass_new</span>&#x27; WHERE user = &#x27;&quot;</span> . dvwaCurrentUser() . <span class="string">&quot;&#x27;;&quot;</span>;</span><br><span class="line">        $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $insert ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for the user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Issue with passwords matching</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/04/DVWA%E2%80%94CSRF/" data-id="ckm5oxbfx00008svu8f0p1965" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DVWA—File Inclusion" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/28/DVWA%E2%80%94File%20Inclusion/" class="article-date">
-  <time datetime="2021-02-28T11:26:47.000Z" itemprop="datePublished">2021-02-28</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/28/DVWA%E2%80%94File%20Inclusion/">DVWA—File Inclusion</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>File Inclusion，译为文件包含（漏洞）。服务器开启allow_url_include选项时，就可以通过php的某些特性函数（<code>include()</code>，<code>require()</code>和<code>include_once()</code>，<code>require_once()</code>）利用url去动态包含文件。此时如果没有对文件来源进行严格审查，就会导致任意文件读取或者任意命令执行。</p>
-<ul>
-<li>文件包含漏洞分为本地文件包含漏洞与远程文件包含漏洞。</li>
-</ul>
-<p><strong>本地文件包含漏洞：</strong>通过浏览器包含web服务器上的文件，这种漏洞是因为服务器包含文件时没有进行严格的过滤，直接允许并执行用户在url输入的服务器包含文件。通俗的说就是被包含的文件在服务器本地。</p>
-<p><strong>远程文件包含漏洞：</strong>服务器开启了php配置中的allow_url_fopen选项（选项开启之后，服务器允许包含一个远程的文件）。在远程服务器上预先设置好的webshell，然后攻击者利用该漏洞包含一个远程的文件。这种漏洞的出现是因为服务器对用户的输入没有进行检查，会导致不同程度的信息泄露。通俗的说就是被包含的文件不在目标服务器。</p>
-<ul>
-<li><p>常见的敏感信息路径</p>
-<p>利用本地文件包含漏洞可以获取系统（服务器）的本地文件的内容。<br><strong>Windows系统常见敏感文件如下：</strong></p>
-<p>c:\boot.ini                               系统版本信息<br>c:\xxx\php.ini                         PHP配置信息。<br>c:\xxx\my.ini                           MySQL配置信息。<br>c: \xxx\httpd.conf                  Apache配置信息。<br><strong>linux系统常见敏感文件如下：</strong></p>
-<p>/etc/passwd                                    Linux系统账号信息。<br>/etc/httpd/conf/httpd.conf          Apache配置信息。<br>/etc/my.conf                                  MySQL配置信息。<br>/usr/etc/php.ini                             PHP配置信息。</p>
-</li>
-<li><p>常见路径符号</p>
-<p>/                                 根目录<br>./                                当前目录<br>../                               返回到上一级目录<br>../../                            返回上两级目录<br>.\ 、..\和./、../          意义相同</p>
-</li>
-</ul>
-<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到，服务器端对page参数没有做任何的过滤跟检查。</p>
-<ul>
-<li><strong>利用本地文件包含漏洞</strong></li>
-</ul>
-<p>我们先让参数page的值等于一个服务器本地不存在的文件![1](DVWA—File Inclusion/1.png)</p>
-<p>我们可以看到网站的根目录为<code>\DVWA-master\</code>，而<code>index.php</code>文件距根目录差两个文件夹，那么我们可以通过两个<code>../</code>回到根目录，然后去访问一些敏感文件：如PHP版本信息等。![2](DVWA—File Inclusion/2.png)</p>
-<ul>
-<li><strong>利用远程文件包含漏洞</strong></li>
-</ul>
-<p>因为我们搭的是靶场模拟服务器，那dvwa（81端口）靶场就相当于一个服务器，我们再在“远端服务器”127.0.0.1下上传文件1.txt内容为：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">      phpinfo();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>然后利用远程文件包含访问![3](DVWA—File Inclusion/3.png)</p>
-<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Input validation</span></span><br><span class="line">$file = str_replace( <span class="keyword">array</span>( <span class="string">&quot;http://&quot;</span>, <span class="string">&quot;https://&quot;</span> ), <span class="string">&quot;&quot;</span>, $file );</span><br><span class="line">$file = str_replace( <span class="keyword">array</span>( <span class="string">&quot;../&quot;</span>, <span class="string">&quot;..\&quot;&quot;</span> ), <span class="string">&quot;&quot;</span>, $file );</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到服务器过滤了<code>http://</code>, <code>https://</code>，<code>../</code>, <code>..\</code>，但是我们只要用双写就可以绕过了</p>
-<p>![4](DVWA—File Inclusion/4.png)</p>
-<p>![5](DVWA—File Inclusion/5.png)</p>
-<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Input validation</span></span><br><span class="line"><span class="keyword">if</span>( !fnmatch( <span class="string">&quot;file*&quot;</span>, $file ) &amp;&amp; $file != <span class="string">&quot;include.php&quot;</span> ) &#123;</span><br><span class="line">    <span class="comment">// This isn&#x27;t the page we want!</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR: File not found!&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>新函数：</p>
-<p><strong>fnmatch() 函数</strong></p>
-<p>功能：根据指定的模式来匹配文件名或字符串。</p>
-<p>语法：fnmatch(pattern,string,flags)</p>
-<table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">pattern</td>
-<td align="left">必需。规定要检索的模式。</td>
-</tr>
-<tr>
-<td align="left">string</td>
-<td align="left">必需。规定要检查的字符串或文件。</td>
-</tr>
-<tr>
-<td align="left">flags</td>
-<td align="left">可选。</td>
-</tr>
-</tbody></table>
-<p>我们可以看到服务器规定只能包含以file开头的文件，但是我们可以利用file协议绕过。</p>
-<p>file协议主要用于访问本地计算机中的文件，当我们用浏览器打开一个本地文件时利用的就是file协议![6](DVWA—File Inclusion/6.png)</p>
-<p>file协议的基本格式：file:///文件路径</p>
-<p>由于file协议规定只能由于访问本地文件，因此搭配文件上传漏洞效果极佳。![7](DVWA—File Inclusion/7.png)</p>
-<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Impossible File Inclusion Source</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Only allow include.php or file&#123;1..3&#125;.php</span></span><br><span class="line"><span class="keyword">if</span>( $file != <span class="string">&quot;include.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file1.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file2.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file3.php&quot;</span> ) &#123;</span><br><span class="line">    <span class="comment">// This isn&#x27;t the page we want!</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR: File not found!&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/28/DVWA%E2%80%94File%20Inclusion/" data-id="ckm5oxbg100018svug41yds8g" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DVWA—Command Injection" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/25/DVWA%E2%80%94Command%20Injection/" class="article-date">
-  <time datetime="2021-02-25T12:24:15.000Z" itemprop="datePublished">2021-02-25</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/25/DVWA%E2%80%94Command%20Injection/">DVWA——Command Injection</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>命令注入——利用可以调用系统命令的web应用，通过构造特殊命令字符串的方式，把恶意代码输入一个编辑域(例如缺乏有效验证的输入框)来改变网页动态生成的内容，最终实现本应在服务端才能工作的系统命令。命令注入攻击的常见场景为：仅仅需要输入数据的场合，攻击者构造数据同时输入了恶意命令代码，而系统对此并未过滤，恶意命令代码一并执行，最终导致信息泄露或者正常数据的破坏；PHP命令注入攻击漏洞是PHP应用程序中常见的脚本漏洞之一。命令注入和代码注入不同，代码注入的目的在于将外部代码注入应用程序本身，并随程序执行；命令攻击的对象是服务器的宿主机。因此用户可以通过构造特殊的输入来达到入侵目的。</p>
-<ul>
-<li><strong><code>&amp;</code>，<code>&amp;&amp;</code>，<code>|</code>，<code>||</code>命令拼接符的区别</strong>:</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>A&amp;B</th>
-<th align="center">拼接，A和B之间无制约关系</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>A&amp;&amp;B</td>
-<td align="center">A执行成功，之后才会执行B</td>
-</tr>
-<tr>
-<td>A|B</td>
-<td align="center">A的输出作为B的输入</td>
-</tr>
-<tr>
-<td>A||B</td>
-<td align="center">A执行失败，之后才会执行B</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p><strong>windows系统下常见的拼接命令：</strong></p>
-<ul>
-<li><p>ipconfig 查看本地网络</p>
-</li>
-<li><p>net  user   查看系统用户</p>
-</li>
-<li><p>dir  查看当前目录</p>
-</li>
-<li><p>find 查找包含指定字符的行</p>
-</li>
-<li><p>whoami 查看系统当前有效用户名   </p>
-</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>Linux命令大全</strong>：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">https://www.runoob.com/linux/linux-command-manual.html</a></li>
-</ul>
-<h1 id="Low"><a href="#Low" class="headerlink" title="Low:"></a>Low:</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;   </span><br><span class="line">        <span class="comment">// Get input   </span></span><br><span class="line">        $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];   </span><br><span class="line">        <span class="comment">// Determine OS and execute the ping command.   </span></span><br><span class="line">        <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;     </span><br><span class="line">            <span class="comment">// Windows     </span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping &#x27;</span> . $target );   </span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">else</span> &#123;     </span><br><span class="line">            <span class="comment">// *nix     </span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping -c 4 &#x27;</span> . $target );   </span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="comment">// Feedback for the end user   </span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>新函数：</p>
-<ul>
-<li><strong>php_uname()函数</strong></li>
-</ul>
-<p>功能：返回运行 PHP 的系统的有关信息。</p>
-<p>语法：php_uname ([ string $mode = “a” ] )</p>
-<p>   其中，<code>mode</code> 是单个字符，用于定义要返回什么信息：</p>
-<ol>
-<li><p><code>&#39;a&#39;</code>：此为默认。包含序列 <code>&quot;s n r v m&quot;</code> 里的所有模式。</p>
-</li>
-<li><p><code>&#39;s&#39;</code>：操作系统名称。例如： <code>FreeBSD</code>。</p>
-</li>
-<li><p><code>&#39;n&#39;</code>：主机名。例如： <code>localhost.example.com</code>。</p>
-</li>
-<li><p><code>&#39;r&#39;</code>：版本名称，例如： <code>5.1.2-RELEASE</code>。</p>
-</li>
-<li><p><code>&#39;v&#39;</code>：版本信息。操作系统之间有很大的不同。</p>
-</li>
-<li><p><code>&#39;m&#39;</code>：机器类型。例如：<code>i386</code>。 </p>
-</li>
-</ol>
-<p>   <strong>shell_exec()函数</strong></p>
-<p>   功能：通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。（补充：<code>Shell 是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务。</code>）</p>
-<p>   语法：shell_exec ( string <code>$cmd</code> )</p>
-<p>   其中参数cmd为要执行的命令。</p>
-<p>查看源码我们可知，服务器通过<strong>stristr</strong>和<strong>php_uname</strong>两个函数来判断操作系统，执行不同的ping命令。同时服务器没有对我们输入的IP地址做任何的过滤处理，我们可以利用任意的命令执行分隔符来执行我们的指令、获取我们想要的信息。</p>
-<p>例如输入：127.0.0.1&amp;&amp;echo “hello world”</p>
-<p>![1](DVWA—Command Injection/1.png)</p>
-<h1 id="Medium"><a href="#Medium" class="headerlink" title="Medium:"></a>Medium:</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set blacklist</span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&amp;&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist).</span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// *nix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Feedback for the end user</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>新函数：</p>
-<ul>
-<li><p><strong>str_replace()函数</strong></p>
-<p><strong>功能：</strong>替换字符串中的一些字符（区分大小写）。</p>
-<p>该函数必须遵循下列规则：</p>
-<ul>
-<li>如果搜索的字符串是一个数组，那么它将返回一个数组。</li>
-<li>如果搜索的字符串是一个数组，那么它将对数组中的每个元素进行查找和替换。</li>
-<li>如果同时需要对某个数组进行查找和替换，并且需要执行替换的元素少于查找到的元素的数量，那么多余的元素将用空字符串进行替换。</li>
-<li>如果是对一个数组进行查找，但只对一个字符串进行替换，那么替代字符串将对所有查找到的值起作用。</li>
-</ul>
-<p>补充：该函数是区分大小写的。 str_ireplace() 函数执行不区分大小写的搜索。</p>
-<p><strong>语法：</strong>str_ireplace(<em>find,replace,string,count</em>)</p>
-<table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><em>find</em></td>
-<td align="left">必需。规定要查找的值。</td>
-</tr>
-<tr>
-<td align="left"><em>replace</em></td>
-<td align="left">必需。规定替换 <em>find</em> 中的值的值。</td>
-</tr>
-<tr>
-<td align="left"><em>string</em></td>
-<td align="left">必需。规定被搜索的字符串。</td>
-</tr>
-<tr>
-<td align="left"><em>count</em></td>
-<td align="left">可选。一个变量，对替换数进行计数。</td>
-</tr>
-</tbody></table>
-</li>
-<li><p><strong>array_keys() 函数</strong></p>
-<p><strong>功能：</strong>返回包含数组中所有键名的一个新数组。</p>
-<p><strong>语法</strong>：array_keys(<em>array,value,strict</em>)</p>
-<table>
-<thead>
-<tr>
-<th align="left">参数</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><em>array</em></td>
-<td align="left">必需。规定数组。</td>
-</tr>
-<tr>
-<td align="left"><em>value</em></td>
-<td align="left">可选。您可以指定键值，然后只有该键值对应的键名会被返回。</td>
-</tr>
-<tr>
-<td align="left"><em>strict</em></td>
-<td align="left">可选。与 value 参数一起使用。                                                                                                         可能的值：true - 返回带有指定键值的键名。依赖类型，数字 5 与字符串 “5” 是不同的；                                   false - 默认值。不依赖类型，数字 5 与字符串 “5” 是相同的。</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<p>​       菜鸟实例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$a&#x3D;array(&quot;Volvo&quot;&#x3D;&gt;&quot;XC90&quot;,&quot;BMW&quot;&#x3D;&gt;&quot;X5&quot;,&quot;Toyota&quot;&#x3D;&gt;&quot;Highlander&quot;);</span><br><span class="line">print_r(array_keys($a));</span><br><span class="line">?&gt;</span><br><span class="line">运行结果：Array ( [0] &#x3D;&gt; Volvo，[1] &#x3D;&gt; BMW ，[2] &#x3D;&gt; Toyota )</span><br></pre></td></tr></table></figure>
-
-<p>通过查看源码我们发现服务器设置了黑名单过滤了字符<code>&amp;&amp;</code>和<code>;</code>，但是我们可以是用<code>&amp;</code>替代，<code>&amp;;&amp;</code>绕过的方式避开黑名单。</p>
-<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = trim($_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set blacklist</span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;| &#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;-&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;$&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;(&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;)&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;`&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;||&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist).</span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// *nix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Feedback for the end user</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>通过查看源码我们看到服务器对黑名单进行了补充，但是发现黑名单禁用的是<code>&#39;| &#39;</code>(这个里面有个空格)，而不是<code>&#39;|&#39;</code>，那么也就是说<code>|</code>命令指令符未被禁用。</p>
-<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line">    $target = stripslashes( $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Split the IP into 4 octects</span></span><br><span class="line">    $octet = explode( <span class="string">&quot;.&quot;</span>, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check IF each octet is an integer</span></span><br><span class="line">    <span class="keyword">if</span>( ( is_numeric( $octet[<span class="number">0</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">1</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">2</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">3</span>] ) ) &amp;&amp; ( sizeof( $octet ) == <span class="number">4</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// If all 4 octets are int&#x27;s put the IP back together.</span></span><br><span class="line">        $target = $octet[<span class="number">0</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">1</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">2</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">        <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">            <span class="comment">// Windows</span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// *nix</span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for the end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Ops. Let the user name theres a mistake</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;ERROR: You have entered an invalid IP.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/25/DVWA%E2%80%94Command%20Injection/" data-id="cklupquwd000098vug2aa53oz" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1033,7 +947,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
     </div>
   </div>
 
@@ -1043,7 +957,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 10px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 12.5px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -1065,6 +979,14 @@
       <ul>
         
           <li>
+            <a href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/18/DVWA%E2%80%94CSP/">CSP</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/16/bugku/">bugku(1)</a>
           </li>
         
@@ -1073,15 +995,7 @@
           </li>
         
           <li>
-            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/">攻防世界web进阶</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/12/DVWA%E2%80%94Weak%20Session%20IDs/">DVWA—Weak Session IDs</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/12/DVWA%E2%80%94File%20Uplod/">DVWA—File Uplod</a>
+            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/">攻防世界web进阶</a>
           </li>
         
       </ul>

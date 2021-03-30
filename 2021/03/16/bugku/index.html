@@ -7,12 +7,12 @@
   
   <title>bugku(1) | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="web11： 这题的题目是：网站被黑了 黑客会不会留下后门 那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件 访问 用bp抓包爆破  pass为hack，登入 web13：题目叫我们看看源码，我们看看源码：  我们对其url解码： 12345678910function checkSubmit()&amp;#123;var a&#x3D;document.getElementById">
+  <meta name="description" content="web11： 这题的题目是：网站被黑了 黑客会不会留下后门 那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件 访问shell.php 用bp抓包爆破可知密码为hack  pass为hack，登入 web13：题目叫我们看看源码，我们看看源码：  我们对其url解码： 12345678910function checkSubmit()&amp;#123;var a&#x3D;docum">
 <meta property="og:type" content="article">
 <meta property="og:title" content="bugku(1)">
 <meta property="og:url" content="http://example.com/2021/03/16/bugku/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="web11： 这题的题目是：网站被黑了 黑客会不会留下后门 那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件 访问 用bp抓包爆破  pass为hack，登入 web13：题目叫我们看看源码，我们看看源码：  我们对其url解码： 12345678910function checkSubmit()&amp;#123;var a&#x3D;document.getElementById">
+<meta property="og:description" content="web11： 这题的题目是：网站被黑了 黑客会不会留下后门 那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件 访问shell.php 用bp抓包爆破可知密码为hack  pass为hack，登入 web13：题目叫我们看看源码，我们看看源码：  我们对其url解码： 12345678910function checkSubmit()&amp;#123;var a&#x3D;docum">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/.com//1.png">
 <meta property="og:image" content="http://example.com/.com//2.png">
@@ -20,8 +20,17 @@
 <meta property="og:image" content="http://example.com/.com//4.png">
 <meta property="og:image" content="http://example.com/.com//5.png">
 <meta property="og:image" content="http://example.com/.com//6.png">
+<meta property="og:image" content="http://example.com/.com//7.png">
+<meta property="og:image" content="http://example.com/.com//35@%25PWPHHUMJX79WMRZM%5B_5.png">
+<meta property="og:image" content="http://example.com/.com//8.png">
+<meta property="og:image" content="http://example.com/.com//12.png">
+<meta property="og:image" content="http://example.com/.com//13.png">
+<meta property="og:image" content="http://example.com/.com//14.png">
+<meta property="og:image" content="http://example.com/.com//9.png">
+<meta property="og:image" content="http://example.com/.com//10.png">
+<meta property="og:image" content="http://example.com/.com//11.png">
 <meta property="article:published_time" content="2021-03-16T14:56:40.000Z">
-<meta property="article:modified_time" content="2021-03-18T07:18:28.996Z">
+<meta property="article:modified_time" content="2021-03-28T06:53:33.387Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="bugku">
 <meta name="twitter:card" content="summary">
@@ -98,8 +107,8 @@
       
         <h1 id="web11："><a href="#web11：" class="headerlink" title="web11："></a>web11：</h1><p> 这题的题目是：网站被黑了 黑客会不会留下后门</p>
 <p>那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件<img src="/.com//1.png" alt="1"></p>
-<p>访问<img src="/.com//2.png" alt="2"></p>
-<p>用bp抓包爆破</p>
+<p>访问shell.php<img src="/.com//2.png" alt="2"></p>
+<p>用bp抓包爆破可知密码为<code>hack</code></p>
 <p><img src="/.com//3.png" alt="3"></p>
 <p>pass为hack，登入<img src="/.com//4.png" alt="4"></p>
 <h1 id="web13："><a href="#web13：" class="headerlink" title="web13："></a>web13：</h1><p>题目叫我们看看源码，我们看看源码：</p>
@@ -109,6 +118,53 @@
 
 <p>提交字符串<code>67d709b2b54aa2aa648cf6e87a7114f1</code></p>
 <p><img src="/.com//6.png" alt="6"></p>
+<h1 id="web16："><a href="#web16：" class="headerlink" title="web16："></a>web16：</h1><p>进入环境后发现就一串数字，其他什么也没有，检查网页源码，抓包看回显都没有什么线索，又用御剑扫描网页后台</p>
+<p><img src="/.com//7.png" alt="7"></p>
+<p>发现一个.bak拓展名（bak这种备份文件在我们平常使用绘图、编程软件时都会默认创建备份文件，如cad文件修改后会产生bak文件，wps、word等文件修改后也都会产生bak备份文件，这样可以保证当源文件不小心被删掉或者出现故障导致无故自动退出时，还可以从bak备份文件继续编辑，减少了不少误操作带来的损失。）的文件，结合描述的信息：备份是个好习惯，我们可以猜测这个.bak拓展名文件应该有东西</p>
+<p>下载文件并打开<img src="/.com//35@%25PWPHHUMJX79WMRZM%5B_5.png" alt="img"></p>
+<p>我们可以看到key1和key2本身不能相等，但是被md5编码后两者要相等才能得到flag。</p>
+<p>总的来说这是一道文件包含漏洞+绕过字符串过滤+绕过md5编码的题</p>
+<p>我们用双写绕过字符串过滤，利用md5()函数无法处理数组（如果传入的为数组，会返回NULL，所以两个数组经过加密后得到的都是NULL,也就是相等的。）达成if条件。</p>
+<p>因此我们的payload是<code>?kekeyy1[]=1&amp;kekeyy2[]=2</code></p>
+<p><img src="/.com//8.png" alt="8"></p>
+<h1 id="Web20"><a href="#Web20" class="headerlink" title="Web20"></a>Web20</h1><p>打开题目地址发现是一堆乱码，我还以为乱码里面有内容，分析了一通，结果什么也没有。</p>
+<p>注意到url栏filename的值好像被编码了，base64解码得keys.txt。<img src="/.com//12.png" alt="12"></p>
+<ul>
+<li>变量line的值为多少就返回指定文件中第几行，无值时默认返回第0行</li>
+</ul>
+<p>一般index.php都会存在源码，编码index.php</p>
+<p><img src="/.com//13.png" alt="13"></p>
+<p>返回index.php第一行源码，只要不断更改line的值最终就可以获得完整的index.php源码（因为我不会写python脚本）</p>
+<p>index.php源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    </span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">$file=base64_decode(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;filename&#x27;</span>])?$_GET[<span class="string">&#x27;filename&#x27;</span>]:<span class="string">&quot;&quot;</span>);</span><br><span class="line">$line=<span class="keyword">isset</span>($_GET[<span class="string">&#x27;line&#x27;</span>])?intval($_GET[<span class="string">&#x27;line&#x27;</span>]):<span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>($file==<span class="string">&#x27;&#x27;</span>) header(<span class="string">&quot;location:index.php?line=&amp;filename=a2V5cy50eHQ=&quot;</span>);</span><br><span class="line">$file_list = <span class="keyword">array</span>(</span><br><span class="line"><span class="string">&#x27;0&#x27;</span> =&gt;<span class="string">&#x27;keys.txt&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;1&#x27;</span> =&gt;<span class="string">&#x27;index.php&#x27;</span>,</span><br><span class="line">);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_COOKIE[<span class="string">&#x27;margin&#x27;</span>]) &amp;&amp; $_COOKIE[<span class="string">&#x27;margin&#x27;</span>]==<span class="string">&#x27;margin&#x27;</span>)&#123;</span><br><span class="line">$file_list[<span class="number">2</span>]=<span class="string">&#x27;keys.php&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(in_array($file, $file_list))&#123;</span><br><span class="line">$fa = file($file);</span><br><span class="line"><span class="keyword">echo</span> $fa[$line];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们看到当cookie内容为参数margin=margin时，file_list数组会多一个键值<code>keys.php</code>，然后通过in_array函数检测我们上传的文件名是否在file_list数组中，是则发送key.php文件的内容。</p>
+<p>因此我们构造cookie：margin=margin，令filename的值为key.php  base64编码后的值。<img src="/.com//14.png" alt="14"></p>
+<h1 id="web21"><a href="#web21" class="headerlink" title="web21"></a>web21</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/.com//9.png" alt="9"></p>
+<p>发现有一个1p.html文件，打开是一段HTML代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span> <span class="attr">LANGUAGE</span>=<span class="string">&quot;Javascript&quot;</span>&gt;</span></span><br><span class="line">&lt;!--</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> Words =<span class="string">&quot;%3Cscript%3Ewindow.location.href%3D&#x27;http%3A%2F%2Fwww.bugku.com&#x27;%3B%3C%2Fscript%3E%20%0A%3C!--JTIyJTNCaWYoISUyNF9HRVQlNUInaWQnJTVEKSUwQSU3QiUwQSUwOWhlYWRlcignTG9jYXRpb24lM0ElMjBoZWxsby5waHAlM0ZpZCUzRDEnKSUzQiUwQSUwOWV4aXQoKSUzQiUwQSU3RCUwQSUyNGlkJTNEJTI0X0dFVCU1QidpZCclNUQlM0IlMEElMjRhJTNEJTI0X0dFVCU1QidhJyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJ2InJTVEJTNCJTBBaWYoc3RyaXBvcyglMjRhJTJDJy4nKSklMEElN0IlMEElMDllY2hvJTIwJ25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJyUzQiUwQSUwOXJldHVybiUyMCUzQiUwQSU3RCUwQSUyNGRhdGElMjAlM0QlMjAlNDBmaWxlX2dldF9jb250ZW50cyglMjRhJTJDJ3InKSUzQiUwQWlmKCUyNGRhdGElM0QlM0QlMjJidWdrdSUyMGlzJTIwYSUyMG5pY2UlMjBwbGF0ZWZvcm0hJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuKCUyNGIpJTNFNSUyMGFuZCUyMGVyZWdpKCUyMjExMSUyMi5zdWJzdHIoJTI0YiUyQzAlMkMxKSUyQyUyMjExMTQlMjIpJTIwYW5kJTIwc3Vic3RyKCUyNGIlMkMwJTJDMSkhJTNENCklMEElN0IlMEElMDklMjRmbGFnJTIwJTNEJTIwJTIyZmxhZyU3QioqKioqKioqKioqJTdEJTIyJTBBJTdEJTBBZWxzZSUwQSU3QiUwQSUwOXByaW50JTIwJTIybmV2ZXIlMjBuZXZlciUyMG5ldmVyJTIwZ2l2ZSUyMHVwJTIwISEhJTIyJTNCJTBBJTdEJTBBJTBBJTBBJTNGJTNF--%3E&quot;</span> </span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">OutWord</span>(<span class="params"></span>)</span></span></span><br><span class="line">&#123;</span><br><span class="line"><span class="javascript"><span class="keyword">var</span> NewWords;</span></span><br><span class="line"><span class="javascript">NewWords = <span class="built_in">unescape</span>(Words);</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.write(NewWords);</span></span><br><span class="line">&#125; </span><br><span class="line">OutWord();</span><br><span class="line"><span class="javascript"><span class="comment">// --&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HTML</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们看到word一大串字符串很可疑，结合后面的unescape()函数，断定这里被编码了</p>
+<p>用burp解码，顺序为url解码，base64解码，再url解码</p>
+<p><img src="/.com//10.png" alt="10"></p>
+<p>最终得</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--<span class="string">&quot;;if(!<span class="subst">$_GET</span>[&#x27;id&#x27;])</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	header(&#x27;Location: hello.php?id=1&#x27;);</span></span><br><span class="line"><span class="string">	exit();</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$id</span>=<span class="subst">$_GET</span>[&#x27;id&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$a</span>=<span class="subst">$_GET</span>[&#x27;a&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$b</span>=<span class="subst">$_GET</span>[&#x27;b&#x27;];</span></span><br><span class="line"><span class="string">if(stripos(<span class="subst">$a</span>,&#x27;.&#x27;))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	echo &#x27;no no no no no no no&#x27;;</span></span><br><span class="line"><span class="string">	return ;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$data</span> = @file_get_contents(<span class="subst">$a</span>,&#x27;r&#x27;);</span></span><br><span class="line"><span class="string">if(<span class="subst">$data</span>==&quot;</span>bugku is a nice plateform!<span class="string">&quot; and <span class="subst">$id</span>==0 and strlen(<span class="subst">$b</span>)&gt;5 and eregi(&quot;</span><span class="number">111</span><span class="string">&quot;.substr(<span class="subst">$b</span>,0,1),&quot;</span><span class="number">1114</span><span class="string">&quot;) and substr(<span class="subst">$b</span>,0,1)!=4)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	<span class="subst">$flag</span> = &quot;</span>flag&#123;***********&#125;<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	print &quot;</span>never never never give up !!!<span class="string">&quot;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">?&gt;--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>file_get_contents() 函数：把整个文件读入一个字符串中。</p>
+</li>
+<li><p>eregi()</p>
+<p>作用：不分大小写的正则表达式匹配——在 <code>string</code> 中寻找与给定的正则表达式 <code>pattern</code> 所匹配的子串。</p>
+<p>语法：ereg ( string <code>$pattern</code> , string <code>$string</code> , array <code>&amp;$regs</code> = ? ) </p>
+</li>
+</ul>
+<p>代码审计：当id为空时，网页自动跳转到指定文件；参数<code>a</code>中不得有<code>.</code>，否则输出‘no’（这限制了我们直接导入文件）；接着将a的值赋值给参数data；if条件规定：data的值为<code>bugku is a nice plateform!</code>，id的值为0，b值的长度大于5，然后<code>111</code>和b值的第一个字符结合与<code>1114</code>进行匹配，并且b值的第一个字符不能是4。</p>
+<p>ereg和eregi的截断漏洞：%00截断及遇到%00则默认为字符串的结束。因此我们构造b=%0023456</p>
+<p>php中会把id=0当成id=nothing，也就是空白。那么这题<code>!$_GET[&#39;id&#39;]</code>和<code>$id==0</code>明显冲突矛盾，这时我们要想到PHP在处理哈希字符串时，会利用”!=”或”==”来对哈希值进行比较，它把每一个以”0E”开头的哈希值都解释为0，所以如果两个不同的密码经过哈希以后，其哈希值都是以”0E”开头的，那么PHP将会认为他们相同，都是0。因此我们可以构造：<code>?id=0e1</code></p>
+<p>由于if条件规定：data的值为<code>bugku is a nice plateform!</code>因此我们可以利用php://input获取post上传数据的特点，</p>
+<p>令<code>?a=php://input</code>并post数据<code>bugku is a nice plateform!</code></p>
+<p>综上所述：payload=?id=0e1&amp;a=php://input&amp;b=%0023456 并post数据<code>bugku is a nice plateform!</code></p>
+<p><img src="/.com//11.png" alt="11"></p>
 
       
     </div>
@@ -123,6 +179,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="/2021/03/18/DVWA%E2%80%94CSP/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CSP
+        
+      </div>
+    </a>
   
   
     <a href="/2021/03/13/DVWA%E2%80%94XSS/" id="article-nav-older" class="article-nav-link-wrap">
@@ -146,7 +211,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
     </div>
   </div>
 
@@ -156,7 +221,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 10px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 12.5px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -178,6 +243,14 @@
       <ul>
         
           <li>
+            <a href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/03/18/DVWA%E2%80%94CSP/">CSP</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/16/bugku/">bugku(1)</a>
           </li>
         
@@ -186,15 +259,7 @@
           </li>
         
           <li>
-            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B6/">攻防世界web进阶</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/12/DVWA%E2%80%94Weak%20Session%20IDs/">DVWA—Weak Session IDs</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/12/DVWA%E2%80%94File%20Uplod/">DVWA—File Uplod</a>
+            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/">攻防世界web进阶</a>
           </li>
         
       </ul>
