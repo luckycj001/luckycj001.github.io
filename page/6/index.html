@@ -64,6 +64,184 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/01/blog6/" class="article-date">
+  <time datetime="2020-11-01T01:37:48.000Z" itemprop="datePublished">2020-11-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/01/blog6/">第四章汇总（3）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.结构体</p>
+<p>1.成员的类型可以是另一个结构体的类型，如：存在struct  a  b，即意味b是struct  a型。</p>
+<p>2.如果两个结构体的成员类型，名称，个数相同，但结构体名不同，也是两个不同的结构类型。</p>
+<p>3.成员名可以和程序中的变量名相同，二者不代表同一对象。如：程序中可以定义“int num”，同时还可以在struct结构中定义”int num“。</p>
+<p>4.初值内容用“{}”括起来，各组数据用“，”隔开，并且数据应与结构体类型定义时的成员个数相等，类型一致。</p>
+<p>5.如果初值个数少于结构体成员个数，则自动为无初值的成员赋值0；若多余则编译错误。</p>
+<p>二.新的关键词</p>
+<p>1.const是C语言中的一个关键词，他限定一个变量不允许被改变。使用const在一定程度上提高程序的安全性和可靠性。</p>
+<p>2.enum是枚举类型的引导字，用于声明枚举类型。</p>
+<p>3.typedef用于声明一种新类型名来代替旧类型名。</p>
+<p>三.共用体</p>
+<p>1.共用体类型是一种多个不同类型共享储蓄空间的构造类型，即共用体变量的所有成员占同一个储蓄空间。</p>
+<p>2.共用体变量所占空间的大小取决于占储蓄空间最大的成员，而不是各个成员的储蓄空间之和，这点是与结构体变量有着本质上的不同。</p>
+<p>3.对共用体的某一成员赋值，会覆盖其他成员原来的数据，原来成员的值就不存在了，因此，共用体变量中起作用的是最后一次存入的成员变量的值。例如：</p>
+<p>x.a=10;x.b=20;printf(“%d%f”,x.a,x.b);       输出结果为：0  20.0</p>
+<p>四.枚举类型</p>
+<p>1.enum 语法格式：</p>
+<p>   enum  枚举名</p>
+<p>   {     枚举值1[=整型常数1]，枚举值2[=整型常数2]….   }；</p>
+<p>2.括号内的“=整型常数”可以省略。如果省略，编译程序按照顺序给每个枚举元素一个对应的整数值，整数值从0开始，后续元素顺序加1.</p>
+<p>3.在C语言中，枚举变量的值不能直接进行输入和输出，只能间接地实现输出和输入的操作。例如使用switch（）语句。</p>
+<p>4.不能把枚举常量对应的序号直接赋值给枚举变量。如枚举变量=1。</p>
+<p>5.可以用强制类型转换为枚举变量赋值，如：枚举变量=（enum 枚举名）（1）。</p>
+<p>五.自定义类型名</p>
+<p>1.语法格式：typedef  类型名 新类型名</p>
+<p>2.特别的，用typedef语法定义数组类型名，如：typedef int appay[10]//定义appay为有十个元素的整型数组类型名。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/01/blog6/" data-id="ckkrqc5ch0010n4vu04uy8lg2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog5" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/31/blog5/" class="article-date">
+  <time datetime="2020-10-31T12:00:08.000Z" itemprop="datePublished">2020-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/31/blog5/">第四章汇总（2）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.字符数组</p>
+<p>1.若不对字符数组进行初始化，则数组中各元素的值是不可预知的。</p>
+<p>2.若花括号内提供的字符数组个数多余数组长度，则会产生编译错误的信息。</p>
+<p>3.若花括号内提供的字符数组个数少余数组长度，则编译器将这些字符优先赋值给前面的元素，其余元素取值（’\0’）。</p>
+<p>4.用字符串常量直接赋值时，可省略花括号，用“”覆盖字符串常量。用字符常量逐个赋初值，时花括号不可省略，且各个字符由’’覆盖，字符间用逗号隔开。</p>
+<p>5.C语言中，字符串是以字符’\0’结尾，故它会额外占据数组一格内存。</p>
+<p>6.使用%c格式说明符进行逐个字符的输入/输出；使用%s格式说明符进行字符串的输入/输出。</p>
+<p>7.当一个字符表示为字符串变量名时，其本身就是该字符串的首地址，即scanf（）函数输入时无需再使加取地址符“&amp;”。</p>
+<p>8.使用字符串函数时要在程序开头用“#include&lt;string.h&gt;”命令将头文件&lt;string.h&gt;包括进来。</p>
+<p>9.引用字符要用“ ‘’ ”。</p>
+<p>二.新函数</p>
+<p>a 字符串复制函数strcpy（）； 用法：若strcpy（字符数组1，字符数组2），将字符串1/字符数组2连同结束标志’\0’复制到字符数组1中。</p>
+<p>b 字符串连续函数strcat（） ；用法：若strcpy（字符数组1，字符数组2），链接两个字符串，把字符串2连接到字符串1后面，再把得到的结果放在字符串1中。</p>
+<p>c  字符串比较函数strcmp（） ； 用法：若strcmp（字符串1，字符串2）</p>
+<p>d 求字符串长度strlen（）；用法：若strlen（字符串），检测字符串中字符的个数，不包括’\0’。</p>
+<p>e 大写字母转换小写字母函数strlwr（）。</p>
+<p>f 小写字母换号大写字母函数strupr（）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/31/blog5/" data-id="ckkrqc5cf000wn4vufv9p0f09" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/22/blog4/" class="article-date">
+  <time datetime="2020-10-22T13:19:02.000Z" itemprop="datePublished">2020-10-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/10/22/blog4/">第四章汇总（1）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.   一维数组</p>
+<p>1.a 数组名不能与变量名一样；b 可以在定义变量名的同时定义数组；</p>
+<p>​            c  “[]”中的数据只能是整型常量，不能是变量，且若为整型常量即可在其中加减；</p>
+<p>​            d  数组下标是从0开始的，且数组最后一个元素的下标为该数组元素个数减一；</p>
+<p>​            e  C语言中只能逐个使用数组中的元素，不能一次性引用多个元素，如：a[2]=1，意为将1的值赋值给该数组的第二个元素；</p>
+<p>​            f  若未给数组中元素赋值，则其输出结果为不确定值；</p>
+<p>​            g 当所赋初值个数多余该数组的元素个数时，在编译时出错，无结果；当所赋初值个数少于该数组的元素个数时，会自动给未赋值的元素赋值为0。</p>
+<ol start="2">
+<li><p>a 产生随机数：利用rand()函数，其原型为int rand(void)。要产生[n,m]范围内随机整数，要利用公式(int)(n+(m-n)*rand()/RAND_MAX)</p>
+<p>b  初始化随机数发生器：srand()，其函数原型为void srand(unsigned int seed)。seed是随机数种子，为了产生不可预见的随机数，通常用time(0)返回的值作为随机种子。而函数time(0)包含在头文件&lt;time.h&gt;中。</p>
+</li>
+</ol>
+<p>二.   二维数组</p>
+<ol>
+<li>初始化二维数组时，可省略第一维的长度，但第二维长度不能忽略。</li>
+<li>按顺序赋值并且省略第一维的长度时，数组第一维的大小按以下规则决定。设有n个初值数据，第二维长度为m，由于可能只对部分数据赋值，n/m不一定会被整除，因此第一维的大小通常为(int)(n/m+1).</li>
+<li>矩阵转置：将一个二维数组的行和列元素进行互换。即将二维数组a中的第i行第j列元素赋给二位数组b中的第j行第i列。</li>
+</ol>
+<p>三.字符串函数</p>
+<p>strcmp(字符串1,字符串2)</p>
+<p>用法：两个字符串自左向右一个个比对，直到出现不同的字符或遇到‘\0’为止。（若字符串第一个字符比对就不同，那么即停止比对）。函数的返回值——a.若字符串1=字符串2，那么返回值为0；b.若字符串1&gt;字符串2，那么返回值为正整数；c.若字符串1&lt;字符串2，那么返回值为负整数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/22/blog4/" data-id="ckkrqc5ce000vn4vu31shhhro" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/10/18/blog3/" class="article-date">
@@ -215,7 +393,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 18px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 14px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 18px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 14px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -237,23 +415,23 @@
       <ul>
         
           <li>
-            <a href="/2021/04/05/buuctf/">buuctf</a>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/07/bugku2/">bugukuu2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/05/buuctf1/">buuctf</a>
           </li>
         
           <li>
             <a href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则匹配</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/18/DVWA%E2%80%94CSP/">CSP</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/16/bugku/">bugku(1)</a>
           </li>
         
       </ul>

