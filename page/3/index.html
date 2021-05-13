@@ -64,6 +64,197 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DVWA—Command Injection" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/25/DVWA%E2%80%94Command%20Injection/" class="article-date">
+  <time datetime="2021-02-25T12:24:15.000Z" itemprop="datePublished">2021-02-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/25/DVWA%E2%80%94Command%20Injection/">DVWA——Command Injection</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>命令注入——利用可以调用系统命令的web应用，通过构造特殊命令字符串的方式，把恶意代码输入一个编辑域(例如缺乏有效验证的输入框)来改变网页动态生成的内容，最终实现本应在服务端才能工作的系统命令。命令注入攻击的常见场景为：仅仅需要输入数据的场合，攻击者构造数据同时输入了恶意命令代码，而系统对此并未过滤，恶意命令代码一并执行，最终导致信息泄露或者正常数据的破坏；PHP命令注入攻击漏洞是PHP应用程序中常见的脚本漏洞之一。命令注入和代码注入不同，代码注入的目的在于将外部代码注入应用程序本身，并随程序执行；命令攻击的对象是服务器的宿主机。因此用户可以通过构造特殊的输入来达到入侵目的。</p>
+<ul>
+<li><strong><code>&amp;</code>，<code>&amp;&amp;</code>，<code>|</code>，<code>||</code>命令拼接符的区别</strong>:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>A&amp;B</th>
+<th align="center">拼接，A和B之间无制约关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A&amp;&amp;B</td>
+<td align="center">A执行成功，之后才会执行B</td>
+</tr>
+<tr>
+<td>A|B</td>
+<td align="center">A的输出作为B的输入</td>
+</tr>
+<tr>
+<td>A||B</td>
+<td align="center">A执行失败，之后才会执行B</td>
+</tr>
+<tr>
+<td>A;B</td>
+<td align="center">; 分号表示命令依次执行。</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><strong>windows系统下常见的拼接命令：</strong></p>
+<ul>
+<li><p>ipconfig 查看本地网络</p>
+</li>
+<li><p>net  user   查看系统用户</p>
+</li>
+<li><p>dir  查看当前目录</p>
+</li>
+<li><p>find 查找包含指定字符的行</p>
+</li>
+<li><p>whoami 查看系统当前有效用户名   </p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Linux命令大全</strong>：<a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-command-manual.html">https://www.runoob.com/linux/linux-command-manual.html</a></li>
+</ul>
+<h1 id="Low"><a href="#Low" class="headerlink" title="Low:"></a>Low:</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;   </span><br><span class="line">        <span class="comment">// Get input   </span></span><br><span class="line">        $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];   </span><br><span class="line">        <span class="comment">// Determine OS and execute the ping command.   </span></span><br><span class="line">        <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;     </span><br><span class="line">            <span class="comment">// Windows     </span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping &#x27;</span> . $target );   </span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">else</span> &#123;     </span><br><span class="line">            <span class="comment">// *nix     </span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping -c 4 &#x27;</span> . $target );   </span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="comment">// Feedback for the end user   </span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>新函数：</p>
+<ul>
+<li><strong>php_uname()函数</strong></li>
+</ul>
+<p>功能：返回运行 PHP 的系统的有关信息。</p>
+<p>语法：php_uname ([ string $mode = “a” ] )</p>
+<p>   其中，<code>mode</code> 是单个字符，用于定义要返回什么信息：</p>
+<ol>
+<li><p><code>&#39;a&#39;</code>：此为默认。包含序列 <code>&quot;s n r v m&quot;</code> 里的所有模式。</p>
+</li>
+<li><p><code>&#39;s&#39;</code>：操作系统名称。例如： <code>FreeBSD</code>。</p>
+</li>
+<li><p><code>&#39;n&#39;</code>：主机名。例如： <code>localhost.example.com</code>。</p>
+</li>
+<li><p><code>&#39;r&#39;</code>：版本名称，例如： <code>5.1.2-RELEASE</code>。</p>
+</li>
+<li><p><code>&#39;v&#39;</code>：版本信息。操作系统之间有很大的不同。</p>
+</li>
+<li><p><code>&#39;m&#39;</code>：机器类型。例如：<code>i386</code>。 </p>
+</li>
+</ol>
+<p>   <strong>shell_exec()函数</strong></p>
+<p>   功能：通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回。（补充：<code>Shell 是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务。</code>）</p>
+<p>   语法：shell_exec ( string <code>$cmd</code> )</p>
+<p>   其中参数cmd为要执行的命令。</p>
+<p>查看源码我们可知，服务器通过<strong>stristr</strong>和<strong>php_uname</strong>两个函数来判断操作系统，执行不同的ping命令。同时服务器没有对我们输入的IP地址做任何的过滤处理，我们可以利用任意的命令执行分隔符来执行我们的指令、获取我们想要的信息。</p>
+<p>例如输入：127.0.0.1&amp;&amp;echo “hello world”</p>
+<p>![1](DVWA—Command Injection/1.png)</p>
+<h1 id="Medium"><a href="#Medium" class="headerlink" title="Medium:"></a>Medium:</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set blacklist</span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&amp;&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist).</span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// *nix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Feedback for the end user</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>新函数：</p>
+<ul>
+<li><p><strong>str_replace()函数</strong></p>
+<p><strong>功能：</strong>替换字符串中的一些字符（区分大小写）。</p>
+<p>该函数必须遵循下列规则：</p>
+<ul>
+<li>如果搜索的字符串是一个数组，那么它将返回一个数组。</li>
+<li>如果搜索的字符串是一个数组，那么它将对数组中的每个元素进行查找和替换。</li>
+<li>如果同时需要对某个数组进行查找和替换，并且需要执行替换的元素少于查找到的元素的数量，那么多余的元素将用空字符串进行替换。</li>
+<li>如果是对一个数组进行查找，但只对一个字符串进行替换，那么替代字符串将对所有查找到的值起作用。</li>
+</ul>
+<p>补充：该函数是区分大小写的。 str_ireplace() 函数执行不区分大小写的搜索。</p>
+<p><strong>语法：</strong>str_ireplace(<em>find,replace,string,count</em>)</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><em>find</em></td>
+<td align="left">必需。规定要查找的值。</td>
+</tr>
+<tr>
+<td align="left"><em>replace</em></td>
+<td align="left">必需。规定替换 <em>find</em> 中的值的值。</td>
+</tr>
+<tr>
+<td align="left"><em>string</em></td>
+<td align="left">必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td align="left"><em>count</em></td>
+<td align="left">可选。一个变量，对替换数进行计数。</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>array_keys() 函数</strong></p>
+<p><strong>功能：</strong>返回包含数组中所有键名的一个新数组。</p>
+<p><strong>语法</strong>：array_keys(<em>array,value,strict</em>)</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><em>array</em></td>
+<td align="left">必需。规定数组。</td>
+</tr>
+<tr>
+<td align="left"><em>value</em></td>
+<td align="left">可选。您可以指定键值，然后只有该键值对应的键名会被返回。</td>
+</tr>
+<tr>
+<td align="left"><em>strict</em></td>
+<td align="left">可选。与 value 参数一起使用。                                                                                                         可能的值：true - 返回带有指定键值的键名。依赖类型，数字 5 与字符串 “5” 是不同的；                                   false - 默认值。不依赖类型，数字 5 与字符串 “5” 是相同的。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p>​       菜鸟实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$a&#x3D;array(&quot;Volvo&quot;&#x3D;&gt;&quot;XC90&quot;,&quot;BMW&quot;&#x3D;&gt;&quot;X5&quot;,&quot;Toyota&quot;&#x3D;&gt;&quot;Highlander&quot;);</span><br><span class="line">print_r(array_keys($a));</span><br><span class="line">?&gt;</span><br><span class="line">运行结果：Array ( [0] &#x3D;&gt; Volvo，[1] &#x3D;&gt; BMW ，[2] &#x3D;&gt; Toyota )</span><br></pre></td></tr></table></figure>
+
+<p>通过查看源码我们发现服务器设置了黑名单过滤了字符<code>&amp;&amp;</code>和<code>;</code>，但是我们可以是用<code>&amp;</code>替代，<code>&amp;;&amp;</code>绕过的方式避开黑名单。</p>
+<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = trim($_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set blacklist</span></span><br><span class="line">    $substitutions = <span class="keyword">array</span>(</span><br><span class="line">        <span class="string">&#x27;&amp;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;;&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;| &#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;-&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;$&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;(&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;)&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;`&#x27;</span>  =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;||&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove any of the charactars in the array (blacklist).</span></span><br><span class="line">    $target = str_replace( array_keys( $substitutions ), $substitutions, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// *nix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Feedback for the end user</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>通过查看源码我们看到服务器对黑名单进行了补充，但是发现黑名单禁用的是<code>&#39;| &#39;</code>(这个里面有个空格)，而不是<code>&#39;|&#39;</code>，那么也就是说<code>|</code>命令指令符未被禁用。</p>
+<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ]  ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $target = $_REQUEST[ <span class="string">&#x27;ip&#x27;</span> ];</span><br><span class="line">    $target = stripslashes( $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Split the IP into 4 octects</span></span><br><span class="line">    $octet = explode( <span class="string">&quot;.&quot;</span>, $target );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check IF each octet is an integer</span></span><br><span class="line">    <span class="keyword">if</span>( ( is_numeric( $octet[<span class="number">0</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">1</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">2</span>] ) ) &amp;&amp; ( is_numeric( $octet[<span class="number">3</span>] ) ) &amp;&amp; ( sizeof( $octet ) == <span class="number">4</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// If all 4 octets are int&#x27;s put the IP back together.</span></span><br><span class="line">        $target = $octet[<span class="number">0</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">1</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">2</span>] . <span class="string">&#x27;.&#x27;</span> . $octet[<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Determine OS and execute the ping command.</span></span><br><span class="line">        <span class="keyword">if</span>( stristr( php_uname( <span class="string">&#x27;s&#x27;</span> ), <span class="string">&#x27;Windows NT&#x27;</span> ) ) &#123;</span><br><span class="line">            <span class="comment">// Windows</span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping  &#x27;</span> . $target );</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// *nix</span></span><br><span class="line">            $cmd = shell_exec( <span class="string">&#x27;ping  -c 4 &#x27;</span> . $target );</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for the end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;<span class="subst">&#123;$cmd&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Ops. Let the user name theres a mistake</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;pre&gt;ERROR: You have entered an invalid IP.&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/25/DVWA%E2%80%94Command%20Injection/" data-id="cklupquwd000098vug2aa53oz" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-upload-labs-pass14-21" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/02/20/upload-labs-pass14-21/" class="article-date">
@@ -1182,79 +1373,6 @@
 
 
   
-    <article id="post-lesson24" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/03/lesson24/" class="article-date">
-  <time datetime="2021-02-03T13:07:57.000Z" itemprop="datePublished">2021-02-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/03/lesson24/">lesson24</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="lesson24："><a href="#lesson24：" class="headerlink" title="lesson24："></a>lesson24：</h2><p>这关感觉很有意思。以往的SQL注入都是一阶注入，而这一关出现了二阶注入。先介绍一下二阶注入：</p>
-<p><strong>二阶注入也叫存储型的注入，就是将可能导致 sql 注入的字符先存入到数据库中，当再次调用这个恶意构造的字符时，就会触发sql 注入</strong>。</p>
-<p><img src="/.com//2.png" alt="2"></p>
-<p>我们先在页面上做一些试探。</p>
-<ul>
-<li>点击：Forgot your password？</li>
-</ul>
-<p>页面跳转：<img src="/.com//1.png" alt="1"></p>
-<p>大意是如果你忘了你的密码，就自己黑了他。那么我们肯定不能在这里下手了。</p>
-<ul>
-<li>点击：New User click here?</li>
-<li>页面跳转：<img src="/.com//3.png" alt="3"></li>
-</ul>
-<p>我们看到这就是一个普通的注册界面，有什么用呢，我们先暂不言表。</p>
-<p>我们接着试探，输入正确账号密码，进入到一个修改密码的网页：</p>
-<p><img src="/.com//4.png" alt="4"></p>
-<p>不知道哪个地方可以注入，我们先<strong>打开login的源码：</strong></p>
-<p><img src="/.com//6.png" alt="6"></p>
-<p>发现登入页面输入的账号密码都被转义了，那么肯定不能直接注入，接着看代码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&quot;username&quot;] = $login;</span><br></pre></td></tr></table></figure>
-
-<p>发现它设了一个新变量储存从数据库中选择出来的username的值。</p>
-<p><strong>打开pass_change的源码：</strong><img src="/.com//5.png" alt="5"></p>
-<p>我们可以看出从改密码的页面注入是不可行的了，但是我们发现从数据库中选择出来的username没有被复查，直接构造成sql语句，带入到数据库中。于是我们就可以有这样一种思路，我们先注册一个账号，例如：账户：admin’#（admin为目标用户名），密码：123。</p>
-<p>然后我们输入我们注册的这个账号密码登入，进入修改密码页面，</p>
-<p>pass_change的源码中sql语句是：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql = &quot;<span class="keyword">UPDATE</span> <span class="keyword">users</span> <span class="keyword">SET</span> <span class="keyword">PASSWORD</span>=<span class="string">&#x27;$pass&#x27;</span> <span class="keyword">where</span> username=<span class="string">&#x27;$username&#x27;</span> <span class="keyword">and</span> <span class="keyword">password</span>=<span class="string">&#x27;$curr_pass&#x27;</span> <span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
-
-<p>而登入我们注册的账户后，sql语句被篡改为：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$sql = &quot;<span class="keyword">UPDATE</span> <span class="keyword">users</span> <span class="keyword">SET</span> <span class="keyword">PASSWORD</span>=<span class="string">&#x27;$pass&#x27;</span> <span class="keyword">where</span> username=<span class="string">&#x27;admin&#x27;</span><span class="comment">#&#x27; and password=&#x27;$curr_pass&#x27; &quot;;</span></span><br><span class="line">相当于：</span><br><span class="line">$<span class="keyword">sql</span> = <span class="string">&quot;UPDATE users SET PASSWORD=&#x27;$pass&#x27; where username=&#x27;admin&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>也就是说，我们达到了无需知道目标账户密码而可以修改目标账户的密码，进而通过修改的新密码登入目标账户。</p>
-<p><strong>但是这里有个问题：我们输入的单引号不是被转义了吗，那它构造的sql语句怎么还会起作用呢？</strong></p>
-<p>原来转义只是暂时的，数据存储到数据库以后还是以原句的形式存在，反斜杠不会随之插入数据库。</p>
-<p>注：我发现这样注入还是很有局限性的，因为你只能一个一个去破解，如果通过注册账户时构造payload，会受到字节长度的限制。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/03/lesson24/" data-id="ckkrqc5cr001yn4vudlfhgluq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1292,7 +1410,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
     </div>
   </div>
 
@@ -1303,6 +1421,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/05/13/NMSL/">NMSL</a>
+          </li>
         
           <li>
             <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
@@ -1318,10 +1440,6 @@
         
           <li>
             <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/07/bugku2/">bugukuu2</a>
           </li>
         
       </ul>
