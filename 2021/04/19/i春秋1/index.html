@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>i春秋 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="第三届“百越杯”福建省高校网络空间安全大赛（upload文件上传漏洞）打开题目地址发现是一道文件上传题，尝试上传一个shell内容，jpg后缀的文件，发现上传成功，说明不检查文件内容 再上传一次，burp抓包，修改后缀jpg为php，发现也上传成功 用蚁剑连接 没有直接给我们flag，那么可能”藏“起来了 在虚拟终端上寻找，也找不到  然后我以为flag被删了，看了大佬的博客才知道，config文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="i春秋">
+<meta property="og:url" content="http://example.com/2021/04/19/i%E6%98%A5%E7%A7%8B1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第三届“百越杯”福建省高校网络空间安全大赛（upload文件上传漏洞）打开题目地址发现是一道文件上传题，尝试上传一个shell内容，jpg后缀的文件，发现上传成功，说明不检查文件内容 再上传一次，burp抓包，修改后缀jpg为php，发现也上传成功 用蚁剑连接 没有直接给我们flag，那么可能”藏“起来了 在虚拟终端上寻找，也找不到  然后我以为flag被删了，看了大佬的博客才知道，config文">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/1.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/2.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/3.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/5.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/4.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/6.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/7.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/8.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/9.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/10.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/11.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/12.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/13.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/14.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/15.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/16.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/17.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/18.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/19.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/20.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/21.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/22.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/23.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/24.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/25.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/26.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/27.png">
+<meta property="article:published_time" content="2021-04-19T14:25:33.000Z">
+<meta property="article:modified_time" content="2021-04-29T02:02:11.977Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/i春秋/1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-i春秋1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/" class="article-date">
+  <time datetime="2021-04-19T14:25:33.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      i春秋
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="第三届“百越杯”福建省高校网络空间安全大赛"><a href="#第三届“百越杯”福建省高校网络空间安全大赛" class="headerlink" title="第三届“百越杯”福建省高校网络空间安全大赛"></a>第三届“百越杯”福建省高校网络空间安全大赛</h1><h2 id="（upload文件上传漏洞）"><a href="#（upload文件上传漏洞）" class="headerlink" title="（upload文件上传漏洞）"></a>（upload文件上传漏洞）</h2><p>打开题目地址发现是一道文件上传题，尝试上传一个shell内容，jpg后缀的文件，发现上传成功，说明不检查文件内容</p>
+<p>再上传一次，burp抓包，修改后缀jpg为php，发现也上传成功<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\1.png" alt="1"></p>
+<p>用蚁剑连接<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\2.png" alt="2"></p>
+<p>没有直接给我们flag，那么可能”藏“起来了</p>
+<p>在虚拟终端上寻找，也找不到</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\3.png" alt="3"></p>
+<p>然后我以为flag被删了，看了大佬的博客才知道，config文件里面有内容<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\5.png" alt="5"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\4.png" alt="4"></p>
+<p>于是我们在蚁剑的主页选择数据操作，添加数据库，连接用户和连接密码时刚刚配置文件的内容</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\6.png" alt="6"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\7.png" alt="7"></p>
+<p>其实感觉能猜到config里面有东西还是蛮神奇的，可能是config文件是配置文件的原因，所以会下意识的去那里找线索。</p>
+<h1 id="“百度杯”CTF比赛-九月场"><a href="#“百度杯”CTF比赛-九月场" class="headerlink" title="“百度杯”CTF比赛 九月场"></a>“百度杯”CTF比赛 九月场</h1><h2 id="（文件上传漏洞）"><a href="#（文件上传漏洞）" class="headerlink" title="（文件上传漏洞）"></a>（文件上传漏洞）</h2><p>我们先上传一个shell内容，jpg后缀的文件，发现上传成功，说明不检查文件内容。然后在上传上传一次，burp拦截修改后缀为php，也上传成功。但是他并没有直接告诉我们他上传的位置，我们查看源码可以看到<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\8.png" alt="8"></p>
+<p>点击进入网页<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\9.png" alt="9"></p>
+<p>我们都知道，按理来说这里不应该显出源码的，那么对比说明这里过滤了<code>&lt;? </code>  和<code>php</code></p>
+<p>我们可以尝试换标签（如<code>&lt;script&gt;</code>）来绕过<code>&lt;?</code>过滤</p>
+<p>通过大小写来绕过<code>php</code>过滤</p>
+<p><strong>法1：</strong>构造一个内容为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language&#x3D;&quot;pHp&quot;&gt;@eval($_POST[&#39;pass&#39;]);&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>后缀为jsp的文件，上传，蚁剑连接<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\10.png" alt="10"></p>
+<p>法2：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ITmincherry/article/details/102531096">https://blog.csdn.net/ITmincherry/article/details/102531096</a></p>
+<h1 id="“百度杯”CTF比赛-2017-二月场"><a href="#“百度杯”CTF比赛-2017-二月场" class="headerlink" title="“百度杯”CTF比赛 2017 二月场"></a>“百度杯”CTF比赛 2017 二月场</h1><h2 id="（文件包含漏洞）"><a href="#（文件包含漏洞）" class="headerlink" title="（文件包含漏洞）"></a>（文件包含漏洞）</h2><p>我们看到这是一道文件包含漏洞题：<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\11.png" alt="11"></p>
+<p>我们会想到利用PHP的输入流php://input<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\12.png" alt="12"></p>
+<p>我们看到有一个文件名比较奇特，用PHP://filter读取dle345aae.php文件<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\13.png" alt="13"></p>
+<p>再base64解码得</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\14.png" alt="14"></p>
+<h1 id="“百度杯”CTF比赛-九月场——123"><a href="#“百度杯”CTF比赛-九月场——123" class="headerlink" title="“百度杯”CTF比赛 九月场——123"></a>“百度杯”CTF比赛 九月场——123</h1><p>打开容器，发现一个登入框，还以为是sql注入，尝试了一下发现都是报错，查看源码：<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\15.png" alt="15"></p>
+<p>然后查看user.php，但是发现网页里面什么也没有，源码也是</p>
+<p>于是我用御剑扫了一下端口，发现有一个flag.php的文件，但是点景区，发现被骗了，是假的。</p>
+<p>于是看了大佬的提示，这里应该查看user.php的备份文件user.php.bak，属于备份隐私泄露</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\16.png" alt="16"></p>
+<p>下载下来，里面都是用户名，根据login.php源码的提示，密码由用户名+生日年份构成</p>
+<p>尝试burp爆破：<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\17.png" alt="17"></p>
+<p>设定两个参数，然后更改攻击模式为battering ram，即对两个参数同时爆破，且payload相同</p>
+<p>我们猜测这么多用户里面应该会有人是1995年出生的，然后爆破出<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\18.png" alt="18"></p>
+<p>用爆破出的用户名密码登入，页面什么内容也没有，查看源码发现：<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\19.png" alt="19"></p>
+<p>F12进入开发者模式将注释符都删掉，得到一个上传框，上传一句话木马文件，<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\20.png" alt="20"></p>
+<p>上传后缀jpg的一句话木马<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\21.png" alt="21"></p>
+<p>这就有点奇怪了，为什么明明已经是白名单的后缀了，文件名还是不合法<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\22.png" alt="22"></p>
+<p>尝试利用Apache的后缀解析<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\23.png" alt="23"></p>
+<p>删去一句话木马<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\24.png" alt="24"></p>
+<p>打开<code>/view.php</code>网页<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\25.png" alt="25"></p>
+<p>传参：?file=1</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\26.png" alt="26"></p>
+<p>过滤了<code>flag</code>，尝试双写绕过</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\i春秋\27.png" alt="27"></p>
+<p>SP: burp的几种攻击模式：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39101049/article/details/90234669">https://blog.csdn.net/qq_39101049/article/details/90234669</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/19/i%E6%98%A5%E7%A7%8B1/" data-id="ckomqzvlz0001u8vu29488a9b" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          i春秋
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/13/buuctf2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">buuctf2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 15px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/07/bugku2/">bugukuu2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
