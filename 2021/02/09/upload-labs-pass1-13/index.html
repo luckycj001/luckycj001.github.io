@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>upload-labs-pass1—13 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="[TOC] 前言upload-labs主要是一些针对文件上传漏洞的实验。 再正式开始之前，先了解一下什么是文件上传漏洞？ 文件上传漏洞是指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，而用户绕过上传机制上传恶意代码并执行从而控制服务器。显然这种漏洞是getshell最快最直接的方法之一，需要说明的是上传文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="upload-labs-pass1—13">
+<meta property="og:url" content="http://example.com/2021/02/09/upload-labs-pass1-13/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[TOC] 前言upload-labs主要是一些针对文件上传漏洞的实验。 再正式开始之前，先了解一下什么是文件上传漏洞？ 文件上传漏洞是指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，而用户绕过上传机制上传恶意代码并执行从而控制服务器。显然这种漏洞是getshell最快最直接的方法之一，需要说明的是上传文件">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/.com//1.png">
+<meta property="og:image" content="http://example.com/.com//2.png">
+<meta property="og:image" content="http://example.com/.com//3.png">
+<meta property="og:image" content="http://example.com/.com//4.png">
+<meta property="og:image" content="http://example.com/.com//5.png">
+<meta property="og:image" content="http://example.com/.com//6.png">
+<meta property="og:image" content="http://example.com/.com//7.png">
+<meta property="og:image" content="http://example.com/.com//8.png">
+<meta property="og:image" content="http://example.com/.com//9.png">
+<meta property="article:published_time" content="2021-02-09T11:32:20.000Z">
+<meta property="article:modified_time" content="2021-02-24T04:51:36.883Z">
+<meta property="article:author" content="linbei">
+<meta property="article:tag" content="upload-labs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-upload-labs-pass1-13" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/09/upload-labs-pass1-13/" class="article-date">
+  <time datetime="2021-02-09T11:32:20.000Z" itemprop="datePublished">2021-02-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      upload-labs-pass1—13
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[TOC]</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>upload-labs主要是一些针对文件上传漏洞的实验。</p>
+<p>再正式开始之前，先了解一下<strong>什么是文件上传漏洞？</strong></p>
+<p><strong>文件上传漏洞是指用户上传了一个可执行的脚本文件，并通过此脚本文件获得了执行服务器端命令的能力。常见场景是web服务器允许用户上传图片或者普通文本文件保存，而用户绕过上传机制上传恶意代码并执行从而控制服务器。显然这种漏洞是getshell最快最直接的方法之一，需要说明的是上传文件操作本身是没有问题的，问题在于文件上传到服务器后，服务器怎么处理和解释文件。web应用程序通常带有文件上传的功能，比如在博客发表文章需要上传图片等行为就可能存在文件上传漏洞。文件上传漏洞就是利用网页代码中的文件上传路径变量过滤不严将，将可执行的文件上传到一个到服务器中，再通过URL去访问以执行恶意代码——攻击者可以直接上传WebShell（以asp、php或者jsp等网页文件形式存在的一种命令执行环境，也可以将其称做为一种网页后门）到服务器上。然后利用渗透工具（如蚁剑）连接webshell以达到操作服务器的目的。</strong></p>
+<ul>
+<li><strong>上传漏洞类型大体可分为以下几类：</strong></li>
+</ul>
+<p><img src="/.com//1.png" alt="1"></p>
+<ul>
+<li><p>判断上传漏洞类型的思路：<img src="/.com//2.png" alt="2" style="zoom: 200%;"></p>
+</li>
+<li><p><strong>webshell（一句话木马）的制备</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模板： <span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">&#x27;password&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@</code>表示后面即使执行错误，也不报错。<code>eval（）</code>函数表示括号内的语句字符串什么的全都当做代码执行。<code>$_POST[&#39;password&#39;]</code>表示从页面中用post的方式获得password这个参数值。</p>
+</li>
+</ul>
+<p>那么这句话的作用是什么呢？举个例子：password=echo ‘a’，就相当于&lt; ?php @eval(“echo ‘a’”);? &gt;即再网页上输出一个a。我们知道了这个就可以根据改变password的值来达到操控服务器的目的了，或者我们可以连接蚁剑，一键获取目标服务器。</p>
+<p><strong>补充：</strong></p>
+<ul>
+<li><strong>入侵的条件</strong></li>
+</ul>
+<p>（1）木马上传成功，未被杀；<br>（2）知道木马的路径在哪；<br>（3）上传的木马能正常运行。</p>
+<ul>
+<li><p><strong>常见的一句话木马</strong></p>
+<p>php的一句话木马： &lt; ?php @eval($_POST[‘pass’]);? &gt;<br>asp的一句话是：   &lt;%eval request (“pass”)%&gt;<br>aspx的一句话是：  &lt;%@ Page Language=”Jscript”%&gt; &lt;%eval(Request.Item[“pass”],”unsafe”);%&gt;</p>
+</li>
+</ul>
+<h1 id="pass-01：js检查"><a href="#pass-01：js检查" class="headerlink" title="pass-01：js检查"></a>pass-01：js检查</h1><p>打开pass-01的index.php查看源码，我们看到网页对上传的图片做了js检查，</p>
+<p><img src="/.com//3.png" alt="3"></p>
+<p>而且设置了上传白名单，<img src="/.com//4.png" alt="4"></p>
+<p>因此题目要求我们上传一个webshell到服务器上，我们可以有以下三种思路：</p>
+<ol>
+<li>删除那段有关js检查的代码</li>
+<li>增加白名单中可上传文件类型</li>
+<li>先将上传文件类型改为白名单的一种（使其通过js检查）然后用burp抓包，再将其文件后缀更改为预期文件类型</li>
+</ol>
+<h1 id="pass-02：MIME绕过"><a href="#pass-02：MIME绕过" class="headerlink" title="pass-02：MIME绕过"></a>pass-02：MIME绕过</h1><ul>
+<li>查看提示：本pass在服务端对数据包的<strong>MIME</strong>进行检查。</li>
+</ul>
+<p><strong>MIME：</strong>MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型。是设定某种扩展名的文件用一种应用程序来打开的方式类型，当该扩展名文件被访问的时候，浏览器会自动使用指定应用程序来打开。多用于指定一些客户端自定义的文件名，以及一些媒体文件打开方式。在HTTP中，MIME类型被定义在Content-Type header中。</p>
+<p><strong>常见的MIME类型：</strong></p>
+<p>udio/mpeg -&gt; .mp3<br>application/msword -&gt; .doc<br>application/octet-stream -&gt; .exe<br>application/pdf -&gt; .pdf<br>application/x-javascript -&gt; .js<br>application/x-rar -&gt; .rar<br>application/zip -&gt; .zip<br>image/gif -&gt; .gif<br>image/jpeg -&gt; .jpg / .jpeg<br>image/png -&gt; .png<br>text/plain -&gt; .txt<br>text/html -&gt; .html<br>video/mp4 -&gt; .mp4</p>
+<ul>
+<li><strong>查看源码：</strong><img src="/.com//5.png" alt="5"></li>
+</ul>
+<p>也就是说服务器还是规定了白名单，那么我们可以有以下两种思路：</p>
+<p>1.先将webshell后缀类型改为允许上传的文件后缀类型（使其绕过MIME检查），然后burp抓包，将webshell后缀改回.php。</p>
+<p>2.将webshell.php文件上传，burp抓包，将Content-Type的MIME类型改为白名单中的类型。</p>
+<ul>
+<li><strong>sp：</strong>我在看源码的时候发现这关的源码也存在js检查的源码，但是我发现把这段码删了并不能实现上传webshell，因为源码中没有规定checkfile()的作用，而且服务器是通过if语句判断上传文件类型是否符合。</li>
+</ul>
+<h1 id="pass-03：上传特殊可解析后缀"><a href="#pass-03：上传特殊可解析后缀" class="headerlink" title="pass-03：上传特殊可解析后缀"></a>pass-03：上传特殊可解析后缀</h1><ul>
+<li>查看源码：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$is_upload = <span class="literal">false</span>;</span><br><span class="line">$msg = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">&#x27;submit&#x27;</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">        $deny_ext = <span class="keyword">array</span>(<span class="string">&#x27;.asp&#x27;</span>,<span class="string">&#x27;.aspx&#x27;</span>,<span class="string">&#x27;.php&#x27;</span>,<span class="string">&#x27;.jsp&#x27;</span>);</span><br><span class="line">        $file_name = trim($_FILES[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">        $file_name = deldot($file_name);<span class="comment">//删除文件名末尾的点</span></span><br><span class="line">        $file_ext = strrchr($file_name, <span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">        $file_ext = strtolower($file_ext); <span class="comment">//转换为小写</span></span><br><span class="line">        $file_ext = str_ireplace(<span class="string">&#x27;::$DATA&#x27;</span>, <span class="string">&#x27;&#x27;</span>, $file_ext);<span class="comment">//去除字符串::$DATA</span></span><br><span class="line">        $file_ext = trim($file_ext); <span class="comment">//收尾去空</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(!in_array($file_ext, $deny_ext)) &#123;</span><br><span class="line">            $temp_file = $_FILES[<span class="string">&#x27;upload_file&#x27;</span>][<span class="string">&#x27;tmp_name&#x27;</span>];</span><br><span class="line">            $img_path = UPLOAD_PATH.<span class="string">&#x27;/&#x27;</span>.date(<span class="string">&quot;YmdHis&quot;</span>).rand(<span class="number">1000</span>,<span class="number">9999</span>).$file_ext;            </span><br><span class="line">            <span class="keyword">if</span> (move_uploaded_file($temp_file,$img_path)) &#123;</span><br><span class="line">                 $is_upload = <span class="literal">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                $msg = <span class="string">&#x27;上传出错！&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            $msg = <span class="string">&#x27;不允许上传.asp,.aspx,.php,.jsp后缀文件！&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        $msg = UPLOAD_PATH . <span class="string">&#x27;文件夹不存在,请手工创建！&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到服务器对上传文件做了很多过滤处理，包括设定了黑名单。</p>
+<ul>
+<li>这边我们补充一个知识点：Apache解析顺序是从右到左开始解析文件后缀，如果最右侧扩展名不能识别的话，就继续往左判断，直到遇到可以解析的文件后缀为止。而且Apache的httpd.conf中可以进行配置（AddType application/x-httpd-php .php .php3 .phtml），规定哪些文件后缀是以php格式来解析的。</li>
+</ul>
+<p>​      我们看到黑名单中没有禁用这些可解析后缀，因此我们可以利用这一点，上传可解析后缀。</p>
+<ul>
+<li><p>sp：常用可解析后缀<img src="/.com//6.png" alt="6"></p>
+</li>
+<li><p>陌生函数：</p>
+</li>
+</ul>
+<p>！strrchr() 函数</p>
+<p>功能：查找字符，在指定字符串中从后面开始的第一次出现的位置，如果成功，则返回从该位置到字符串结尾的所有字符，如果失败，则返回 false。</p>
+<p>语法：strrchr(string，char)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>string</td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td>char</td>
+<td>必需。规定要查找的字符。如果该参数是数字，则搜索匹配数字 ASCII 值的字符。</td>
+</tr>
+</tbody></table>
+<p>！trim()函数</p>
+<p>功能：除去<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AD%97%E7%AC%A6%E4%B8%B2/1017763">字符串</a>开头和末尾的空格或其他字符。</p>
+<p>语法：trim (string $str [,string $charlist ])</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定要检查的字符串。</td>
+</tr>
+<tr>
+<td><em>charlist</em></td>
+<td>可选。规定从字符串中删除哪些字符。如果省略该参数，则移除下列所有字符：”\0” - NULL ；”\t” - 制表符； “\n” - 换行； “\x0B” - 垂直制表符； “\r” - 回车 ；” “ - 空格</td>
+</tr>
+</tbody></table>
+<p>！in_array()函数</p>
+<p>功能：搜索数组中是否存在指定的值。</p>
+<p>语法：in_array(search,array,type)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>search</em></td>
+<td>必需。规定要在数组搜索的值。</td>
+</tr>
+<tr>
+<td><em>array</em></td>
+<td>必需。规定要搜索的数组。</td>
+</tr>
+<tr>
+<td><em>type</em></td>
+<td>可选。如果设置该参数为 true，则检查搜索的数据与数组的值的类型是否相同。如果 <em>search</em> 参数是字符串且 <em>type</em> 参数被设置为 TRUE，则搜索区分大小写。</td>
+</tr>
+</tbody></table>
+<p>！move_uploaded_file() 函数</p>
+<p>功能：将上传的文件移动到新位置。</p>
+<p>语法：move_uploaded_file(file,newloc)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>file</td>
+<td>必需。规定要移动的文件。</td>
+</tr>
+<tr>
+<td>newloc</td>
+<td>必需。规定文件的新位置。</td>
+</tr>
+</tbody></table>
+<ul>
+<li>注：这关我没能实现在本地复现，上传shell后用蚁剑连接不上，好像是Apache的版本不能太高。</li>
+</ul>
+<p>！str_ireplace() 函数</p>
+<p>功能：替换字符串中的一些字符（不区分大小写）。</p>
+<p>语法：str_ireplace(find,replace,string,count)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>find</em></td>
+<td>必需。规定要查找的值。</td>
+</tr>
+<tr>
+<td><em>replace</em></td>
+<td>必需。规定替换 <em>find</em> 中的值的值。</td>
+</tr>
+<tr>
+<td><em>string</em></td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td><em>count</em></td>
+<td>可选。一个变量，对替换数进行计数。</td>
+</tr>
+</tbody></table>
+<h1 id="pass-04：上传-htaccess"><a href="#pass-04：上传-htaccess" class="headerlink" title="pass-04：上传.htaccess"></a>pass-04：上传.htaccess</h1><ul>
+<li>这关的黑名单添加了可解析后缀，但是忽略了.htaccess类型。</li>
+</ul>
+<p>htaccess文件是Apache服务器中的一个配置文件，负责相关目录下网页配置，可以帮我们实现网页301重定向，自定义404错误页面，改变文件扩展名等功能。其中.htaccess文件内容:SetHandler application/x-httpd-php设置当前目录所有文件都使用PHP解析，无论上传任何类型文件，只要文件内容符合php语言代码规范，就会被当做php文件执行。</p>
+<ul>
+<li>因此这关的思路是：先上传一个后缀为.htaccess，内容为：SetHandler application/x-httpd-php</li>
+</ul>
+<p>​           &lt;FilesMatch “webshell.jpg”&gt;                   </p>
+<p>或　　                 SetHandler application/x-httpd-php         的文件，然后再上传webshell.jpg即可。</p>
+<p>​            </p>
+<ul>
+<li>注：这关我没能实现在本地复现，上传shell后用蚁剑连接不上，好像是Apache的版本不能太高。</li>
+</ul>
+<h1 id="pass-05"><a href="#pass-05" class="headerlink" title="pass-05"></a>pass-05</h1><ul>
+<li>pass-04是利用Apache的解析文件进行绕过黑名单，这关则是利用PHP的解析方式绕过黑名单。</li>
+</ul>
+<p>我们看到黑名单里又多加了一个htaccess类型，但是php配置文件类型php.ini没有被禁用，且提示告诉我们上传目录存在php文件（readme.php）。 </p>
+<ul>
+<li>那么这关的思路：先上传一个后缀为.user.ini（相当于用户自定义的php.ini）内容为 auto_prepend_file=webshell.png（意思是该目录下的所有php文件都包含webshell.png），然后我们再上传webshell.png，最后用蚁剑连接时我们要注意连接的是readme.php（因为其文件内容包含shell）而不是webshell.png。</li>
+</ul>
+<p>但是这里我其实有个疑问：那就是我们在现实渗透的时候又怎么会知道靶机的上传目录是否存在.php类型文件，以及.php文件的文件名呢？挖个坑！！！！！！！！！！！！！！！！！！！！！！！！！！！</p>
+<h1 id="pass-06：后缀大小写绕过"><a href="#pass-06：后缀大小写绕过" class="headerlink" title="pass-06：后缀大小写绕过"></a>pass-06：后缀大小写绕过</h1><ul>
+<li><p>这关我们查看源码发现，它的黑名单已经相当齐全了，但是它相对前几关删了一个函数：strtolower()。其作用就是把所有字符全部转为小写字母。</p>
+</li>
+<li><p>那么这关利用这一漏洞，上传webshell.phP文件，然后蚁剑连接即可。</p>
+</li>
+</ul>
+<h1 id="pass-07：空格绕过"><a href="#pass-07：空格绕过" class="headerlink" title="pass-07：空格绕过"></a>pass-07：空格绕过</h1><ul>
+<li><p>查看源码发现它删去了trim()函数。</p>
+</li>
+<li><p>这边补一个知识：在win系统下呢，如果文件后缀最后面是空格、点、：：$DATA会自动省去，也就是说在客户端目录下的是文件名是”干净”。那么我们这关的思路是：上传webshell.php文件然后抓包，在后缀后加一个空格。</p>
+</li>
+<li><p>那么这关的思路就是：先上传webshell.php，抓包，在后缀后加个空格</p>
+<p>sp：没能复现</p>
+</li>
+</ul>
+<h1 id="pass-08：点绕过"><a href="#pass-08：点绕过" class="headerlink" title="pass-08：点绕过"></a>pass-08：点绕过</h1><ul>
+<li>查看源码发现它删去了deldot()函数。原理同pass-07</li>
+</ul>
+<p>那么这关的思路就是：上传webshell.php然后抓包，在后缀后加个点（.）</p>
+<h1 id="pass-09：-DATA绕过"><a href="#pass-09：-DATA绕过" class="headerlink" title="pass-09：::$DATA绕过"></a>pass-09：::$DATA绕过</h1><ul>
+<li>查看源码发现少了对::$DATA的过滤。</li>
+</ul>
+<p>DATA(NTFS文件系统的存储数据流的一个属性)NTFS文件系统包括对备用数据流的支持,备用数据流允许文件包含多个数据流，每个文件至少有一个数据流。在Windows中，这个默认数据流称为：$DATA,当我们访问1.php::$DATA 时，就是请求 1.php 本身的数据，如果a.php 还包含了其他的数据流，比如a.php:lake2.php，请求1.php:lake2.php::$DATA，则是请求1.php中的流数据lake2.php的流数据内容。</p>
+<ul>
+<li>那么我们这关的思路是：先webshell.php，抓包，后缀后添加::DATA，最后蚁剑连接。</li>
+</ul>
+<h1 id="pass-10"><a href="#pass-10" class="headerlink" title="pass-10"></a>pass-10</h1><ul>
+<li>这关查看源码发现过滤的都过滤了，但是和以往有一点不同：上传位置表达方式改变</li>
+</ul>
+<p>旧：$img_path = UPLOAD_PATH.’/‘.date(“YmdHis”).rand(1000,9999).$file_ext;</p>
+<p>新：$img_path = UPLOAD_PATH.’/‘.$file_name;</p>
+<p>sp：没能复现</p>
+<h1 id="pass-11：双后缀名绕过"><a href="#pass-11：双后缀名绕过" class="headerlink" title="pass-11：双后缀名绕过"></a>pass-11：双后缀名绕过</h1><p>我们查看源码，发现关键句：$file_name = str_ireplace($deny_ext,””, $file_name);意思是查找上传的文件名中是否存在黑名单中的值，如果存在就删去。</p>
+<p>那么这关我们的思路是：上传webshell.php，抓包，后缀更改为pphphp</p>
+<h1 id="pass-12：-00截断（get型）"><a href="#pass-12：-00截断（get型）" class="headerlink" title="pass-12：%00截断（get型）"></a>pass-12：%00截断（get型）</h1><p>查看这关的源码，发现上传位置表达方式改变了——$img_path = $_GET[‘save_path’].”/“.rand(10, 99).date(“YmdHis”).”.”.$file_ext;</p>
+<p>我们可以发现save_pasth是可控路径，有点像sql注入里?id=。</p>
+<p>先补充知识：</p>
+<p>1.php语法中，当一个字符串中存在空字符时，会导致空字符后面的字符被丢弃（误把它当成结束符），后面的数据直接忽略，这就导致漏洞产生。</p>
+<p>2.%00是对ascii码中的0对应的字符编码后的结果，0x00则是%00解码成的16进制。当url中的参数是通过GET方式获取时，%00会被自动解码。当通过POST方式获取时，不会自动解码，%00只会原样被当成字符串来输出。所以通过POST方式请求时，我们需要手动将它改写为十六进制0x00。</p>
+<p><img src="/.com//7.png" alt="7"></p>
+<p>那么这关我们的思路就是：上传webshell.png，抓包，令save_pasth=../upload/webshell.php%00</p>
+<p>sp：strrpos()函数</p>
+<p>功能：strrpos() 函数查找字符串在另一字符串中最后一次出现的位置。返回字符（字符串）在目标字符串中最后一次出现的位置，如果没有找到字符串则返回 FALSE。字符串位置从 0 开始，不是从 1 开始。</p>
+<p>语法：strrpos(string,find,start)</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定被搜索的字符串。</td>
+</tr>
+<tr>
+<td><em>find</em></td>
+<td>必需。规定要查找的字符。</td>
+</tr>
+<tr>
+<td><em>start</em></td>
+<td>可选。规定在何处开始搜索。</td>
+</tr>
+</tbody></table>
+<h1 id="pass-13：0x00截断（post型）"><a href="#pass-13：0x00截断（post型）" class="headerlink" title="pass-13：0x00截断（post型）"></a>pass-13：0x00截断（post型）</h1><p>法一：同pass-12</p>
+<p>法二：上传webshell.png，抓包</p>
+<p><img src="/.com//8.png" alt="8"></p>
+<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/.com//9.png" alt="9"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/09/upload-labs-pass1-13/" data-id="ckld8142j00040cvucb7fe0iq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/02/16/DVWA%E2%80%94Brute%20Force/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DVWA—Brute Force
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/02/08/lesson54-65/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">lesson54-65</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 15px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/13/blog/">blog</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 linbei<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

