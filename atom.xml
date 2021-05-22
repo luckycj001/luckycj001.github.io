@@ -891,28 +891,6 @@
   </entry>
   
   <entry>
-    <title>2021.1月web渗透培训</title>
-    <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/"/>
-    <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/</id>
-    <published>2021-01-27T02:56:06.000Z</published>
-    <updated>2021-01-29T03:13:47.624Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="web渗透的宏观思路："><a href="#web渗透的宏观思路：" class="headerlink" title="web渗透的宏观思路："></a>web渗透的宏观思路：</h3><h5 id="a-信息收集"><a href="#a-信息收集" class="headerlink" title="a.信息收集"></a>a.信息收集</h5><h5 id="b-漏洞挖掘"><a href="#b-漏洞挖掘" class="headerlink" title="b.漏洞挖掘"></a>b.漏洞挖掘</h5><h5 id="c-漏洞利用"><a href="#c-漏洞利用" class="headerlink" title="c.漏洞利用"></a>c.漏洞利用</h5><h5 id="d-输出渗透测试报告"><a href="#d-输出渗透测试报告" class="headerlink" title="d.输出渗透测试报告"></a>d.输出渗透测试报告</h5><h4 id="一-信息收集"><a href="#一-信息收集" class="headerlink" title="一.信息收集"></a>一.信息收集</h4><p>1.基本信息：</p><p>《域名信息，子域名，ip地址，同IP的其他网站信息–站长之家；</p><p>​    获取子域名–子域名挖掘机</p><p>​    获取域名或IP地址–<a href="http://viewdns.info、https//www.dnsdb.io">http://viewdns.info、https://www.dnsdb.io</a></p><p>​    根据IP地址查询同一IP地址的其他信息–<a href="http://114best.com/ip/114.aspx?w=">http://114best.com/ip/114.aspx?w=</a></p><p>《端口：80（http）443（HTTPS） 445（共享文件夹）；</p><p>《服务（web版本），服务版本；</p><p>2.os操作系统版本：</p><p>linux，wind，mac</p><p>3.web中间件（web程序，用来提供网页服务）</p><p>Apache（主流），iis，Nginx，weblogic</p><p>4.数据库</p><p>类型、版本：mysql，mssql，oracle，access</p><p>5.服务器后端的脚本类型、版本</p><p>PHP、JSP、ASP</p><h5 id="端口扫描技术–NMAP"><a href="#端口扫描技术–NMAP" class="headerlink" title="~端口扫描技术–NMAP"></a>~端口扫描技术–NMAP</h5><p>基本命令格式：nmap -参数 ip/ip段/主机地址</p><h6 id="Nmap-TCP扫描端口选项"><a href="#Nmap-TCP扫描端口选项" class="headerlink" title="Nmap TCP扫描端口选项:"></a>Nmap TCP扫描端口选项:</h6><p>-sP：用ping的方式判断是否有存活主机,不扫描端口。<br>-sT：使用TCP连接扫描，对目标主机所有端口进行完整的三次握手，如果成功建立连接则端口是开放的。<br>-sS：使用半开连接（SYN stealth)扫描，使用SYN标记位的数据包进行端口探测，收到SYN/ACK包则端口是开放的，收到RST/ACK包则端口是关闭的。<br>-sA：TCP ACK扫描使用ACK标志位数据包，若目标主机回复RST数据包，则目标端口没有被过滤（用于发现防<br>火墙的过滤规则)。</p><h6 id="Nmap-UDP扫描端口选项"><a href="#Nmap-UDP扫描端口选项" class="headerlink" title="Nmap UDP扫描端口选项:"></a>Nmap UDP扫描端口选项:</h6><p>-sU使用UDP数据包经行扫描，返回UDP报文，则端口是开放的;返回不可达则端口处于关闭或过滤状态。</p><h6 id="Nmap目标端口选项"><a href="#Nmap目标端口选项" class="headerlink" title="Nmap目标端口选项:"></a>Nmap目标端口选项:</h6><p>-p：扫描指定的端口<br>-F：快速扫描100个常用的端口<br>-r：顺序扫描，按从小到大的顺序进行端口扫描</p><h6 id="Nmap输出选项"><a href="#Nmap输出选项" class="headerlink" title="Nmap输出选项:"></a>Nmap输出选项:</h6><p>-oN：标准输出为指定的文件<br>-oX：生成XML格式文件可以转换成HTML文件</p><h6 id="其他常用选项"><a href="#其他常用选项" class="headerlink" title="其他常用选项:"></a>其他常用选项:</h6><p>-sV：检测服务端软件版本信息<br>-O：检测操作系统信息<br>-Pn：禁用nmap的主机检测功能<br>-A：探测服务版本、对操作系统进行识别、进行脚本扫描、进行路由探测</p><p>注：nmap -sP ip段可检测该网段下所有存活的主机</p><p>本章参考ppt：<a href="https://kdocs.cn/l/ctOPJlaBJgUw">https://kdocs.cn/l/ctOPJlaBJgUw</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;web渗透的宏观思路：&quot;&gt;&lt;a href=&quot;#web渗透的宏观思路：&quot; class=&quot;headerlink&quot; title=&quot;web渗透的宏观思路：&quot;&gt;&lt;/a&gt;web渗透的宏观思路：&lt;/h3&gt;&lt;h5 id=&quot;a-信息收集&quot;&gt;&lt;a href=&quot;#a-信息收集&quot; cla</summary>
-      
-    
-    
-    
-    
-    <category term="web渗透" scheme="http://example.com/tags/web%E6%B8%97%E9%80%8F/"/>
-    
-  </entry>
-  
-  <entry>
     <title>2021-1月web渗透培训(2)</title>
     <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/"/>
     <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/</id>
@@ -928,6 +906,28 @@
 &lt;p&gt;将用户的输入当作代码/指令，在数据库中操作、执行&lt;/p&gt;
 &lt;p&gt;例如：用户名：admin 密码：123&lt;/p&gt;
 &lt;p&gt;正常带入数据库中执行：select *from users where username=‘admin’ an</summary>
+      
+    
+    
+    
+    
+    <category term="web渗透" scheme="http://example.com/tags/web%E6%B8%97%E9%80%8F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2021.1月web渗透培训</title>
+    <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/"/>
+    <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/</id>
+    <published>2021-01-27T02:56:06.000Z</published>
+    <updated>2021-01-29T03:13:47.624Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="web渗透的宏观思路："><a href="#web渗透的宏观思路：" class="headerlink" title="web渗透的宏观思路："></a>web渗透的宏观思路：</h3><h5 id="a-信息收集"><a href="#a-信息收集" class="headerlink" title="a.信息收集"></a>a.信息收集</h5><h5 id="b-漏洞挖掘"><a href="#b-漏洞挖掘" class="headerlink" title="b.漏洞挖掘"></a>b.漏洞挖掘</h5><h5 id="c-漏洞利用"><a href="#c-漏洞利用" class="headerlink" title="c.漏洞利用"></a>c.漏洞利用</h5><h5 id="d-输出渗透测试报告"><a href="#d-输出渗透测试报告" class="headerlink" title="d.输出渗透测试报告"></a>d.输出渗透测试报告</h5><h4 id="一-信息收集"><a href="#一-信息收集" class="headerlink" title="一.信息收集"></a>一.信息收集</h4><p>1.基本信息：</p><p>《域名信息，子域名，ip地址，同IP的其他网站信息–站长之家；</p><p>​    获取子域名–子域名挖掘机</p><p>​    获取域名或IP地址–<a href="http://viewdns.info、https//www.dnsdb.io">http://viewdns.info、https://www.dnsdb.io</a></p><p>​    根据IP地址查询同一IP地址的其他信息–<a href="http://114best.com/ip/114.aspx?w=">http://114best.com/ip/114.aspx?w=</a></p><p>《端口：80（http）443（HTTPS） 445（共享文件夹）；</p><p>《服务（web版本），服务版本；</p><p>2.os操作系统版本：</p><p>linux，wind，mac</p><p>3.web中间件（web程序，用来提供网页服务）</p><p>Apache（主流），iis，Nginx，weblogic</p><p>4.数据库</p><p>类型、版本：mysql，mssql，oracle，access</p><p>5.服务器后端的脚本类型、版本</p><p>PHP、JSP、ASP</p><h5 id="端口扫描技术–NMAP"><a href="#端口扫描技术–NMAP" class="headerlink" title="~端口扫描技术–NMAP"></a>~端口扫描技术–NMAP</h5><p>基本命令格式：nmap -参数 ip/ip段/主机地址</p><h6 id="Nmap-TCP扫描端口选项"><a href="#Nmap-TCP扫描端口选项" class="headerlink" title="Nmap TCP扫描端口选项:"></a>Nmap TCP扫描端口选项:</h6><p>-sP：用ping的方式判断是否有存活主机,不扫描端口。<br>-sT：使用TCP连接扫描，对目标主机所有端口进行完整的三次握手，如果成功建立连接则端口是开放的。<br>-sS：使用半开连接（SYN stealth)扫描，使用SYN标记位的数据包进行端口探测，收到SYN/ACK包则端口是开放的，收到RST/ACK包则端口是关闭的。<br>-sA：TCP ACK扫描使用ACK标志位数据包，若目标主机回复RST数据包，则目标端口没有被过滤（用于发现防<br>火墙的过滤规则)。</p><h6 id="Nmap-UDP扫描端口选项"><a href="#Nmap-UDP扫描端口选项" class="headerlink" title="Nmap UDP扫描端口选项:"></a>Nmap UDP扫描端口选项:</h6><p>-sU使用UDP数据包经行扫描，返回UDP报文，则端口是开放的;返回不可达则端口处于关闭或过滤状态。</p><h6 id="Nmap目标端口选项"><a href="#Nmap目标端口选项" class="headerlink" title="Nmap目标端口选项:"></a>Nmap目标端口选项:</h6><p>-p：扫描指定的端口<br>-F：快速扫描100个常用的端口<br>-r：顺序扫描，按从小到大的顺序进行端口扫描</p><h6 id="Nmap输出选项"><a href="#Nmap输出选项" class="headerlink" title="Nmap输出选项:"></a>Nmap输出选项:</h6><p>-oN：标准输出为指定的文件<br>-oX：生成XML格式文件可以转换成HTML文件</p><h6 id="其他常用选项"><a href="#其他常用选项" class="headerlink" title="其他常用选项:"></a>其他常用选项:</h6><p>-sV：检测服务端软件版本信息<br>-O：检测操作系统信息<br>-Pn：禁用nmap的主机检测功能<br>-A：探测服务版本、对操作系统进行识别、进行脚本扫描、进行路由探测</p><p>注：nmap -sP ip段可检测该网段下所有存活的主机</p><p>本章参考ppt：<a href="https://kdocs.cn/l/ctOPJlaBJgUw">https://kdocs.cn/l/ctOPJlaBJgUw</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;web渗透的宏观思路：&quot;&gt;&lt;a href=&quot;#web渗透的宏观思路：&quot; class=&quot;headerlink&quot; title=&quot;web渗透的宏观思路：&quot;&gt;&lt;/a&gt;web渗透的宏观思路：&lt;/h3&gt;&lt;h5 id=&quot;a-信息收集&quot;&gt;&lt;a href=&quot;#a-信息收集&quot; cla</summary>
       
     
     
