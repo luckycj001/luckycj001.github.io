@@ -64,6 +64,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-序列化与反序列化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="article-date">
+  <time datetime="2021-05-22T02:37:59.000Z" itemprop="datePublished">2021-05-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">序列化与反序列化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="序列和反序列化："><a href="#序列和反序列化：" class="headerlink" title="序列和反序列化："></a>序列和反序列化：</h1><p>简单来说：</p>
+<p>序列化——将变量或对象转换成字符串的过程。</p>
+<p>反序列化——将字符串转换成变量或对象的过程。</p>
+<p><img src="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210522104245613.png" alt="image-20210522104245613"></p>
+<h2 id="常见的魔术方法："><a href="#常见的魔术方法：" class="headerlink" title="常见的魔术方法："></a>常见的魔术方法：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_construct()：创建对象时初始化</span><br><span class="line">_destruction()：结束时销毁对象</span><br><span class="line">_toString()：对象被当作字符串时使用</span><br><span class="line">_sleep()：序列化对象之前调用</span><br><span class="line">_wakeup()：反序列化对象之前调用</span><br><span class="line">_call()：调用对象不存在时使用</span><br><span class="line">_get()：调用私有属性时使用</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="常见的访问控制修饰符"><a href="#常见的访问控制修饰符" class="headerlink" title="常见的访问控制修饰符"></a>常见的访问控制修饰符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public(公有)</span><br><span class="line">protected(受保护)</span><br><span class="line">private(私有的)</span><br><span class="line">protected属性被序列化的时候属性值会变成：%00*%00属性名</span><br><span class="line">private属性被序列化的时候属性值会变成：%00类名%00属性名</span><br></pre></td></tr></table></figure>
+
+
+
+<p>借阅资料：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/bmth666/article/details/104737025">https://blog.csdn.net/bmth666/article/details/104737025</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" data-id="ckozpcut60002dwvu6oef5ev2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-buuctf3" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/05/21/buuctf3/" class="article-date">
@@ -95,6 +147,71 @@
 <p><img src="/2021/05/21/buuctf3/image-20210521235448143.png" alt="image-20210521235448143"></p>
 <p>他又要求只能本地访问，伪造X-Forwarded-For：</p>
 <p><img src="/2021/05/21/buuctf3/image-20210521235637487.png" alt="image-20210521235637487"></p>
+<h1 id="极客大挑战-2019-PHP"><a href="#极客大挑战-2019-PHP" class="headerlink" title="[极客大挑战 2019]PHP"></a>[极客大挑战 2019]PHP</h1><p>打开容器：<img src="/2021/05/21/buuctf3/image-20210522105040083.png" alt="image-20210522105040083"></p>
+<p>发现这样一句话，猜测应该是备份文件泄露，用dirsearch扫描一下，但是这个网址的服务器可能做得不大好会扫崩，所以我们来手工测试一下。尝试<a href="http://www.zip：![image-20210522105338750](buuctf3.assets/image-20210522105338750.png)">www.zip：![image-20210522105338750](buuctf3.assets/image-20210522105338750.png)</a></p>
+<p>查阅有发现就两个文件有用：<img src="/2021/05/21/buuctf3/image-20210522105452036.png" alt="image-20210522105452036"></p>
+<p><strong>class.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $username = <span class="string">&#x27;nonono&#x27;</span>;</span><br><span class="line">    <span class="keyword">private</span> $password = <span class="string">&#x27;yesyes&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$username,$password</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = $username;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = <span class="string">&#x27;guest&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;password != <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;NO!!!hacker!!!&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;You name is: &quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;username;<span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;You password is: &quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;password;<span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">die</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;username === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">            <span class="keyword">global</span> $flag;</span><br><span class="line">            <span class="keyword">echo</span> $flag;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;hello my friend~~&lt;/br&gt;sorry i can&#x27;t give you the flag!&quot;</span>;</span><br><span class="line">            <span class="keyword">die</span>();</span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>index.php:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">  &lt;meta charset&#x3D;&quot;UTF-8&quot;&gt;</span><br><span class="line">  &lt;title&gt;I have a cat!&lt;&#x2F;title&gt;</span><br><span class="line">  &lt;link rel&#x3D;&quot;stylesheet&quot; href&#x3D;&quot;https:&#x2F;&#x2F;cdnjs.cloudflare.com&#x2F;ajax&#x2F;libs&#x2F;meyer-reset&#x2F;2.0&#x2F;reset.min.css&quot;&gt;</span><br><span class="line">      &lt;link rel&#x3D;&quot;stylesheet&quot; href&#x3D;&quot;style.css&quot;&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line">&lt;style&gt;</span><br><span class="line">    #login&#123;   </span><br><span class="line">        position: absolute;   </span><br><span class="line">        top: 50%;   </span><br><span class="line">        left:50%;   </span><br><span class="line">        margin: -150px 0 0 -150px;   </span><br><span class="line">        width: 300px;   </span><br><span class="line">        height: 300px;   </span><br><span class="line">    &#125;   </span><br><span class="line">    h4&#123;   </span><br><span class="line">        font-size: 2em;   </span><br><span class="line">        margin: 0.67em 0;   </span><br><span class="line">    &#125;</span><br><span class="line">&lt;&#x2F;style&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;div id&#x3D;&quot;world&quot;&gt;</span><br><span class="line">    &lt;div style&#x3D;&quot;text-shadow:0px 0px 5px;font-family:arial;color:black;font-size:20px;position: absolute;bottom: 85%;left: 440px;font-family:KaiTi;&quot;&gt;因为每次猫猫都在我键盘上乱跳，所以我有一个良好的备份网站的习惯</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div style&#x3D;&quot;text-shadow:0px 0px 5px;font-family:arial;color:black;font-size:20px;position: absolute;bottom: 80%;left: 700px;font-family:KaiTi;&quot;&gt;不愧是我！！！</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div style&#x3D;&quot;text-shadow:0px 0px 5px;font-family:arial;color:black;font-size:20px;position: absolute;bottom: 70%;left: 640px;font-family:KaiTi;&quot;&gt;</span><br><span class="line">    &lt;?php</span><br><span class="line">    include &#39;class.php&#39;;</span><br><span class="line">    $select &#x3D; $_GET[&#39;select&#39;];</span><br><span class="line">    $res&#x3D;unserialize(@$select);</span><br><span class="line">    ?&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;div style&#x3D;&quot;position: absolute;bottom: 5%;width: 99%;&quot;&gt;&lt;p align&#x3D;&quot;center&quot; style&#x3D;&quot;font:italic 15px Georgia,serif;color:white;&quot;&gt; Syclover @ cl4y&lt;&#x2F;p&gt;&lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br><span class="line">&lt;script src&#x3D;&#39;http:&#x2F;&#x2F;cdnjs.cloudflare.com&#x2F;ajax&#x2F;libs&#x2F;three.js&#x2F;r70&#x2F;three.min.js&#39;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&#39;http:&#x2F;&#x2F;cdnjs.cloudflare.com&#x2F;ajax&#x2F;libs&#x2F;gsap&#x2F;1.16.1&#x2F;TweenMax.min.js&#39;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&#39;https:&#x2F;&#x2F;s3-us-west-2.amazonaws.com&#x2F;s.cdpn.io&#x2F;264161&#x2F;OrbitControls.js&#39;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script src&#x3D;&#39;https:&#x2F;&#x2F;s3-us-west-2.amazonaws.com&#x2F;s.cdpn.io&#x2F;264161&#x2F;Cat.js&#39;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;script  src&#x3D;&quot;index.js&quot;&gt;&lt;&#x2F;script&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中关键的代码段：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;class.php&#x27;</span>;</span><br><span class="line">$select = $_GET[<span class="string">&#x27;select&#x27;</span>];</span><br><span class="line">$res=unserialize(@$select);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>至此，我们可以知道这是一道反序列化题，当username=admin，password=100时输出flag。但是这里有个麻烦，<code>__wakeup()</code>魔术方法会在反序列化前跳出来执行，也就是username被赋值guest，就破坏了输出flag的条件，因此我们要想办法绕过<code>__wakeup()</code>魔术方法：在反序列化字符串时，属性个数的值大于实际属性个数时，会跳过 __wakeup()函数的执行。</p>
+<p><strong>我们尝试构造payload：</strong></p>
+<p><code>?select=O:4:&quot;Name&quot;:3:&#123;s:14:&quot;%00Name%00username&quot;;s:5:&quot;admin&quot;;s:14:&quot;%00Name%00password&quot;;i:100;&#125;</code></p>
+<p><strong>这里要注意：</strong>由于这里的username和password属于private变量（private 声明的字段为私有字段，只在所声明的类中可见，在该类的子类和该类的对象实例中均不可见。），因此在序列化的时候会在字段名前面增加所属类名，并且类名和字段名前要加前缀<code>0</code>。</p>
+<p><img src="/2021/05/21/buuctf3/image-20210522112524139.png" alt="image-20210522112524139"></p>
+<h1 id="RoarCTF-2019-Easy-Calc"><a href="#RoarCTF-2019-Easy-Calc" class="headerlink" title="[RoarCTF 2019]Easy Calc"></a>[RoarCTF 2019]Easy Calc</h1><p>打开容器，发现这是一个计算机，查看一下源码：<img src="/2021/05/21/buuctf3/image-20210522185134958.png" alt="image-20210522185134958"></p>
+<p>现在我们知道服务器端存在一个WAF；</p>
+<p>我们先访问一下calc.php：<img src="/2021/05/21/buuctf3/image-20210522185307483.png" alt="image-20210522185307483"></p>
+<p>我们看到他过滤了一些符号，同时利用num传参</p>
+<h4 id="这里我们要引入一个新的知识点：利用PHP的字符串解析特性Bypass"><a href="#这里我们要引入一个新的知识点：利用PHP的字符串解析特性Bypass" class="headerlink" title="这里我们要引入一个新的知识点：利用PHP的字符串解析特性Bypass"></a>这里我们要引入一个新的知识点：利用PHP的字符串解析特性Bypass</h4><p><strong>我们知道PHP将查询字符串（在URL或正文中）转换为内部$_GET或的关联数组$_POST。例如：/?foo=bar变成Array([foo]  =&gt;   “bar”)。值得注意的是，查询字符串在解析的过程中会将某些字符删除或用下划线代替。</strong></p>
+<p><strong>例如，/?%20news[id%00=42会转换为Array([news_id] =&gt; 42)；其中<code>%20</code>被删除<code>[</code>被下划线替换。</strong></p>
+<p><strong>如果一个IDS/IPS或WAF中有一条规则是当news_id参数的值是一个非数字的值则拦截，那么我们就可以用以下语句绕过：</strong></p>
+<p><code>/news.php?%20news[id%00=a</code></p>
+<p><strong>因为此时的变量名是<code>%20new[id</code>，而WAF识别的变量名是<code>new_id</code>，当php解析时会将<code>%20</code>和<code>[</code>删去，将<code>%20news[id%00</code>的值将存储到$_GET[“news_id”]中。</strong></p>
+<p><strong>PHP的字符串解析对部分字符的操作：</strong></p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>.</td>
+<td>下划线替换</td>
+</tr>
+<tr>
+<td>[</td>
+<td>下划线替换</td>
+</tr>
+<tr>
+<td>%20（ ）</td>
+<td>删除</td>
+</tr>
+<tr>
+<td>+</td>
+<td>删除</td>
+</tr>
+</tbody></table>
+<p>我们看到由于存在eval()函数，因此存在eval()代码执行漏洞：</p>
+<p>PHP函数：<br>🌸scandir()：以数组形式返回指定目录中的文件和目录<br>🌸var_dump()：输出变量的相关信息。显示关于一个或多个表达式的结构信息，包括表达式的类型与值。数组将递归展开值，通过缩进显示其结构。<br>🌸file_get_contents()：把整个文件读入一个字符串中。</p>
+<p>总结:我们通过PHP的字符串解析特性绕过防火墙，利用eval()代码执行漏洞获取flag</p>
+<p><strong>构造paylaod：</strong></p>
+<p>扫描服务器根目录下文件：<code>calc.php? num=var_dump(scandir(chr(47)))</code></p>
+<p><img src="/2021/05/21/buuctf3/image-20210522193141532.png" alt="image-20210522193141532"></p>
+<p>获取flagg文件的内容：<code>calc.php? num=var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))</code></p>
+<p><img src="/2021/05/21/buuctf3/image-20210522193354743.png" alt="image-20210522193354743"></p>
+<h4 id="？疑问："><a href="#？疑问：" class="headerlink" title="？疑问："></a>？疑问：</h4><p>为什么<code>calc.php?+num=var_dump(system(chr(96).chr(108).chr(115).chr(96)))</code>无法获取服务器底下目录</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://www.icode9.com/content-4-703121.html">https://www.icode9.com/content-4-703121.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/213359.html">https://www.freebuf.com/articles/web/213359.html</a></p>
 
       
     </div>
@@ -111,9 +228,9 @@
 
 
   
-    <article id="post-做题思路" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-web做题思路" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2021/05/13/%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/" class="article-date">
+    <a href="/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/" class="article-date">
   <time datetime="2021-05-13T11:30:19.000Z" itemprop="datePublished">2021-05-13</time>
 </a>
     
@@ -125,7 +242,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/13/%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
+      <a class="article-title" href="/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
     </h1>
   
 
@@ -134,12 +251,12 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>常见的备份文件后缀：</p>
-<p>.index.php.swp<br>index.php.swp<br>index.php.bak<br>.index.php~<br>index.php.bak_Edietplus<br>index.php.~<br>index.php.<del>1</del><br>index.php<br>index.php~<br>index.php.rar<br>index.php.zip<br>index.php.7z<br>index.php.tar.gz<br>.index.php.swo<br><a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a><br><a target="_blank" rel="noopener" href="http://www.rar/">www.rar</a><br><a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a><br><a target="_blank" rel="noopener" href="http://www.7z/">www.7z</a><br><code>www.tar.gz</code><br><a target="_blank" rel="noopener" href="http://www.tar/">www.tar</a><br>web.zip<br>web.rar<br>web.zip<br>web.7z<br>web.tar.gz<br>web.tar<br>wwwroot.rar<br>web.rar</p>
+<p>.index.php.swp<br>index.php.swp<br>index.php.bak<br>.index.php~<br>index.php.bak_Edietplus<br>index.php.~<br>index.php.<del>1</del><br>index.php<br>index.php~<br>index.php.rar<br>index.php.zip<br>index.php.7z<br>index.php.tar.gz<br>.index.php.swo<br><a target="_blank" rel="noopener" href="http://www.rar/">www.rar</a><br><a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a><br><a target="_blank" rel="noopener" href="http://www.7z/">www.7z</a><br><code>www.tar.gz</code><br><a target="_blank" rel="noopener" href="http://www.tar/">www.tar</a><br>web.zip<br>web.rar<br>web.7z<br>web.tar.gz<br>web.tar<br>wwwroot.rar<br>web.rar</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/13/%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/" data-id="ckoyk4ao6003d94vug40x2pd4" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/" data-id="ckozpcut00000dwvubtw4g9q6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
@@ -923,61 +1040,11 @@
 
 
   
-    <article id="post-DVWA—JS" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/03/18/DVWA%E2%80%94JS/" class="article-date">
-  <time datetime="2021-03-18T10:52:29.000Z" itemprop="datePublished">2021-03-18</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/18/DVWA%E2%80%94JS/">JS</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>javascript一种常用于页面代码中，用来实现动态效果的脚本语言。由于JS是存储在客户端，所以过分依赖JS代码逻辑，容易被攻击者获取代码后，进行数据伪造。</p>
-<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p>先提交默认数据<img src="/2021/03/18/DVWA%E2%80%94JS/1.png" alt="1"></p>
-<p>提交<code>success</code><img src="/2021/03/18/DVWA%E2%80%94JS/2.png" alt="2"></p>
-<p>无效的token怎么回事呢？查看网页源码</p>
-<p><img src="/2021/03/18/DVWA%E2%80%94JS/3.png" alt="3"></p>
-<p><img src="/2021/03/18/DVWA%E2%80%94JS/4.png" alt="4"></p>
-<p>我们看到token由前端生成，与服务器无关，但是前端的token是根据<code>ChangeMe</code>来生成的，而服务器要的token是根据<code>success</code>生成的。</p>
-<p>利用控制台执行代码</p>
-<p><img src="/2021/03/18/DVWA%E2%80%94JS/5.png" alt="5"></p>
-<p><img src="/2021/03/18/DVWA%E2%80%94JS/6.png" alt="6"></p>
-<p>我们将箭号所指的token的值用上面弹框中的值替换<img src="/2021/03/18/DVWA%E2%80%94JS/7.png" alt="7"></p>
-<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p><a target="_blank" rel="noopener" href="http://www.bubuko.com/infodetail-2905900.html">http://www.bubuko.com/infodetail-2905900.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/18/DVWA%E2%80%94JS/" data-id="ckoyk4alr000f94vu4fk59ngg" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1023,11 +1090,15 @@
       <ul>
         
           <li>
+            <a href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">序列化与反序列化</a>
+          </li>
+        
+          <li>
             <a href="/2021/05/21/buuctf3/">buuctf3</a>
           </li>
         
           <li>
-            <a href="/2021/05/13/%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
+            <a href="/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
           </li>
         
           <li>
@@ -1036,10 +1107,6 @@
         
           <li>
             <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/13/buuctf2/">buuctf2</a>
           </li>
         
       </ul>
