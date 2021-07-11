@@ -64,6 +64,45 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-CTF工具用法" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/" class="article-date">
+  <time datetime="2021-06-06T03:16:10.000Z" itemprop="datePublished">2021-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/">CTF工具用法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="dirsearch"><a href="#dirsearch" class="headerlink" title="dirsearch"></a>dirsearch</h1><p>指令：python dirsearch.py -u”127.0.0.1”</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/" data-id="ckqyivbpt0000mkvua0p5b7vn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-buuctf4" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/05/23/buuctf4/" class="article-date">
@@ -104,6 +143,54 @@
 <p><img src="/2021/05/23/buuctf4/image-20210523164546430.png" alt="image-20210523164546430"></p>
 <h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p><code>?username=1&#39; uniounionn selecselectt 1,2,group_concat(flag) frofromm (ctf.Flag)%23&amp;password=1</code></p>
 <p><img src="/2021/05/23/buuctf4/image-20210523170907245.png" alt="image-20210523170907245"></p>
+<h1 id="MRCTF2020-Ez-bypass"><a href="#MRCTF2020-Ez-bypass" class="headerlink" title="[MRCTF2020]Ez_bypass"></a>[MRCTF2020]Ez_bypass</h1><p>打开容器发现一段php代码，整理得：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">I put something in F12 <span class="keyword">for</span> you</span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line">$flag=<span class="string">&#x27;MRCTF&#123;xxxxxxxxxxxxxxxxxxxxxxxxx&#125;&#x27;</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;gg&#x27;</span>])&amp;&amp;<span class="keyword">isset</span>($_GET[<span class="string">&#x27;id&#x27;</span>])) &#123;</span><br><span class="line">    $id=$_GET[<span class="string">&#x27;id&#x27;</span>];</span><br><span class="line">    $gg=$_GET[<span class="string">&#x27;gg&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span> (md5($id) === md5($gg) &amp;&amp; $id !== $gg) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;You got the first step&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">&#x27;passwd&#x27;</span>])) &#123;</span><br><span class="line">            $passwd=$_POST[<span class="string">&#x27;passwd&#x27;</span>];</span><br><span class="line">            <span class="keyword">if</span> (!is_numeric($passwd))</span><br><span class="line">            &#123;</span><br><span class="line">                 <span class="keyword">if</span>($passwd==<span class="number">1234567</span>)</span><br><span class="line">                 &#123;</span><br><span class="line">                     <span class="keyword">echo</span> <span class="string">&#x27;Good Job!&#x27;</span>;</span><br><span class="line">                     highlight_file(<span class="string">&#x27;flag.php&#x27;</span>);</span><br><span class="line">                     <span class="keyword">die</span>(<span class="string">&#x27;By Retr_0&#x27;</span>);</span><br><span class="line">                 &#125;</span><br><span class="line">                 <span class="keyword">else</span></span><br><span class="line">                 &#123;</span><br><span class="line">                     <span class="keyword">echo</span> <span class="string">&quot;can you think twice??&quot;</span>;</span><br><span class="line">                 &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&#x27;You can not get it !&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">&#x27;only one way to get the flag&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;You are not a real hacker!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;Please input first&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;Please input first</span><br></pre></td></tr></table></figure>
+
+<p>代码审计可知，我们通过GET获取gg和id两个参数，通过POST获取passwd。</p>
+<p>先来看第一个判断语句：if(  md5($id) === md5($gg) &amp;&amp; $id !== $gg )</p>
+<p>它要求我们两组参数的值要不相等，但md5编码后的值相等</p>
+<p>我们之前有做过md5绕过，弱等于判断，这里可以利用数组绕过md5。因为md5无法编码数组，会返回null。</p>
+<p>构造第一个payload：<code>?id[]=1&amp;gg[]=2</code></p>
+<p>再看第二个判断语句：if (   !is_numeric($passwd)    )<br>                                               if(     $passwd==1234567    )<br>他要求我们POST的参数passwd的值类型不为数字，但是又判断passwd的值是都等于1234567，这里我们可以使用弱等于绕过</p>
+<p>构造第二个payload：<code>password=1234567a</code></p>
+<p>最后，通过hackbar上传我们的payload即可获取flag<img src="/2021/05/23/buuctf4/image-20210710103012191.png" alt="image-20210710103012191"></p>
+<h1 id="BJDCTF2020-Easy-MD5"><a href="#BJDCTF2020-Easy-MD5" class="headerlink" title="[BJDCTF2020]Easy MD5"></a>[BJDCTF2020]Easy MD5</h1><p>打开容器，发现就一个查询框，查看源码没发现什么重要的信息。</p>
+<p>随机输入数字1，发现没什么回显，但是看到URL栏跳出passwd=1</p>
+<p>尝试抓包：</p>
+<p><img src="/2021/05/23/buuctf4/image-20210710174945601.png" alt="image-20210710174945601"></p>
+<p>发现回文中藏着hint——将我们输入上传的passwd经过md5编码后带入sql查询语句。</p>
+<p>这里介绍一下md5()函数：</p>
+<p><strong>语法</strong>：<code>md5(string,raw)</code></p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em>string</em></td>
+<td>必需。规定要计算的字符串。</td>
+</tr>
+<tr>
+<td><em>raw</em></td>
+<td>可选。规定十六进制或二进制输出格式：  TRUE - 原始 16 字符二进制格式                                                                                                                               FALSE - 默认。32 字符十六进制数</td>
+</tr>
+</tbody></table>
+<p>**sp:**原始二进制数据不是指0101这些二进制数据，而是原始字符串转换成ascii码后组成的字符串。</p>
+<p>关于md5输出原始二进制的转换过程和机制参考博客：<a target="_blank" rel="noopener" href="https://www.7gugu.com/2020/01/15/%E6%8E%A2%E7%A9%B6php%E7%9A%84md5%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA%E7%9A%84%E5%8E%9F%E5%A7%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E6%98%AF%E5%95%A5/">https://www.7gugu.com/2020/01/15/%E6%8E%A2%E7%A9%B6php%E7%9A%84md5%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA%E7%9A%84%E5%8E%9F%E5%A7%8B%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%95%B0%E6%8D%AE%E6%98%AF%E5%95%A5/</a></p>
+<p>我们可以看到提示要求我们输入的passwd经过md5编码后要等于真的密码，但是我们怎么会知道密码呢，那么关键点肯定就是在md5上。通过查阅资料我们得知可以使用<code>ffifdyop</code>绕过，其经过<code>md5(ffifdyop,raw)</code>后为<code>&#39;or&#39;6xxxxxxxxxx</code>；</p>
+<p>带入sql语句中为：<code>select * from &#39;admin&#39; where password=&#39;&#39;or&#39;6xxxxxxxxxx&#39;</code>，也就是说构成了一句用真式。那么这时带入数据库中就不会返回空了。</p>
+<p>输入ffifdyop后跳转到一个新的页面，查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">$a = $GET[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line">$b = $_GET[<span class="string">&#x27;b&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($a != $b &amp;&amp; md5($a) == md5($b))&#123;</span><br><span class="line">    <span class="comment">// wow, glzjin wants a girl friend.</span></span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们用数组绕过md5即可，构造payload：<code>?a[]=a&amp;b[]=b</code>   绕过</p>
+<p>有跳转到另一个页面，又是一串代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_POST[<span class="string">&#x27;param1&#x27;</span>]!==$_POST[<span class="string">&#x27;param2&#x27;</span>]&amp;&amp;md5($_POST[<span class="string">&#x27;param1&#x27;</span>])===md5($_POST[<span class="string">&#x27;param2&#x27;</span>]))&#123;</span><br><span class="line">    <span class="keyword">echo</span> $flag;</span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>这里我们依旧采用数组绕过md5即可：<img src="/2021/05/23/buuctf4/image-20210710214847048.png" alt="image-20210710214847048"></p>
+<p>需要注意的是后面一个等号是强等于，那么我们就不能使用哈希碰撞来绕过md5。因为PHP强等于时就不会把以0E开头的哈希值解释为0。</p>
+<p><strong>sp：</strong>最近还做了蛮多md5绕过的题，有一个关于md5绕过的博客写的挺全面的：<a target="_blank" rel="noopener" href="https://blog.csdn.net/CSDNiamcoming/article/details/108837347">https://blog.csdn.net/CSDNiamcoming/article/details/108837347</a></p>
 
       
     </div>
@@ -710,149 +797,11 @@
 
 
   
-    <article id="post-bugku2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/04/07/bugku2/" class="article-date">
-  <time datetime="2021-04-07T14:50:37.000Z" itemprop="datePublished">2021-04-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/04/07/bugku2/">bugukuu2</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>web25</p>
-<h1 id="web26（伪造Referer）"><a href="#web26（伪造Referer）" class="headerlink" title="web26（伪造Referer）"></a>web26（伪造Referer）</h1><p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\1.png" alt="1"></p>
-<p>我们知道Referer可以伪造的，burp抓包，添加语句：<code>Referer: http://www.google.com</code></p>
-<p>获得flag</p>
-<p>web27</p>
-<h1 id="web28：（伪造X-Forwarded-For）"><a href="#web28：（伪造X-Forwarded-For）" class="headerlink" title="web28：（伪造X-Forwarded-For）"></a>web28：（伪造X-Forwarded-For）</h1><p>这题就是伪造X-Forwarded-For不多说了</p>
-<p>web29</p>
-<h1 id="web30：（猜测-php-input利用-file-get-contents-函数绕过）"><a href="#web30：（猜测-php-input利用-file-get-contents-函数绕过）" class="headerlink" title="web30：（猜测 || php:input利用||file_get_contents() 函数绕过）"></a>web30：（猜测 || php:input利用||file_get_contents() 函数绕过）</h1><p>题目说txt，什么用呢先记着</p>
-<p>打开题目地址，看见源码<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\2.png" alt="2"></p>
-<ul>
-<li><p>新函数：</p>
-<p><strong>extract() 函数</strong></p>
-<p>功能： 从数组中将变量导入到当前的符号表</p>
-<p>语法：extract(array,extract_rules,prefix)</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><em>array</em></td>
-<td>必需。规定要使用的数组。</td>
-</tr>
-<tr>
-<td><em>extract_rules</em></td>
-<td>可选。extract() 函数将检查每个键名是否为合法的变量名，同时也检查和符号表中已存在的变量名是否冲突。对不合法和冲突的键名的处理将根据此参数决定。 可能的值：  EXTR_OVERWRITE - 默认。如果有冲突，则覆盖已有的变量。 EXTR_SKIP - 如果有冲突，不覆盖已有的变量。 EXTR_PREFIX_SAME - 如果有冲突，在变量名前加上前缀 <em>prefix</em>。 EXTR_PREFIX_ALL - 给所有变量名加上前缀 <em>prefix</em>。 EXTR_PREFIX_INVALID - 仅在不合法或数字变量名前加上前缀 <em>prefix</em>。 EXTR_IF_EXISTS - 仅在当前符号表中已有同名变量时，覆盖它们的值。其它的都不处理。 EXTR_PREFIX_IF_EXISTS - 仅在当前符号表中已有同名变量时，建立附加了前缀的变量名，其它的都不处理。 EXTR_REFS - 将变量作为引用提取。导入的变量仍然引用了数组参数的值。</td>
-</tr>
-<tr>
-<td><em>prefix</em></td>
-<td>可选。请注意 <em>prefix</em> 仅在 <em>extract_type</em> 的值是 EXTR_PREFIX_SAME，EXTR_PREFIX_ALL，EXTR_PREFIX_INVALID 或 EXTR_PREFIX_IF_EXISTS 时需要。如果附加了前缀后的结果不是合法的变量名，将不会导入到符号表中。 前缀和数组键名之间会自动加上一个下划线。</td>
-</tr>
-</tbody></table>
-<p>  <strong>file_get_contents() 函数</strong></p>
-<p>  功能：把整个文件读入一个字符串中</p>
-<p>  语法：file_get_contents(path,include_path,context,start,max_length)</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>path</td>
-<td>必需。规定要读取的文件。</td>
-</tr>
-<tr>
-<td>include_path</td>
-<td>可选。如果您还想在 include_path（在 php.ini 中）中搜索文件的话，请设置该参数为 ‘1’。</td>
-</tr>
-<tr>
-<td>context</td>
-<td>可选。规定文件句柄的环境。context 是一套可以修改流的行为的选项。若使用 NULL，则忽略。</td>
-</tr>
-<tr>
-<td>start</td>
-<td>可选。规定在文件中开始读取的位置。该参数是 PHP 5.1 中新增的。</td>
-</tr>
-<tr>
-<td>max_length</td>
-<td>可选。规定读取的字节数。该参数是 PHP 5.1 中新增的。</td>
-</tr>
-</tbody></table>
-<p>代码审计：通过get的方式获取$ac和$fn，file_get_contents() 函数读取文件内容，然后赋值给$f，当$f=$ac时输出flag</p>
-<p><strong>法1：</strong>由于题目提到一个后缀txt，猜测存在文件名flag.txt，访问，果然存在<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\3.png" alt="3"></p>
-<p>构造payload：<code>?ac=bugku&amp;fn=flag.txt</code></p>
-<p><strong>法2：</strong>利用php伪协议php://input </p>
-<p>当传入的参数值作为文件名打开时，可以将参数值设为php://input,同时<code>post</code>想设置的文件内容，<strong>php执行时会将post内容当作文件内容。</strong></p>
-<p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\4.png" alt="4"></p>
-<h1 id="web31：（御剑扫描-burp暴力破解）"><a href="#web31：（御剑扫描-burp暴力破解）" class="headerlink" title="web31：（御剑扫描+burp暴力破解）"></a>web31：（御剑扫描+burp暴力破解）</h1><p>刚打开题目地址还以为网络崩了，刷了几次还是一样，那应该就是题目页面了，查看一下源码，没东西，蚁剑扫一下<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\5.png" alt="5"></p>
-<p>发现有一个robots.txt，点进去看一下<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\6.png" alt="6"></p>
-<p>打开resusl.php<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\7.png" alt="7"></p>
-<p>发现这里通过GET方式获取参数x，当x的值等password时应该就会跳出flag了，尝试爆破</p>
-<p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\8.png" alt="8"></p>
-<h1 id="web32"><a href="#web32" class="headerlink" title="web32"></a>web32</h1><p>神仙题，没看源码做个鬼</p>
-<h1 id="web34：（upload-一句话木马）"><a href="#web34：（upload-一句话木马）" class="headerlink" title="web34：（upload+一句话木马）"></a>web34：（upload+一句话木马）</h1><p>打开题目地址，页面上没什么东西，查看源码：<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\9.png" alt="9"></p>
-<p>点开upload.php<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\10.png" alt="10"></p>
-<p>尝试一句话木马，然后发现它设立了一个白名单，看起来不好绕了</p>
-<p>上传图片马，访问上传地址：<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\11.png" alt="11"></p>
-<p>我们看到看来服务器过滤了<code>&lt;?php</code>和<code>?&gt;</code></p>
-<p><strong>法1：</strong>我们创建一个新文件，后缀jpg，内容<code>&lt;script language=&quot;php&quot;&gt;eval($_POST[&#39;cmd&#39;]); &lt;/script&gt;</code>上传，访问发现一片空白，说明被当做php代码执行了，蚁剑连接，终端寻找<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\12.png" alt="12"></p>
-<p><strong>法2：</strong>我们创建一个新文件，后缀jpg，内容<code>&lt;script language=&quot;php&quot;&gt;system(&quot;find / -name flag*&quot;); &lt;/script&gt;</code></p>
-<p>访问上传地址<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\13.png" alt="13"></p>
-<p>直接<code>?flie=/flag</code>   ， flag就出来了</p>
-<p>然后我自己修改了一下文件内容：<code>&lt;script language=&quot;php&quot;&gt;system(&quot;cat /flag&quot;); &lt;/script&gt;</code></p>
-<p>访问上传地址<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\14.png" alt="14"></p>
-<h1 id="web35：（反序列化）"><a href="#web35：（反序列化）" class="headerlink" title="web35：（反序列化）"></a>web35：（反序列化）</h1><p>点开题目地址</p>
-<p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\15.png" alt="15"></p>
-<p>第一眼看还以为是一道sql注入题，结果发现login点不动。查看源码<img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\16.png" alt="16"></p>
-<p>点击</p>
-<p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\17.png" alt="17"></p>
-<p>尝试传输：<code>?25603</code><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\18.png" alt="18"></p>
-<p>我们看到当cookie的值反序列化后等于key的值时会输出flag，于是我们自然想到将key的值先序列化后赋值给cookie</p>
-<p>php在线工具：<code>https://c.runoob.com/compile/1</code><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\19.png" alt="19"></p>
-<p>构造payload:<code>Cookie: BUGKU=s:13:&quot;ctf.bugku.com&quot;</code></p>
-<p><img src="/2021/04/07/bugku2/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku2\20.png" alt="20"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/07/bugku2/" data-id="ckozphtuj002azsvuaj1sgf8r" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -866,7 +815,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
     </div>
   </div>
 
@@ -876,7 +825,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 16px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/ISCC/" style="font-size: 10px;">ISCC</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 18px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/DVWA-labs/" style="font-size: 15px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/ISCC/" style="font-size: 10px;">ISCC</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 17.5px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -885,7 +834,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
     </div>
   </div>
 
@@ -896,6 +845,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/">CTF工具用法</a>
+          </li>
         
           <li>
             <a href="/2021/05/23/buuctf4/">buuctf4</a>
@@ -911,10 +864,6 @@
         
           <li>
             <a href="/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/04/2021ISCC/">ISCC</a>
           </li>
         
       </ul>

