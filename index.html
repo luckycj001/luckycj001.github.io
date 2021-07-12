@@ -87,19 +87,19 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>最近看bugku新上了一波题，就做一下</p>
-<h1 id="game1"><a href="#game1" class="headerlink" title="game1"></a>game1</h1><p>打开容器，发现是一个搭房子的小游戏，一般这种题都是靠修改得分来达到获取flag要求。</p>
+<h1 id="Game1"><a href="#Game1" class="headerlink" title="Game1"></a>Game1</h1><p>打开容器，发现是一个搭房子的小游戏，一般这种题都是靠修改得分来达到获取flag要求。</p>
 <p>f12查看源码：</p>
-<p><img src="/bugku3.assets/image-20210712195230060.png" alt="image-20210712195230060"></p>
+<p><img src="/2021/07/12/bugku3/image-20210712195230060.png" alt="image-20210712195230060"></p>
 <p>注意到一个提交文件，他包括了三个变量——score就是该局游戏得分，ip固定为ppp的值，sign为该局游戏得分经过base64编码后的值</p>
 <p>因此我们可以构造payload：<code>score.php?score=6666&amp;ip=110.90.9.142&amp;sign=NjY2Ng==</code></p>
-<p>但是这样回显是失败的，为什么会这样呢？试玩两局游戏<img src="/bugku3.assets/image-20210712195703946.png" alt="image-20210712195703946"></p>
+<p>但是这样回显是失败的，为什么会这样呢？试玩两局游戏<img src="/2021/07/12/bugku3/image-20210712195703946.png" alt="image-20210712195703946"></p>
 <p>我们知道50的base64编码是NTA=，而这里看到他前面还多了前缀zM</p>
 <p>多玩了几局后发现他真实的<code>sign=&#39;zM&#39;+&#39;Base64.encode(score.toString())&#39;+&#39;==&#39;</code></p>
 <p>加上前缀后就成功得到flag啦</p>
 <p><strong>sp：</strong>由于最近在学习python所以就学习大佬的脚本看看能不能跑出爆flag的临界点再哪：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode</span><br><span class="line"></span><br><span class="line">url=<span class="string">&quot;http://114.67.246.176:15342/score.php?score=&quot;</span></span><br><span class="line">url2=<span class="string">&quot;&amp;ip=110.90.9.142&amp;sign=zM&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range (<span class="number">1000</span>,<span class="number">100000</span>):</span><br><span class="line">    i=str(i)</span><br><span class="line">    j=b64encode(i.encode())</span><br><span class="line">    j=j.decode()</span><br><span class="line">    r=requests.get(url+i+url2+j+<span class="string">&#x27;==&#x27;</span>)</span><br><span class="line">    print(i)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;失败了&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> r.text:</span><br><span class="line">        <span class="keyword">print</span> (r.text)</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="/bugku3.assets/image-20210712202522647.png" alt="image-20210712202522647"></p>
+<p><img src="/2021/07/12/bugku3/image-20210712202522647.png" alt="image-20210712202522647"></p>
 <p>我们可以看到临界点就是3000分</p>
 <p>参考博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44190459/article/details/116648352">https://blog.csdn.net/weixin_44190459/article/details/116648352</a></p>
 <h1 id="变量1"><a href="#变量1" class="headerlink" title="变量1"></a>变量1</h1><p>打开容器我们就可以看到源码：</p>
@@ -111,13 +111,13 @@
 <p>而这里**var_dump()**函数 显示关于一个或多个表达式的结构信息，包括表达式的类型与值。结合可变变量名那么就会返回对应的键值。</p>
 <p>此时我们要联想到php中超全局变量 <code>$GLOBALS </code>，PHP 在名为<code>$GLOBALS[index]</code>的数组中存储了所有全局变量</p>
 <p>因此构造payload：<code>?args=GLOBLAS</code></p>
-<p><img src="/bugku3.assets/image-20210712210315711.png" alt="image-20210712210315711"></p>
+<p><img src="/2021/07/12/bugku3/image-20210712210315711.png" alt="image-20210712210315711"></p>
 <p>参考博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xuchen16/article/details/82737194">https://blog.csdn.net/xuchen16/article/details/82737194</a></p>
 <h1 id="秋名山车神"><a href="#秋名山车神" class="headerlink" title="秋名山车神"></a>秋名山车神</h1><p>点开容器就给我们一长串数字要我们在两秒内计算完成，显然是不可能实现的，因此需要构造脚本：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">url = <span class="string">&#x27;&#x27;&#x27;http://114.67.246.176:19230/&#x27;&#x27;&#x27;</span></span><br><span class="line">s = requests.session()</span><br><span class="line">retuen = s.get(url)</span><br><span class="line">equation = re.search(<span class="string">r&#x27;(\d+[+\-*])+(\d+)&#x27;</span>, retuen.text).group()</span><br><span class="line">result = eval(equation)</span><br><span class="line">key = &#123;<span class="string">&#x27;value&#x27;</span>:result&#125;</span><br><span class="line">print(s.post(url, data = key).text)</span><br></pre></td></tr></table></figure>
 
 <p>跑脚本的时候可能不会每次都出flag（可能给出的式子溢出或者什么的），没出就多跑几次</p>
-<p><img src="/bugku3.assets/image-20210712212923522.png" alt="image-20210712212923522"></p>
+<p><img src="/2021/07/12/bugku3/image-20210712212923522.png" alt="image-20210712212923522"></p>
 <p>参考资料：关于对python脚本的理解（主要是python脚本下的正则匹配）：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43578492/article/details/101701339">https://blog.csdn.net/weixin_43578492/article/details/101701339</a></p>
 
       
