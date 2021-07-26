@@ -101,7 +101,7 @@
 <h4 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h4><p>要怎么利用 <strong>preg_replace</strong> <strong>/e</strong> 模式下的代码执行这一特性呢？查看资料，原来<code>对一个正则表达式模式或部分模式 两边添加圆括号 将导致相匹配存储到一个临时缓冲区 中，所捕获的每个子匹配都按照在正则表达式模式中从左到右出现的顺序存储。缓冲区编号从 1 开始，最多可存储 99 个捕获的子表达式。每个缓冲区都可以使用 &#39;\n&#39; 访问，其中 n 为一个标识特定缓冲区的一位或两位十进制数。</code></p>
 <p>因此这里的<strong>\1</strong>指的是第一个匹配项。那么我们的思路就是构造payload是第一个匹配项为getFlag()函数；</p>
 <p>利用foreach()函数的特性上传<code>?\S*=getFlag()</code>，但是这样是调用不了getFlag()函数的，为什么呢？在php中，双引号里面如果包含有变量，php解释器会进行解析；单引号中的变量不会被处理。</p>
-<p><img src="/2021/07/24/buuctf14/image-20210725152300359.png"></p>
+<p><img src="/2021/07/24/buuctf14/image-20210726201738286.png" alt="image-20210726201738286"></p>
 <p>而这里的strtolower(“\\1”)，里面是双引号，所以我们要上传一个<code>变量</code>。<img src="/2021/07/24/buuctf14/image-20210725152617803.png" alt="image-20210725152617803"></p>
 <p>因此改版后的payload为：<code>next.php?\S*=$&#123;getFlag()&#125;&amp;cmd=system(&#39;cat /flag&#39;);</code></p>
 <p>参考资料：<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/language.variables.variable.php">https://www.php.net/manual/zh/language.variables.variable.php</a></p>
