@@ -57,13 +57,13 @@
         </div>
         <div class="content markdown">
             <h1 id="BJDCTF2020-EasySearch"><a href="#BJDCTF2020-EasySearch" class="headerlink" title="[BJDCTF2020]EasySearch"></a>[BJDCTF2020]EasySearch</h1><p>打开容器，发现是一个登入页面</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731193659676.png" alt="image-20210731193659676"></p>
+<p><img src="/buuctf20.assets/image-20210731193659676.png" alt="image-20210731193659676"></p>
 <h4 id="一-初步探索"><a href="#一-初步探索" class="headerlink" title="一.初步探索"></a>一.初步探索</h4><p>尝试sql注入，但是不管输入什么都是回显</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731194025910.png" alt="image-20210731194025910"></p>
+<p><img src="/buuctf20.assets/image-20210731194025910.png" alt="image-20210731194025910"></p>
 <p>看来不是考察SQL注入，看一下源码，也没有什么线索，用dirsearch根本跑不出来，buu会一直崩。</p>
-<p>只能手工来测试了，之前有存一个常见文件备份后缀的名单<img src="/2021/07/31/buuctf20/image-20210731194457855.png" alt="image-20210731194457855"></p>
+<p>只能手工来测试了，之前有存一个常见文件备份后缀的名单<img src="/buuctf20.assets/image-20210731194457855.png" alt="image-20210731194457855"></p>
 <p>运气比较好，第二个就试出来了源码泄露：</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731194618345.png" alt="image-20210731194618345"></p>
+<p><img src="/buuctf20.assets/image-20210731194618345.png" alt="image-20210731194618345"></p>
 <h4 id="二-代码审计"><a href="#二-代码审计" class="headerlink" title="二.代码审计"></a>二.代码审计</h4><p>POST参数$username和$password，if语句判断$password经过MD5编码后截取前六位是否等于<code>6d0bc1</code></p>
 <p>然后他会构建一个文件的路径，路径的其中一部分是调用get_hash()函数随机生成的</p>
 <p>不过他这个<code>.shtnl</code>后缀的文件是什么我还是第一次见</p>
@@ -77,23 +77,23 @@
 </ol>
 <p>​                  <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40657585/article/details/84260844">https://blog.csdn.net/qq_40657585/article/details/84260844</a></p>
 <h4 id="四-思路构建"><a href="#四-思路构建" class="headerlink" title="四.思路构建"></a>四.思路构建</h4><p>我们先登入<code>manage system</code>看看。那么首先要找到符合if语句的$password</p>
-<p>拿别人的脚本跑一下：<img src="/2021/07/31/buuctf20/image-20210731202016637.png" alt="image-20210731202016637"></p>
+<p>拿别人的脚本跑一下：<img src="/buuctf20.assets/image-20210731202016637.png" alt="image-20210731202016637"></p>
 <p>POST数据</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731202346636.png" alt="image-20210731202346636"></p>
+<p><img src="/buuctf20.assets/image-20210731202346636.png" alt="image-20210731202346636"></p>
 <p>发现回显给我们一个文件名，这个就是源码里构造的文件名了</p>
 <p>访问一下：</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731203742131.png" alt="image-20210731203742131"></p>
+<p><img src="/buuctf20.assets/image-20210731203742131.png" alt="image-20210731203742131"></p>
 <p>那我们现在要想怎么利用这个SSI注入了，由于$password的值被强制了，根据网页的回显感觉那注入点可能在$username或者cilent-ip</p>
 <p>但是我伪造cilent-ip发现回显的<code>Client IP</code>的值都不会变，包括XFF也是，那么只剩下$username最后的希望了</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731204417355.png" alt="image-20210731204417355"></p>
+<p><img src="/buuctf20.assets/image-20210731204417355.png" alt="image-20210731204417355"></p>
 <p>访问回显的文件</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731204435297.png" alt="image-20210731204435297"></p>
+<p><img src="/buuctf20.assets/image-20210731204435297.png" alt="image-20210731204435297"></p>
 <p>成功回显当前文件夹目录，但是flag不在这个目录下，访问上一级目录：</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731210011555.png" alt="image-20210731210011555"></p>
-<p><img src="/2021/07/31/buuctf20/image-20210731210023200.png" alt="image-20210731210023200"></p>
+<p><img src="/buuctf20.assets/image-20210731210011555.png" alt="image-20210731210011555"></p>
+<p><img src="/buuctf20.assets/image-20210731210023200.png" alt="image-20210731210023200"></p>
 <p>cat flag文件</p>
-<p><img src="/2021/07/31/buuctf20/image-20210731210240406.png" alt="image-20210731210240406"></p>
-<p><img src="/2021/07/31/buuctf20/image-20210731210221758.png" alt="image-20210731210221758"></p>
+<p><img src="/buuctf20.assets/image-20210731210240406.png" alt="image-20210731210240406"></p>
+<p><img src="/buuctf20.assets/image-20210731210221758.png" alt="image-20210731210221758"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

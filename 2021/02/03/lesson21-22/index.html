@@ -57,7 +57,7 @@ lesson21：首先输入正确的用户名，密码，用burp抓包：
         <div class="content markdown">
             <p>这关虽然和lesson18很像，但是还是有很多东西值得开一篇新的blog。</p>
 <h2 id="lesson21："><a href="#lesson21：" class="headerlink" title="lesson21："></a>lesson21：</h2><p>首先输入正确的用户名，密码，用burp抓包：</p>
-<p><img src="/2021/02/03/lesson21-22/1.png" alt="1"></p>
+<p><img src="/lesson21/1.png" alt="1"></p>
 <p>我们看到cookie一行的uname=被加密了，我们查看源码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(&#x27;uname&#x27;, base64_encode($row1[&#x27;username&#x27;]), time()+3600);	</span><br></pre></td></tr></table></figure>
 
@@ -67,9 +67,9 @@ lesson21：首先输入正确的用户名，密码，用burp抓包：
 <p>cookie 的名称自动指定为相同名称的变量。例如，如果被发送的 cookie 名为 “user”，则会自动创建一个名为 $user 的变量，包含 cookie 的值。</p>
 <p>必须在任何其他输出发送到客户端前对 cookie 进行赋值。</p>
 <p>如果成功，该函数返回 TRUE。如果失败则返回 FALSE。</p>
-<p><img src="/2021/02/03/lesson21-22/2.png" alt="2"></p>
+<p><img src="/lesson21/2.png" alt="2"></p>
 <p>因此我们可以看到cookie的值被加密了。接着看源码：</p>
-<p><img src="/2021/02/03/lesson21-22/3.png" alt="3"></p>
+<p><img src="/lesson21/3.png" alt="3"></p>
 <p>至此，我们可以确信还是从cookie进行注入，不过要将payload进行base64加密。</p>
 <p>在线编译网站：<a target="_blank" rel="noopener" href="https://tool.oschina.net/encrypt?type=3">https://tool.oschina.net/encrypt?type=3</a></p>
 <p>那么开始注入吧！</p>
