@@ -62,9 +62,9 @@
 <ul>
 <li><strong>上传漏洞类型大体可分为以下几类：</strong></li>
 </ul>
-<p><img src="/upload-labs-pass1/1.png" alt="1"></p>
+<p><img src="/2021/02/09/upload-labs-pass1-13/1.png" alt="1"></p>
 <ul>
-<li><p>判断上传漏洞类型的思路：<img src="/upload-labs-pass1/2.png" alt="2" style="zoom: 200%;"></p>
+<li><p>判断上传漏洞类型的思路：<img src="/2021/02/09/upload-labs-pass1-13/2.png" alt="2" style="zoom: 200%;"></p>
 </li>
 <li><p><strong>webshell（一句话木马）的制备</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">模板： <span class="meta">&lt;?php</span> @<span class="keyword">eval</span>($_POST[<span class="string">&#x27;password&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
@@ -84,8 +84,8 @@
 </li>
 </ul>
 <h1 id="pass-01：js检查"><a href="#pass-01：js检查" class="headerlink" title="pass-01：js检查"></a>pass-01：js检查</h1><p>打开pass-01的index.php查看源码，我们看到网页对上传的图片做了js检查，</p>
-<p><img src="/upload-labs-pass1/3.png" alt="3"></p>
-<p>而且设置了上传白名单，<img src="/upload-labs-pass1/4.png" alt="4"></p>
+<p><img src="/2021/02/09/upload-labs-pass1-13/3.png" alt="3"></p>
+<p>而且设置了上传白名单，<img src="/2021/02/09/upload-labs-pass1-13/4.png" alt="4"></p>
 <p>因此题目要求我们上传一个webshell到服务器上，我们可以有以下三种思路：</p>
 <ol>
 <li>删除那段有关js检查的代码</li>
@@ -99,7 +99,7 @@
 <p><strong>常见的MIME类型：</strong></p>
 <p>udio/mpeg -&gt; .mp3<br>application/msword -&gt; .doc<br>application/octet-stream -&gt; .exe<br>application/pdf -&gt; .pdf<br>application/x-javascript -&gt; .js<br>application/x-rar -&gt; .rar<br>application/zip -&gt; .zip<br>image/gif -&gt; .gif<br>image/jpeg -&gt; .jpg / .jpeg<br>image/png -&gt; .png<br>text/plain -&gt; .txt<br>text/html -&gt; .html<br>video/mp4 -&gt; .mp4</p>
 <ul>
-<li><strong>查看源码：</strong><img src="/upload-labs-pass1/5.png" alt="5"></li>
+<li><strong>查看源码：</strong><img src="/2021/02/09/upload-labs-pass1-13/5.png" alt="5"></li>
 </ul>
 <p>也就是说服务器还是规定了白名单，那么我们可以有以下两种思路：</p>
 <p>1.先将webshell后缀类型改为允许上传的文件后缀类型（使其绕过MIME检查），然后burp抓包，将webshell后缀改回.php。</p>
@@ -118,7 +118,7 @@
 </ul>
 <p>​      我们看到黑名单中没有禁用这些可解析后缀，因此我们可以利用这一点，上传可解析后缀。</p>
 <ul>
-<li><p>sp：常用可解析后缀<img src="/upload-labs-pass1/6.png" alt="6"></p>
+<li><p>sp：常用可解析后缀<img src="/2021/02/09/upload-labs-pass1-13/6.png" alt="6"></p>
 </li>
 <li><p>陌生函数：</p>
 </li>
@@ -293,7 +293,7 @@
 <p>先补充知识：</p>
 <p>1.php语法中，当一个字符串中存在空字符时，会导致空字符后面的字符被丢弃（误把它当成结束符），后面的数据直接忽略，这就导致漏洞产生。</p>
 <p>2.%00是对ascii码中的0对应的字符编码后的结果，0x00则是%00解码成的16进制。当url中的参数是通过GET方式获取时，%00会被自动解码。当通过POST方式获取时，不会自动解码，%00只会原样被当成字符串来输出。所以通过POST方式请求时，我们需要手动将它改写为十六进制0x00。</p>
-<p><img src="/upload-labs-pass1/7.png" alt="7"></p>
+<p><img src="/2021/02/09/upload-labs-pass1-13/7.png" alt="7"></p>
 <p>那么这关我们的思路就是：上传webshell.png，抓包，令save_pasth=../upload/webshell.php%00</p>
 <p>sp：strrpos()函数</p>
 <p>功能：strrpos() 函数查找字符串在另一字符串中最后一次出现的位置。返回字符（字符串）在目标字符串中最后一次出现的位置，如果没有找到字符串则返回 FALSE。字符串位置从 0 开始，不是从 1 开始。</p>
@@ -320,8 +320,8 @@
 </tbody></table>
 <h1 id="pass-13：0x00截断（post型）"><a href="#pass-13：0x00截断（post型）" class="headerlink" title="pass-13：0x00截断（post型）"></a>pass-13：0x00截断（post型）</h1><p>法一：同pass-12</p>
 <p>法二：上传webshell.png，抓包</p>
-<p><img src="/upload-labs-pass1/8.png" alt="8"></p>
-<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/upload-labs-pass1/9.png" alt="9"></p>
+<p><img src="/2021/02/09/upload-labs-pass1-13/8.png" alt="8"></p>
+<p>加上webshell.php，然后点开Hex，将webshell.php后面的20改为00，如果找不到20，那么就在raw的webshell.php后面加个空格<img src="/2021/02/09/upload-labs-pass1-13/9.png" alt="9"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

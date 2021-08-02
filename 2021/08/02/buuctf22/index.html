@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>lesson38-45 - 林北</title>
+    <title>buuctf22 - 林北</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="background——堆叠注入：在 SQL 中，;(分号)是用来表示一条 sql 语句的结束。试想一下我们在 ; 结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了,"> 
+    
     <meta name="author" content="linbei"> 
     <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
     <link rel="icon" href="/img/3.jpg"> 
@@ -28,7 +28,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
     <div title="播放/暂停" class="iconfont icon-play"></div>
-    <h3 class="subtitle">lesson38-45</h3>
+    <h3 class="subtitle">buuctf22</h3>
     <div class="social">
         <div>
             <div class="share">
@@ -43,45 +43,14 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">lesson38-45</h1>
+        <h1 class="title">buuctf22</h1>
         <div class="stuff">
-            <span>二月 06, 2021</span>
+            <span>八月 02, 2021</span>
             
-  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/sqlilabs/" rel="tag">sqlilabs</a></li></ul>
-
 
         </div>
         <div class="content markdown">
-            <h1 id="background——堆叠注入："><a href="#background——堆叠注入：" class="headerlink" title="background——堆叠注入："></a>background——堆叠注入：</h1><p>在 SQL 中，<code>;(分号)</code>是用来表示一条 sql 语句的结束。试想一下我们在 <code>; </code>结束一个 sql 语句后继续构造下一条语句，会不会一起执行？因此这个想法也就造就了堆叠注入。但对于不同数据库（mysql，sqlserver，oracle等）来说，除oracle不允许外，其他数据库我们可以在一条sql语句后紧接着构造下一条sql语句。</p>
-<p><strong>这里可能会有一个问题——union injection（联合注入）也是将两条语句合并在一起，两者之间有什么区别么？</strong>(1)区别就在于 union 或者 union all 执行的语句类型是有限的，可以用来执行查询语句，而堆叠注入可以执行的是 任意的语句。 </p>
-<p>(2)堆叠注入不会像联合注入那样受第一句sql语句影响。我们知道联合注入要满足第一句sql语句错误的条件下才会执行后面我们构造的sql语句，而堆叠注入没有这个问题。</p>
-<p>(3)在我们的 web 系统中，因为代码通常只返回一个查询结果，因此，堆叠注入第 二个语句产生错误或者结果时只能被忽略，我们在前端界面是无法看到返回结果的。因此，在读取数据时，我们建议使用 union（联合）注入。例以lesson38的一个payload为例：?id=0’ union select 1,2,database();create table test like users–+这样我们可以前台获取数据信息，后台篡改数据信息，实现“双管齐下”。</p>
-<p><strong>sp：关于数据库的一些增删改查在另一篇博客已经专门介绍了，这里不多赘述。</strong></p>
-<h2 id="lesson38："><a href="#lesson38：" class="headerlink" title="lesson38："></a>lesson38：</h2><p>认识一下新函数：</p>
-<ul>
-<li><p>mysqli_connect()函数：<br>功能：打开一个到 MySQL 服务器的新的连接。<br>语法：mysqli_connect(host,username,password,dbname,port,socket)；<img src="/2021/02/06/lesson38-45/1.png" alt="1"></p>
-</li>
-<li><p>mysqli_select_db()函数：<br>作用：用于更改连接的默认数据库。<br>语法：mysqli_select_db(connection,dbname)<img src="/2021/02/06/lesson38-45/2.png" alt="2"></p>
-</li>
-<li><p>mysqli_multi_query()函数：<br>语法：mysqli_multi_query(connection,query)；</p>
-<p>功能：执行一个或多个针对数据库的查询。多个查询用分号进行分隔。<img src="/2021/02/06/lesson38-45/3.jpg" alt="3"></p>
-<p><strong>注：这个函数是可实现堆叠注入的重要因素！</strong></p>
-</li>
-<li><p>mysql_store_result()函数：<br>功能：用于将mysqli_query()查询的结果集存储到变量中</p>
-</li>
-<li><p>mysqli_more_results()函数：<br>语法：mysqli_more_results(connection);<br>参数：connection——必需。规定要使用的mysql连接<br>功能：检查一个多查询是否有更多的结果。</p>
-</li>
-<li><p>mysqli_fetch_row() 函数：</p>
-<p>语法：mysqli_fetch_row(result)；</p>
-<p>参数：result——必须。规定由 mysqli_query()、mysqli_store_result() 或 mysqli_use_result() 返回的结果  集标识符。</p>
-<p>功能：从结果集中取得一行，并作为枚举数组返回。</p>
-</li>
-</ul>
-<h2 id="lesson39-amp-40-amp-41："><a href="#lesson39-amp-40-amp-41：" class="headerlink" title="lesson39&amp;40&amp;41："></a>lesson39&amp;40&amp;41：</h2><p>就改变了id闭合方式，注意注入类型变化即可，其余与lesson38一致。</p>
-<h2 id="lesson42："><a href="#lesson42：" class="headerlink" title="lesson42："></a>lesson42：</h2><p>这关可以用二阶注入，但是没必要，因为我们输入的密码没有被过滤，我们可以用报错注入，延时注入。或者用我们新学的堆叠注入。</p>
-<p>在我们使用堆叠注入时虽然页面返回错误，但是我们在数据库中查找，还是可以看到我们的payload执行l。</p>
-<h2 id="lesson43-amp-44-amp-45："><a href="#lesson43-amp-44-amp-45：" class="headerlink" title="lesson43&amp;44&amp;45："></a>lesson43&amp;44&amp;45：</h2><p>就改变了id闭合方式，注意注入类型变化即可，其余与lesson42一致。</p>
-
+            
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">

