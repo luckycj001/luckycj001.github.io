@@ -59,7 +59,7 @@
 <p>我们可以看到我们上传三个参数，先看看他的判断语句：判断是否存在text变量，并以只读方式打开文件判断文件内容是否为<code>welcome to the zjctf</code>；接着判断上传的文件名是否有敏感词flag，若不存在则执行include函数；最后将上传的password的值反序列化并输出。</p>
 <p>我们一步步来，先看第一步，我们可以看到很明显不存在text文件，那么我们是不是可以直接给text赋值<code>welcome to the zjctf</code>呢？但是试着直接赋值，发现没有回显，因此说明直接赋值肯定是不行的。我们尝试着使用http伪协议，试试能不能行。</p>
 <p><strong>第一种php://input</strong></p>
-<p>此协议需要 allow_url_include 为 on ，可以访问请求的原始数据的只读流, 将post请求中的数据作为 PHP代码执行。当传入的参数作为文件名打开时，可以将参数设为 php://input ,同时post想设置的文件内容，php执行时会将post内容当作文件内容。<br>这里用 <code>HackBar</code> 报错了<img src="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/image-20210715165922619.png" alt="image-20210715165922619"></p>
+<p>此协议需要 allow_url_include 为 on ，可以访问请求的原始数据的只读流, 将post请求中的数据作为 PHP代码执行。当传入的参数作为文件名打开时，可以将参数设为 php://input ,同时post想设置的文件内容，php执行时会将post内容当作文件内容。<br>这里用 <code>HackBar</code> 报错了<img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63.assets/image-20210715165922619.png" alt="image-20210715165922619"></p>
 <p>但是用bp抓包，再上传就看到有回显，说明这样子是可行的。</p>
 <p><strong>第二种data://伪协议</strong></p>
 <p>data://协议需要满足双on条件，作用和 php://input 类似</p>
@@ -67,20 +67,20 @@
 <p>因此第一步的payload：<code>?text=data:text/plain;base64,d2VsY29tZSB0byB0aGUgempjdGY=</code></p>
 <p>再看第二步，我们注意到有include函数，那么可能就存在文件包含漏洞，用<code>php://filter</code>文件读取流，直接读取flag.php肯定是不行的了，因为第二个判断就要满足文件名中不包含flag字词。此处又提醒我们有一个useless文件，因此我们尝试读取该文件内容</p>
 <p>第二步的payload：<code>file=php://filter/read=convert.base64-encode/resource=useless.php</code></p>
-<p><img src="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/image-20210715165754328.png" alt="image-20210715165754328"></p>
+<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63.assets/image-20210715165754328.png" alt="image-20210715165754328"></p>
 <p>对回显的内容进行base64解码即可：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span></span><br><span class="line">php  </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flag</span></span>&#123;  <span class="comment">//flag.php  </span></span><br><span class="line">    <span class="keyword">public</span> $file;  </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__tostring</span>(<span class="params"></span>)</span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="keyword">$this</span>-&gt;file))&#123;  </span><br><span class="line">            <span class="keyword">echo</span> file_get_contents(<span class="keyword">$this</span>-&gt;file); </span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> (<span class="string">&quot;U R SO CLOSE !///COME ON PLZ&quot;</span>);</span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="meta">?&gt;</span>  </span><br></pre></td></tr></table></figure>
 
 <p>代码审计发现包含文件中的变量file没有做任何防护措施，也就是说我们可以随意控制file的值。</p>
 <p>附上exp：</p>
-<p><img src="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/image-20210715171559909.png" alt="image-20210715171559909"></p>
+<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63.assets/image-20210715171559909.png" alt="image-20210715171559909"></p>
 <p>代码执行完后会产生序列化字符串：<code>O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;</code>；</p>
 <p>当我们把这串字符串作为参数password的值上传后，<code>unserialize</code>函数将其反序列化，这时结合<code>file_get_contents</code>函数打开flag.php文件，读取并输出回显。</p>
 <p>因此这就构成了第三个payload：<code>?password=O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;</code></p>
 <p>总结上述的三个payload，将他们合成一个：</p>
 <p><code>?text=data:text/plain;base64,d2VsY29tZSB0byB0aGUgempjdGY=&amp;file=useless.php&amp;password=O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;</code></p>
-<p><img src="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/image-20210715172620323.png" alt="image-20210715172620323"></p>
-<p>F12查看源码获得flag：<img src="/2021/07/13/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63/image-20210715172736646.png" alt="image-20210715172736646"></p>
+<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63.assets/image-20210715172620323.png" alt="image-20210715172620323"></p>
+<p>F12查看源码获得flag：<img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B63.assets/image-20210715172736646.png" alt="image-20210715172736646"></p>
 <h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>这是一道关于http伪协议、文件包含漏洞和反序列化的题目，只要懂得对应的点感觉还是比较容易的。</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->

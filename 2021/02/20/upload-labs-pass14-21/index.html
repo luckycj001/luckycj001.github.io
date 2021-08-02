@@ -92,14 +92,14 @@
 <li>索引 2 给出的是图像的类型，返回的是数字，其中1 = GIF，2 = JPG，3 = PNG，4 = SWF，5 = PSD，6 = BMP，7 = TIFF(intel byte order)，8 = TIFF(motorola byte order)，9 = JPC，10 = JP2，11 = JPX，12 = JB2，13 = SWC，14 = IFF，15 = WBMP，16 = XBM</li>
 <li>索引 3 给出的是一个宽度和高度的字符串，可以直接用于 HTML 的 &lt;image标签</li>
 </ol>
-<p>菜鸟教程实例：<img src="/2021/02/20/upload-labs-pass14-21/3.png" alt="3"></p>
+<p>菜鸟教程实例：<img src="/upload-labs-pass14/3.png" alt="3"></p>
 <p>那么这关也是直接上传图片马即可绕过。</p>
 <h1 id="pass-16：突破exif-imagetype"><a href="#pass-16：突破exif-imagetype" class="headerlink" title="pass-16：突破exif_imagetype()"></a>pass-16：突破exif_imagetype()</h1><ul>
 <li><p>exif_imagetype()函数：</p>
 <p>功能：读取一个图像的第一个字节并检查其签名。如果发现了恰当的签名则返回一个对应的常量，否则返回 FALSE。这个签名（也可以称为值）和 getimagesize() 返回的数组中的索引 2 的值是一样的，但本函数快得多。</p>
 </li>
 </ul>
-<p><img src="/2021/02/20/upload-labs-pass14-21/4.png" alt="4"></p>
+<p><img src="/upload-labs-pass14/4.png" alt="4"></p>
 <p>那么这关也是直接上传图片马即可绕过。</p>
 <h1 id="pass-17：二次渲染绕过"><a href="#pass-17：二次渲染绕过" class="headerlink" title="pass-17：二次渲染绕过"></a>pass-17：二次渲染绕过</h1><h1 id="pass-18：条件竞争——时间型"><a href="#pass-18：条件竞争——时间型" class="headerlink" title="pass-18：条件竞争——时间型"></a>pass-18：条件竞争——时间型</h1><ul>
 <li>代码审计：服务器先上传了图片，再判断后缀是否符合，符合则重命名，不符合则删除。</li>
@@ -295,7 +295,7 @@
 <li>补充知识：对于像<code>.php/.</code>这样的文件路径，move_uploaded_file()函数会忽略掉文件末尾的<code>/.</code>。如此一来我们上传到服务器的文件还是被重命名为了php后缀。</li>
 <li>那么这关我们的想法是：提前将save_name设置为数组，即令<code>save_name[0]=webshell.php/</code>、<code>save_name[2]=jpg</code>，其中save_name[1]的值为空。这样就可令<code>$file_name=webshell.php/.</code>。但是这边有个疑问，save_name数组的元素个数不是三个吗，$file[count($file) - 1]=$file[2]啊。但是其实我们只对数组赋值了两个元素，因此count的值为2，这就相当于你有3个口袋，但是只有两个口袋有钱。</li>
 </ul>
-<p>下面是实践：<img src="/2021/02/20/upload-labs-pass14-21/5-1614255649559.png" alt="5"></p>
+<p>下面是实践：<img src="/upload-labs-pass14-21/5-1614255649559.png" alt="5"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

