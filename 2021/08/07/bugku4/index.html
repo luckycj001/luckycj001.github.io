@@ -60,22 +60,22 @@
         </div>
         <div class="content markdown">
             <h1 id="速度要快"><a href="#速度要快" class="headerlink" title="速度要快"></a>速度要快</h1><p>打开容器：</p>
-<p><img src="/2021/08/07/bugku4/image-20210807181230804.png" alt="image-20210807181230804"></p>
+<p><img src="/bugku4.assets/image-20210807181230804.png" alt="image-20210807181230804"></p>
 <h4 id="一-初步探索"><a href="#一-初步探索" class="headerlink" title="一.初步探索"></a>一.初步探索</h4><p>查看下源码：</p>
-<p><img src="/2021/08/07/bugku4/image-20210807181326644.png" alt="image-20210807181326644"></p>
+<p><img src="/bugku4.assets/image-20210807181326644.png" alt="image-20210807181326644"></p>
 <p>叫我们POST一个参数margin，值是我们发现的内容，我们发现啥了？先随便试试</p>
-<p><img src="/2021/08/07/bugku4/image-20210807181706951.png" alt="image-20210807181706951"></p>
-<p>回显了一句废话，但是在响应头里看到flag：<img src="/2021/08/07/bugku4/image-20210807181815941.png" alt="image-20210807181815941"></p>
-<p>把这串字符串base64解码，得：<img src="/2021/08/07/bugku4/image-20210807182015720.png" alt="image-20210807182015720"></p>
-<p>还有一段base64字符串，再解码：<img src="/2021/08/07/bugku4/image-20210807182052566.png" alt="image-20210807182052566"></p>
-<p>POST传参<img src="/2021/08/07/bugku4/image-20210807182135377.png" alt="image-20210807182135377"></p>
+<p><img src="/bugku4.assets/image-20210807181706951.png" alt="image-20210807181706951"></p>
+<p>回显了一句废话，但是在响应头里看到flag：<img src="/bugku4.assets/image-20210807181815941.png" alt="image-20210807181815941"></p>
+<p>把这串字符串base64解码，得：<img src="/bugku4.assets/image-20210807182015720.png" alt="image-20210807182015720"></p>
+<p>还有一段base64字符串，再解码：<img src="/bugku4.assets/image-20210807182052566.png" alt="image-20210807182052566"></p>
+<p>POST传参<img src="/bugku4.assets/image-20210807182135377.png" alt="image-20210807182135377"></p>
 <p>看来是我们传参的太慢了，他后台应该是定时更新margin的值，得在规定的时间内获取并提交，那得写脚本来跑了。</p>
 <p>exp：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> re <span class="comment">#正则匹配模块</span></span><br><span class="line">s = requests.session() <span class="comment">#建立会话</span></span><br><span class="line">url = <span class="string">&quot;http://114.67.246.176:11527/&quot;</span></span><br><span class="line">head = s.get(url).headers <span class="comment">#获取头部信息</span></span><br><span class="line">result = head[<span class="string">&#x27;flag&#x27;</span>] <span class="comment">#得到flag的value</span></span><br><span class="line">result = base64.b64decode(result).decode(<span class="string">&#x27;utf-8&#x27;</span>) <span class="comment">#第一次base64解码</span></span><br><span class="line">result = re.search(<span class="string">&#x27;\w+$&#x27;</span>, result).group(<span class="number">0</span>) <span class="comment">#正则匹配base64编码的flag</span></span><br><span class="line">result = base64.b64decode(result).decode(<span class="string">&#x27;utf-8&#x27;</span>) <span class="comment">#第二次解码</span></span><br><span class="line">payload = &#123;<span class="string">&#x27;margin&#x27;</span>: result&#125;</span><br><span class="line">print(s.post(url, data=payload).text) <span class="comment">#post传输数据且输出返回信息</span></span><br></pre></td></tr></table></figure>
 
 
 
-<p><img src="/2021/08/07/bugku4/image-20210807182917519.png" alt="image-20210807182917519"></p>
+<p><img src="/bugku4.assets/image-20210807182917519.png" alt="image-20210807182917519"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">

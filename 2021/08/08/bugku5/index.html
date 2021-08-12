@@ -60,7 +60,7 @@
         <div class="content markdown">
             <h1 id="login1"><a href="#login1" class="headerlink" title="login1"></a>login1</h1><p>打开容器，发现是一个登入界面</p>
 <p>题目hint这题是sql约束攻击</p>
-<p><img src="/2021/08/08/bugku5/image-20210809143818828.png" alt="image-20210809143818828"></p>
+<p><img src="/bugku5.assets/image-20210809143818828.png" alt="image-20210809143818828"></p>
 <h3 id="一-预备知识"><a href="#一-预备知识" class="headerlink" title="一.预备知识"></a>一.预备知识</h3><h4 id="SQL约束攻击"><a href="#SQL约束攻击" class="headerlink" title="SQL约束攻击"></a><strong>SQL约束攻击</strong></h4><ul>
 <li><p>原理介绍：</p>
 <ol>
@@ -69,7 +69,7 @@
 <li><p>数据库在处理SQL字符串语句时，字符串末尾的空格字符都会被删除。什么意思呢？举个例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM users WHERE username&#x3D;&#39;admin &#39;;  等同于  SELECT * FROM users WHERE username&#x3D;&#39;admin&#39;; </span><br></pre></td></tr></table></figure>
 
-<p> <img src="/2021/08/08/bugku5/image-20210809150739830.png" alt="image-20210809150739830"></p>
+<p> <img src="/bugku5.assets/image-20210809150739830.png" alt="image-20210809150739830"></p>
 </li>
 </ol>
 </li>
@@ -81,7 +81,7 @@
 
 </li>
 </ul>
-<p>​     <img src="/2021/08/08/bugku5/image-20210809190823691.png" alt="image-20210809190823691"></p>
+<p>​     <img src="/bugku5.assets/image-20210809190823691.png" alt="image-20210809190823691"></p>
 <p>​        我们看到就算我们注册一个username=<code>admin(一大串空格)1</code>的用户，存入数据库中后因为字段长度约束的限制就会变成admin。</p>
 <p>​    </p>
 <h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>知道了上面的原理，我们就可以开始构造paylaod了：</p>

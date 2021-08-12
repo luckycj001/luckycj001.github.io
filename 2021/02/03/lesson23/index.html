@@ -66,7 +66,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$reg = &quot;/<span class="comment">#/&quot;;</span></span><br><span class="line">$reg1 = &quot;/<span class="comment">--/&quot;;</span></span><br><span class="line">$<span class="keyword">replace</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">$id = preg_replace($reg, $<span class="keyword">replace</span>, $<span class="keyword">id</span>);</span><br><span class="line">$id = preg_replace($reg1, $<span class="keyword">replace</span>, $<span class="keyword">id</span>);</span><br></pre></td></tr></table></figure>
 
 <p><strong>介绍一下preg_replace()函数：</strong></p>
-<p><img src="/2021/02/03/lesson23/1.png" alt="1"></p>
+<p><img src="/lesson23/1.png" alt="1"></p>
 <p>因此我们得知  <code>&#39;--+&#39;</code>   和 <code>#</code>  都被屏蔽掉了，那么我们要怎么闭合sql语句呢？</p>
 <h5 id="1-union注入时"><a href="#1-union注入时" class="headerlink" title="1.union注入时"></a>1.union注入时</h5><p>以爆库为例：?id=-1’  union select 1,database(),’3   </p>
 <p>​               或：?id=-1’  union select 1,database(),3 or ‘1’=’ </p>

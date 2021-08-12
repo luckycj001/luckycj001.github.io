@@ -60,22 +60,22 @@
 <ul>
 <li>点击：Forgot your password？</li>
 </ul>
-<p>页面跳转：<img src="/2021/02/03/lesson24/1.png" alt="1"></p>
+<p>页面跳转：<img src="/lesson24/1.png" alt="1"></p>
 <p>大意是如果你忘了你的密码，就自己黑了他。那么我们肯定不能在这里下手了。</p>
 <ul>
 <li>点击：New User click here?</li>
-<li>页面跳转：<img src="/2021/02/03/lesson24/3.png" alt="3"></li>
+<li>页面跳转：<img src="/lesson24/3.png" alt="3"></li>
 </ul>
 <p>我们看到这就是一个普通的注册界面，有什么用呢，我们先暂不言表。</p>
 <p>我们接着试探，输入正确账号密码，进入到一个修改密码的网页：</p>
-<p><img src="/2021/02/03/lesson24/4.png" alt="4"></p>
+<p><img src="/lesson24/4.png" alt="4"></p>
 <p>不知道哪个地方可以注入，我们先<strong>打开login的源码：</strong></p>
-<p><img src="/2021/02/03/lesson24/6.png" alt="6"></p>
+<p><img src="/lesson24/6.png" alt="6"></p>
 <p>发现登入页面输入的账号密码都被转义了，那么肯定不能直接注入，接着看代码：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[&quot;username&quot;] = $login;</span><br></pre></td></tr></table></figure>
 
 <p>发现它设了一个新变量储存从数据库中选择出来的username的值。</p>
-<p><strong>打开pass_change的源码：</strong><img src="/2021/02/03/lesson24/5.png" alt="5"></p>
+<p><strong>打开pass_change的源码：</strong><img src="/lesson24/5.png" alt="5"></p>
 <p>我们可以看出从改密码的页面注入是不可行的了，但是我们发现从数据库中选择出来的username没有被复查，直接构造成sql语句，带入到数据库中。于是我们就可以有这样一种思路，我们先注册一个账号，例如：账户：admin’#（admin为目标用户名），密码：123。</p>
 <p>然后我们输入我们注册的这个账号密码登入，进入修改密码页面，</p>
 <p>pass_change的源码中sql语句是：</p>

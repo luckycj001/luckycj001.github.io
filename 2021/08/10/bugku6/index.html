@@ -59,7 +59,7 @@ paylaod：?,">
         </div>
         <div class="content markdown">
             <h1 id="Simple-SSTI-1"><a href="#Simple-SSTI-1" class="headerlink" title="Simple_SSTI_1"></a>Simple_SSTI_1</h1><p>打开容器</p>
-<p><img src="/2021/08/10/bugku6/image-20210810160454615.png" alt="image-20210810160454615"></p>
+<p><img src="/bugku6.assets/image-20210810160454615.png" alt="image-20210810160454615"></p>
 <p>叫我们传参flag，没说用哪种方式也没说传啥，先试试GET随便传参</p>
 <p>payload：<code>?flag=1</code></p>
 <p>回显1</p>
@@ -69,7 +69,7 @@ paylaod：?,">
 <p>尝试获取当前目录</p>
 <p>payload：<code>?flag=&#123;&#123;system('ls')&#125;&#125;</code></p>
 <p>回显error，应该是禁用了system。看来我们得想别的法子了。</p>
-<p>查看下源码：<img src="/2021/08/10/bugku6/image-20210810191104638.png" alt="image-20210810191104638"></p>
+<p>查看下源码：<img src="/bugku6.assets/image-20210810191104638.png" alt="image-20210810191104638"></p>
 <p>发现hint说有secret_key的配置，那说明可能里面有flag的信息。</p>
 <p>payload：<code>?flag=&#123;&#123;secret_key&#125;&#125;</code></p>
 <p>但是这样没有回显，那怎么搞呢？</p>
@@ -79,9 +79,9 @@ paylaod：?,">
 <p>再构造payload：<code>?flag=&#123;&#123;config.secret_key&#125;&#125;</code></p>
 <p>但是这样还是没有回显，为什么呢？</p>
 <p>查看一下这个网站：<a target="_blank" rel="noopener" href="http://www.pythondoc.com/flask/config.html">http://www.pythondoc.com/flask/config.html</a></p>
-<p>发现内置的配置值全是大写的<img src="/2021/08/10/bugku6/image-20210810214728567.png" alt="image-20210810214728567"></p>
+<p>发现内置的配置值全是大写的<img src="/bugku6.assets/image-20210810214728567.png" alt="image-20210810214728567"></p>
 <p>再修改payload：<code>?flag=&#123;&#123;config.SECRET_KEY&#125;&#125;</code></p>
-<p><img src="/2021/08/10/bugku6/image-20210810214908352.png" alt="image-20210810214908352"></p>
+<p><img src="/bugku6.assets/image-20210810214908352.png" alt="image-20210810214908352"></p>
 <h1 id="Simple-SSTI-2"><a href="#Simple-SSTI-2" class="headerlink" title="Simple_SSTI_2"></a>Simple_SSTI_2</h1><p>打开容器，又是叫我们传参flag，直接试试有没有ssti注入</p>
 <p>payload：<code>?flag=&#123;&#123;2*2&#125;&#125;</code></p>
 <p>回显4，说明存在ssti注入</p>
@@ -91,13 +91,64 @@ paylaod：?,">
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">?flag&#x3D;&#123;&#123; config.__class__.__init__.__globals__[&#39;os&#39;].popen(&#39;任意执行命令&#39;).read() &#125;&#125;</span><br><span class="line">&#x2F;&#x2F;__class__              用来查看变量所属的类，根据前面的变量形式可以得到其所属的类。</span><br><span class="line">&#x2F;&#x2F;__init__               初始化类，返回的类型是function</span><br><span class="line">&#x2F;&#x2F;__globals__[]          使用方式是 函数名.__globals__获取function所处空间下可使用的module、方法以及所有变量。</span><br><span class="line">&#x2F;&#x2F;os.popen() 方法用于从一个命令打开一个管道。</span><br></pre></td></tr></table></figure>
 
 <p>尝试查看当前目录：<code>?flag=&#123;&#123; config.__class__.__init__.__globals__['os'].popen('ls').read() &#125;&#125;</code></p>
-<p><img src="/2021/08/10/bugku6/image-20210810221315851.png" alt="image-20210810221315851"></p>
+<p><img src="/bugku6.assets/image-20210810221315851.png" alt="image-20210810221315851"></p>
 <p>直接获取flag：<code>?flag=&#123;&#123; config.__class__.__init__.__globals__['os'].popen('cat flag').read() &#125;&#125;</code></p>
-<p><img src="/2021/08/10/bugku6/image-20210810221416746.png" alt="image-20210810221416746"></p>
+<p><img src="/bugku6.assets/image-20210810221416746.png" alt="image-20210810221416746"></p>
+<h1 id="Flask-FileUpload"><a href="#Flask-FileUpload" class="headerlink" title="Flask_FileUpload"></a>Flask_FileUpload</h1><p>打开容器，发现是一道文件上传的题</p>
+<p><img src="/bugku6.assets/image-20210811211030113.png" alt="image-20210811211030113"></p>
+<p>先查看下源码有没有啥hint<img src="/bugku6.assets/image-20210811211008073.png" alt="image-20210811211008073"></p>
+<p>提示告诉我们后台会将我们上传的文件用python执行后的结果回显给我们</p>
+<p>这里我们引入一个知识点：</p>
+<h4 id="Python的os模块简介"><a href="#Python的os模块简介" class="headerlink" title="Python的os模块简介"></a>Python的os模块简介</h4><ul>
+<li><p><strong>os模块</strong>提供了多数操作系统的功能接口函数。当os模块被导入后，它会自适应于不同的操作系统平台，根据不同的平台进行相应的操作，在python编程时，经常和文件、目录打交道，这时就离不开os模块。</p>
+</li>
+<li><pre><code class="php">os.sep:取代操作系统特定的路径分隔符
+os.name:指示你正在使用的工作平台。比如对于Windows，它是&#39;nt&#39;，而对于Linux/Unix用户，它是&#39;posix&#39;。
+os.getcwd:得到当前工作目录，即当前python脚本工作的目录路径。
+os.getenv()和os.putenv:分别用来读取和设置环境变量
+os.listdir():返回指定目录下的所有文件和目录名
+os.remove(file):删除一个文件
+os.stat（file）:获得文件属性
+os.chmod(file):修改文件权限和时间戳
+os.mkdir(name):创建目录
+os.rmdir(name):删除目录
+os.removedirs（r“c：\python”）:删除多个目录
+os.system():运行shell命令
+os.exit():终止当前进程
+os.linesep:给出当前平台的行终止符。例如，Windows使用&#39;\r\n&#39;，Linux使用&#39;\n&#39;而Mac使用&#39;\r&#39;
+os.path.split():返回一个路径的目录名和文件名
+os.path.isfile()和os.path.isdir()分别检验给出的路径是一个目录还是文件
+os.path.existe():检验给出的路径是否真的存在
+os.listdir(dirname):列出dirname下的目录和文件
+os.getcwd():获得当前工作目录
+os.curdir:返回当前目录（&#39;.&#39;）
+os.chdir(dirname):改变工作目录到dirname
+os.path.isdir(name):判断name是不是目录，不是目录就返回false
+os.path.isfile(name):判断name这个文件是否存在，不存在返回false
+os.path.exists(name):判断是否存在文件或目录name
+os.path.getsize(name):或得文件大小，如果name是目录返回0L
+os.path.abspath(name):获得绝对路径
+os.path.isabs():判断是否为绝对路径
+os.path.normpath(path):规范path字符串形式
+os.path.split(name):分割文件名与目录（事实上，如果你完全使用目录，它也会将最后一个目录作为文件名而分离，同时它不会判断文件或目录是否存在）
+os.path.splitext():分离文件名和扩展名
+os.path.join(path,name):连接目录与文件名或目录
+os.path.basename(path):返回文件名
+os.path.dirname(path):返回文件路径</code></pre>
+</li>
+</ul>
+<p>知道了这些，我们就可以写一个含os模块的文件</p>
+<p><img src="/bugku6.assets/image-20210812140222625.png" alt="image-20210812140222625"></p>
+<p>这里注意后缀要为jpg或者png</p>
+<p><img src="/bugku6.assets/image-20210812140248434.png" alt="image-20210812140248434"></p>
+<p>因为我们上传的文件仅允许后缀为jpg和png</p>
+<p>上传成功得flag</p>
+<p><img src="/bugku6.assets/image-20210812140400350.png" alt="image-20210812140400350"></p>
 <h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>参考资料：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zz_Caleb/article/details/96480967?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-1.control">https://blog.csdn.net/zz_Caleb/article/details/96480967?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaochaofang/p/14533709.html">https://www.cnblogs.com/xiaochaofang/p/14533709.html</a></p>
 <p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/3679#toc-8">https://xz.aliyun.com/t/3679#toc-8</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ginvip/p/6439679.html">https://www.cnblogs.com/ginvip/p/6439679.html</a></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
