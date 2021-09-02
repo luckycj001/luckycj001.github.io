@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>buuctf29 - 林北</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="[网鼎杯 2018]Fakebook打开容器，发现可以注册或登入账号，先看看源码，没什么线索，扫扫目录，发现robots.txt文件：
+
+访问user.php.bak：
+12345678910111,"> 
+    <meta name="author" content="linbei"> 
+    <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
+    <link rel="icon" href="/img/3.jpg"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">林北</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">buuctf29</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">buuctf29</h1>
+        <div class="stuff">
+            <span>八月 31, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="网鼎杯-2018-Fakebook"><a href="#网鼎杯-2018-Fakebook" class="headerlink" title="[网鼎杯 2018]Fakebook"></a>[网鼎杯 2018]Fakebook</h1><p>打开容器，发现可以注册或登入账号，先看看源码，没什么线索，扫扫目录，发现robots.txt文件：</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901105642599.png" alt="image-20210901105642599"></p>
+<p>访问user.php.bak：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserInfo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $name = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> $age = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> $blog = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$name, $age, $blog</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;name = $name;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;age = (<span class="keyword">int</span>)$age;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;blog = $blog;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">get</span>(<span class="params">$url</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $ch = curl_init();</span><br><span class="line"></span><br><span class="line">        curl_setopt($ch, CURLOPT_URL, $url);</span><br><span class="line">        curl_setopt($ch, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">        $output = curl_exec($ch);</span><br><span class="line">        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);</span><br><span class="line">        <span class="keyword">if</span>($httpCode == <span class="number">404</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">404</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        curl_close($ch);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> $output;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getBlogContents</span> (<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;get(<span class="keyword">$this</span>-&gt;blog);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">isValidBlog</span> (<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        $blog = <span class="keyword">$this</span>-&gt;blog;</span><br><span class="line">        <span class="keyword">return</span> preg_match(<span class="string">&quot;/^(((http(s?))\:\/\/)?)([0-9a-zA-Z\-]+\.)+[a-zA-Z]&#123;2,6&#125;(\:[0-9]+)?(\/\S*)?$/i&quot;</span>, $blog);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一-代码审计"><a href="#一-代码审计" class="headerlink" title="一.代码审计"></a>一.代码审计</h3><p>可以看到存在一个类UserInfo    ，注意到有两个比较关键的函数</p>
+<ul>
+<li><p>定义函数**get($url)**：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">curl_init(url)函数：初始化一个新的会话，返回一个cURL句柄，供curl_setopt(), curl_exec()和curl_close() 函数使用。参数url如果提供了该参数，CURLOPT_URL 选项将会被设置成这个值。</span><br><span class="line"></span><br><span class="line">curl_setopt ( resource $ch , int $option , mixed $value ) ：设置 cURL 传输选项，为 cURL 会话句柄设置选项。</span><br><span class="line">参数： ch：由 curl_init() 返回的 cURL 句柄；   </span><br><span class="line">      option：需要设置的CURLOPT_XXX选项。（CURLOPT_URL：需要获取的 URL 地址，也可以在curl_init() 初始化会话的时候。使用 CURLOPT_RETURNTRANSFER 后总是会返回原生的（Raw）内容。）</span><br><span class="line">      value：将设置在option选项上的值。</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">curl_getinfo：获取一个cURL连接资源句柄的信息，获取最后一次传输的相关信息。</span><br><span class="line"></span><br><span class="line">curl_exec($ch)：   执行一个cURL会话，请求网页</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>定义函数**isValidBlog ()**：</p>
+<p>if语句规定上传的blog值一定要以http或https开头</p>
+</li>
+</ul>
+<h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>根据get函数的特性，我们看到它利用cURL访问我们上传的blog网址，并且返回访问的信息，那么借此我们可以尝试ssrf，利用file://读取指定路径下的文件。</p>
+<p>但是同时我们发现<strong>isValidBlog ()函数</strong>规定了blog网址只能以http或https开头，那看来得想办法绕过才行。</p>
+<p>眼下回到文头去注册一个账号</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901163732928.png" alt="image-20210901163732928"></p>
+<p>发现username是可点击的：</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901163803983.png" alt="image-20210901163803983"></p>
+<p>可以看到它有一个内联框架，里面是我们的blog网页</p>
+<p>接着我们看到URL栏<img src="/2021/08/31/buuctf29/image-20210901164125000.png" alt="image-20210901164125000"></p>
+<p>改变no的参数：<img src="/2021/08/31/buuctf29/image-20210901164557479.png" alt="image-20210901164557479"></p>
+<p>可以看到它应该是根据用户的no编号来获取用户的相关信息的，因为不存在编号为0的用户，因此返回相关信息为空或报错。</p>
+<p>我们可以尝试一下是否存在sql注入：</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901165202744.png" alt="image-20210901165202744"></p>
+<p>看到报错语句我们可以确定注入点应为整数型<img src="/2021/08/31/buuctf29/image-20210901165318866.png" alt="image-20210901165318866"></p>
+<p><strong>1）确定字段数</strong></p>
+<p><img src="/2021/08/31/buuctf29/image-20210901165511651.png" alt="image-20210901165511651"></p>
+<p>当by的值大于4时，网页报错，因此该表中存在4个字段数</p>
+<p><strong>2）爆库</strong></p>
+<p>由于他禁用了union selcet，发现用/**/可以绕过，同时第二字段为username且为回显位</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901171637729.png" alt="image-20210901171637729"></p>
+<p><img src="/2021/08/31/buuctf29/image-20210901165731131.png" alt="image-20210901165731131"></p>
+<p><strong>3）爆表</strong></p>
+<p><img src="/2021/08/31/buuctf29/image-20210901165802205.png" alt="image-20210901165802205"></p>
+<p><strong>4）爆列</strong></p>
+<p><img src="/2021/08/31/buuctf29/image-20210901165831603.png" alt="image-20210901165831603"></p>
+<p><strong>5）爆值</strong></p>
+<p><img src="/2021/08/31/buuctf29/image-20210901170206412.png" alt="image-20210901170206412"></p>
+<p>可以看到data里存着我们序列化后的注册信息，既然存在对数据序列化，那么理应也有反序列化：</p>
+<p><img src="/2021/08/31/buuctf29/image-20210901171352424.png" alt="image-20210901171352424"></p>
+<p>可以看到它应该是有定义一个unserialize()函数，但是因为我们输入no=0，他没有反序列化对象，所以函数报错；</p>
+<p>那么我们利用这个unserialize()函数就可以绕过isValidBlog ()函数的判断；</p>
+<p>而现在要做的就是确认data的字段值是否会反序列化，然后结合前面我们可以猜测这个表的字段对应为：</p>
+<table>
+<thead>
+<tr>
+<th>1</th>
+<th align="left">no</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2</td>
+<td align="left">username</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="left">passwd</td>
+</tr>
+<tr>
+<td>4</td>
+<td align="left">data</td>
+</tr>
+</tbody></table>
+<p>尝试在字段data处构造我们的paylaod：</p>
+<p>O:8:”UserInfo”:3:{s:4:”name”;s:6:”admin1”;s:3:”age”;i:1;s:4:”blog”;s:29:”file:///var/www/html/flag.php”;}            </p>
+<p>综上，我们完整的paylaod：</p>
+<p><code>?no=0%20union/**/select%201,2,3,%27O:8:%22UserInfo%22:3:&#123;s:4:%22name%22;s:6:%22admin1%22;s:3:%22age%22;i:1;s:4:%22blog%22;s:29:%22file:///var/www/html/flag.php%22;&#125;%27%20--+</code></p>
+<p><img src="/2021/08/31/buuctf29/image-20210902155415999.png" alt="image-20210902155415999"></p>
+<p>可以看到是执行了unserialize()函数，我们看一下源码<img src="/2021/08/31/buuctf29/image-20210902155810875.png" alt="image-20210902155810875"></p>
+<p>点击链接即可获取flag</p>
+<p><img src="/2021/08/31/buuctf29/image-20210902160146055.png" alt="image-20210902160146055"></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
