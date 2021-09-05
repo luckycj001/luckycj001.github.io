@@ -76,7 +76,7 @@
 <p>if语句规定上传的blog值一定要以http或https开头</p>
 </li>
 </ul>
-<h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>根据get函数的特性，我们看到它利用cURL访问我们上传的blog网址，并且返回访问的信息，那么借此我们可以尝试ssrf，利用file://读取指定路径下的文件。</p>
+<h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>根据get函数的特性，我们看到它利用cURL访问我们上传的blog网址，并且返回访问的信息，那么借此我们可以尝试ssrf，利用file:///读取指定路径下的文件。</p>
 <p>但是同时我们发现<strong>isValidBlog ()函数</strong>规定了blog网址只能以http或https开头，那看来得想办法绕过才行。</p>
 <p>眼下回到文头去注册一个账号</p>
 <p><img src="/2021/08/31/buuctf29/image-20210901163732928.png" alt="image-20210901163732928"></p>

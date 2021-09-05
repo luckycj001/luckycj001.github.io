@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>i春秋3 - 林北</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="“百度杯”CTF比赛 十月场_GetFlag打开容器：
+看来我们需要登入才能获取一些相关文件和flag
+第一个考点：MD5字符串碰撞点击进入登入页面：
+可以看到我们登入需要验证码，而这个验证码MD5,"> 
+    <meta name="author" content="linbei"> 
+    <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
+    <link rel="icon" href="/img/3.jpg"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">林北</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">i春秋3</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">i春秋3</h1>
+        <div class="stuff">
+            <span>九月 05, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="“百度杯”CTF比赛-十月场-GetFlag"><a href="#“百度杯”CTF比赛-十月场-GetFlag" class="headerlink" title="“百度杯”CTF比赛 十月场_GetFlag"></a>“百度杯”CTF比赛 十月场_GetFlag</h1><p>打开容器：<img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905110956090.png" alt="image-20210905110956090"></p>
+<p>看来我们需要登入才能获取一些相关文件和flag</p>
+<h4 id="第一个考点：MD5字符串碰撞"><a href="#第一个考点：MD5字符串碰撞" class="headerlink" title="第一个考点：MD5字符串碰撞"></a>第一个考点：MD5字符串碰撞</h4><p>点击进入登入页面：<img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905112248322.png" alt="image-20210905112248322"></p>
+<p>可以看到我们登入需要验证码，而这个验证码MD5编码后截取前六位等于<code>314a35</code></p>
+<p>因此我们写个MD5碰撞的脚本跑出captcha：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">for</span> v1 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">    <span class="keyword">for</span> v2 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> v3 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">            <span class="keyword">for</span> v4 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                <span class="keyword">for</span> v5 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                    <span class="keyword">for</span> v6 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                        v=v1+v2+v3+v4+v5+v6</span><br><span class="line">                        m=hashlib.md5()</span><br><span class="line">                        m.update(v.encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">                        n=m.hexdigest()</span><br><span class="line">                        <span class="keyword">if</span> n[<span class="number">0</span>:<span class="number">6</span>] == <span class="string">&#x27;1268fd&#x27;</span> :</span><br><span class="line">                            print(v)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>解决了验证码的问题但是我们发现我们不知道登入得账号密码，试试看能不能用万能钥匙登入：</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905115642973.png" alt="image-20210905115642973"></p>
+<h4 id="考点二：构造绝对路径"><a href="#考点二：构造绝对路径" class="headerlink" title="考点二：构造绝对路径"></a>考点二：构造绝对路径</h4><p>登入成功，并且发现三个文件：</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905115704155.png" alt="image-20210905115704155"></p>
+<p>前两个文件没什么有效信息，看到a.php 提示我们flag在web服务器根目录下</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905162427055.png" alt="image-20210905162427055"></p>
+<p>同时我们也注意到我们可以通过控制<strong>f</strong>的参数来达到下载任意文件的目的</p>
+<p>那么我们可以通过一级级的返回上一父级目录来读取flag.php</p>
+<p>paylaod：<code>../../flag.php</code></p>
+<p>但是在测试的过程中发现，只要文件名中包含<code>./</code>、<code>../</code>就会返回下面的假flag，看来是过滤了这些分隔符，不想我们我们随意的目录穿越</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905163049348.png" alt="image-20210905163049348"></p>
+<p>那么我们只能猜测绝对路径了，一般的路径为<code>/var/www/html</code>但是测试发现还要在加上<code>Challenges</code></p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905163753177.png" alt="image-20210905163753177"></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$f = $_POST[<span class="string">&#x27;flag&#x27;</span>];</span><br><span class="line">$f = str_replace(<span class="keyword">array</span>(<span class="string">&#x27;`&#x27;</span>, <span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;#&#x27;</span>, <span class="string">&#x27;:&#x27;</span>, <span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&quot;&#x27;&quot;</span>, <span class="string">&#x27;(&#x27;</span>, <span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>), <span class="string">&#x27;&#x27;</span>, $f);</span><br><span class="line"><span class="keyword">if</span>((strlen($f) &gt; <span class="number">13</span>) || (<span class="literal">false</span> !== stripos($f, <span class="string">&#x27;return&#x27;</span>)))</span><br><span class="line">&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&#x27;wowwwwwwwwwwwwwwwwwwwwwwwww&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">		 <span class="keyword">eval</span>(<span class="string">&quot;\$spaceone = <span class="subst">$f</span>&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (<span class="built_in">Exception</span> $e)</span><br><span class="line">&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($spaceone === <span class="string">&#x27;flag&#x27;</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> file_get_contents(<span class="string">&quot;helloctf.php&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p><strong>代码审计：</strong>post一个变量flag，规定flag的参数值要小等于13，并且不含<code>return</code>。然后利用eval()函数将flag的值赋值给变量$spaceone，最后if语句判断其值是否等于flag，若等则读取文件<code>helloctf.php</code>。</p>
+<p>总结一句话就是判断flag的值是否为flag，但是需要注意的是，因为他是用eval()函数赋值的，根据eval()函数的特性，他执行的是标准的php语法，因此我们的paylaod：<code>flag=flag;</code></p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905165107874.png" alt="image-20210905165107874"></p>
+<p>网页无回显，但是查看源码即可看到flag</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

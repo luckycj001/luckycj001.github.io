@@ -157,8 +157,10 @@
 <h1 id="nmap"><a href="#nmap" class="headerlink" title="nmap"></a>nmap</h1><p>nmap常见的指令</p>
 <p> nmap -v 详细信息输出<br> nmap -p 指定端口<br> nmap -iL 扫描文件中的ip<br> nmap -exclude 不扫描某些ip<br> nmap -Pn 使用ping扫描，显式地关闭端口扫描，用于主机发现<br> nmap -sn 使用ping扫描，进行端口扫描，假设主机都是up的<br> nmap -sS 使用SYN扫描，不需要完成三次握手<br> nmap -sT TCP connect扫描，需要完成三次握手，只适用于找出TCP和UDP端口<br> nmap -sU 扫描UDP端口<br> nmap -sF FIN扫描，用于探测防火墙状态，识别端口是否关闭，容易漏扫<br> nmap -sV 扫描目标主机的端口和软件版本<br> nmap -O 远程检测操作系统和软件<br> nmap -O –osscan-guess 猜测目标操作系统版本<br> nmap -traceroute 路由跟踪<br> nmap -A 综合扫描，包含1-10000的端口ping扫描，操作系统扫描，脚本扫描，路由跟踪，服务探测<br> nmap -oN result.txt 将标准输出写入到指定文件中<br> nmap -oX result.xml 将输入写成xml的形式<br> nmap -oS result.txt 将输出写成特殊符号的形式，内容跟-oN是一样的，只是字体变了而已<br> nmap -oG result.txt 将输出写成特殊格式<br> nmap -oA 将输出所有格式，有三种 .xml/ .gnmap/ .nmap<br> nmap -T[0-5] 时间参数模板<br>  -T0 用于躲避IDS，时间很长<br>  -T1 用于躲避IDS，时间很长<br>  -T2 降低了扫描速度，使用更小的带宽和目标主机资源对目标靶机进行扫描<br>  -T3 默认模式，未做优化<br>  -T4 假设用户具有合适及可靠的网络而加速对目标靶机的扫描<br>  -T5 假设用户具有更好的网络或者愿意牺牲准确性而加速扫描<br> nmap -sC 根据端口识别服务自动调用默认脚本</p>
 <p>参考资料：<a href="https://blog.csdn.net/haha13l4/article/details/89737637?utm_medium=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase">https://blog.csdn.net/haha13l4/article/details/89737637?utm_medium=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase</a></p>
-<h1 id="GitHack"><a href="#GitHack" class="headerlink" title="GitHack"></a>GitHack</h1><p>指令：<code>GitHack.py 127.0.0.1/.git/</code></p>
+<h1 id="GitHack"><a href="#GitHack" class="headerlink" title="GitHack"></a>GitHack</h1><p>指令：<code>githack.py 127.0.0.1/.git/</code></p>
 <p><strong>当前大量开发人员使用git进行版本控制，对站点自动部署。如果配置不当，可能会将.git文件夹直接部署到线上环境。这就引起了git泄露漏洞。GitHack是一个.git泄露利用测试脚本，通过泄露的文件，还原重建工程源代码。</strong></p>
+<h1 id="git-extract"><a href="#git-extract" class="headerlink" title="git_extract"></a>git_extract</h1><p>指令：<code>git_extract.py 127.0.0.1/.git/</code></p>
+<p>git泄露扫描</p>
 ]]></content>
       <tags>
         <tag>CTF</tag>
@@ -4682,7 +4684,7 @@ os.path.dirname(path):返回文件路径</code></pre>
 <p>if语句规定上传的blog值一定要以http或https开头</p>
 </li>
 </ul>
-<h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>根据get函数的特性，我们看到它利用cURL访问我们上传的blog网址，并且返回访问的信息，那么借此我们可以尝试ssrf，利用file://读取指定路径下的文件。</p>
+<h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>根据get函数的特性，我们看到它利用cURL访问我们上传的blog网址，并且返回访问的信息，那么借此我们可以尝试ssrf，利用file:///读取指定路径下的文件。</p>
 <p>但是同时我们发现<strong>isValidBlog ()函数</strong>规定了blog网址只能以http或https开头，那看来得想办法绕过才行。</p>
 <p>眼下回到文头去注册一个账号</p>
 <p><img src="/2021/08/31/buuctf29/image-20210901163732928.png" alt="image-20210901163732928"></p>
@@ -4741,6 +4743,42 @@ os.path.dirname(path):返回文件路径</code></pre>
 <p>可以看到是执行了unserialize()函数，我们看一下源码<img src="/2021/08/31/buuctf29/image-20210902155810875.png" alt="image-20210902155810875"></p>
 <p>点击链接即可获取flag</p>
 <p><img src="/2021/08/31/buuctf29/image-20210902160146055.png" alt="image-20210902160146055"></p>
+]]></content>
+      <tags>
+        <tag>刷题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>i春秋3</title>
+    <url>/2021/09/05/i%E6%98%A5%E7%A7%8B3/</url>
+    <content><![CDATA[<h1 id="“百度杯”CTF比赛-十月场-GetFlag"><a href="#“百度杯”CTF比赛-十月场-GetFlag" class="headerlink" title="“百度杯”CTF比赛 十月场_GetFlag"></a>“百度杯”CTF比赛 十月场_GetFlag</h1><p>打开容器：<img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905110956090.png" alt="image-20210905110956090"></p>
+<p>看来我们需要登入才能获取一些相关文件和flag</p>
+<h4 id="第一个考点：MD5字符串碰撞"><a href="#第一个考点：MD5字符串碰撞" class="headerlink" title="第一个考点：MD5字符串碰撞"></a>第一个考点：MD5字符串碰撞</h4><p>点击进入登入页面：<img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905112248322.png" alt="image-20210905112248322"></p>
+<p>可以看到我们登入需要验证码，而这个验证码MD5编码后截取前六位等于<code>314a35</code></p>
+<p>因此我们写个MD5碰撞的脚本跑出captcha：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">for</span> v1 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">    <span class="keyword">for</span> v2 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">        <span class="keyword">for</span> v3 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">            <span class="keyword">for</span> v4 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                <span class="keyword">for</span> v5 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                    <span class="keyword">for</span> v6 <span class="keyword">in</span> <span class="string">&#x27;abcdefghijklmnopqrstuvwxyz123456789&#x27;</span>:</span><br><span class="line">                        v=v1+v2+v3+v4+v5+v6</span><br><span class="line">                        m=hashlib.md5()</span><br><span class="line">                        m.update(v.encode(<span class="string">&quot;utf-8&quot;</span>))</span><br><span class="line">                        n=m.hexdigest()</span><br><span class="line">                        <span class="keyword">if</span> n[<span class="number">0</span>:<span class="number">6</span>] == <span class="string">&#x27;1268fd&#x27;</span> :</span><br><span class="line">                            print(v)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>解决了验证码的问题但是我们发现我们不知道登入得账号密码，试试看能不能用万能钥匙登入：</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905115642973.png" alt="image-20210905115642973"></p>
+<h4 id="考点二：构造绝对路径"><a href="#考点二：构造绝对路径" class="headerlink" title="考点二：构造绝对路径"></a>考点二：构造绝对路径</h4><p>登入成功，并且发现三个文件：</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905115704155.png" alt="image-20210905115704155"></p>
+<p>前两个文件没什么有效信息，看到a.php 提示我们flag在web服务器根目录下</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905162427055.png" alt="image-20210905162427055"></p>
+<p>同时我们也注意到我们可以通过控制<strong>f</strong>的参数来达到下载任意文件的目的</p>
+<p>那么我们可以通过一级级的返回上一父级目录来读取flag.php</p>
+<p>paylaod：<code>../../flag.php</code></p>
+<p>但是在测试的过程中发现，只要文件名中包含<code>./</code>、<code>../</code>就会返回下面的假flag，看来是过滤了这些分隔符，不想我们我们随意的目录穿越</p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905163049348.png" alt="image-20210905163049348"></p>
+<p>那么我们只能猜测绝对路径了，一般的路径为<code>/var/www/html</code>但是测试发现还要在加上<code>Challenges</code></p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905163753177.png" alt="image-20210905163753177"></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$f = $_POST[<span class="string">&#x27;flag&#x27;</span>];</span><br><span class="line">$f = str_replace(<span class="keyword">array</span>(<span class="string">&#x27;`&#x27;</span>, <span class="string">&#x27;$&#x27;</span>, <span class="string">&#x27;*&#x27;</span>, <span class="string">&#x27;#&#x27;</span>, <span class="string">&#x27;:&#x27;</span>, <span class="string">&#x27;\\&#x27;</span>, <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&quot;&#x27;&quot;</span>, <span class="string">&#x27;(&#x27;</span>, <span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>), <span class="string">&#x27;&#x27;</span>, $f);</span><br><span class="line"><span class="keyword">if</span>((strlen($f) &gt; <span class="number">13</span>) || (<span class="literal">false</span> !== stripos($f, <span class="string">&#x27;return&#x27;</span>)))</span><br><span class="line">&#123;</span><br><span class="line">		<span class="keyword">die</span>(<span class="string">&#x27;wowwwwwwwwwwwwwwwwwwwwwwwww&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">		 <span class="keyword">eval</span>(<span class="string">&quot;\$spaceone = <span class="subst">$f</span>&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (<span class="built_in">Exception</span> $e)</span><br><span class="line">&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ($spaceone === <span class="string">&#x27;flag&#x27;</span>)&#123;</span><br><span class="line">	<span class="keyword">echo</span> file_get_contents(<span class="string">&quot;helloctf.php&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p><strong>代码审计：</strong>post一个变量flag，规定flag的参数值要小等于13，并且不含<code>return</code>。然后利用eval()函数将flag的值赋值给变量$spaceone，最后if语句判断其值是否等于flag，若等则读取文件<code>helloctf.php</code>。</p>
+<p>总结一句话就是判断flag的值是否为flag，但是需要注意的是，因为他是用eval()函数赋值的，根据eval()函数的特性，他执行的是标准的php语法，因此我们的paylaod：<code>flag=flag;</code></p>
+<p><img src="/2021/09/05/i%E6%98%A5%E7%A7%8B3/image-20210905165107874.png" alt="image-20210905165107874"></p>
+<p>网页无回显，但是查看源码即可看到flag</p>
 ]]></content>
       <tags>
         <tag>刷题</tag>
