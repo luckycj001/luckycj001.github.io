@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-09-05T08:51:35.065Z</updated>
+  <updated>2021-09-19T06:28:14.174Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,65 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>PHP全学习</title>
+    <link href="http://example.com/2021/09/19/PHP%E5%85%A8%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://example.com/2021/09/19/PHP%E5%85%A8%E5%AD%A6%E4%B9%A0/</id>
+    <published>2021-09-19T06:06:35.000Z</published>
+    <updated>2021-09-19T06:28:14.174Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="PHP语言特点"><a href="#PHP语言特点" class="headerlink" title="PHP语言特点"></a>PHP语言特点</h3>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h3 id=&quot;PHP语言特点&quot;&gt;&lt;a href=&quot;#PHP语言特点&quot; class=&quot;headerlink&quot; title=&quot;PHP语言特点&quot;&gt;&lt;/a&gt;PHP语言特点&lt;/h3&gt;</summary>
+      
+    
+    
+    
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>buuctf30</title>
+    <link href="http://example.com/2021/09/13/buuctf30/"/>
+    <id>http://example.com/2021/09/13/buuctf30/</id>
+    <published>2021-09-13T14:17:01.000Z</published>
+    <updated>2021-09-19T09:25:24.684Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="BJDCTF2020-Mark-loves-cat"><a href="#BJDCTF2020-Mark-loves-cat" class="headerlink" title="[BJDCTF2020]Mark loves cat"></a>[BJDCTF2020]Mark loves cat</h1><p>打开容器，发现是一个很“漂亮”的网页：</p><p><img src="/2021/09/13/buuctf30/f75b5b3c4d96d4b7c41b089df0e0547.png" alt="f75b5b3c4d96d4b7c41b089df0e0547"></p><h3 id="一-初步尝试"><a href="#一-初步尝试" class="headerlink" title="一.初步尝试"></a>一.初步尝试</h3><p>查看源码，没有发现什么信息，用git_extract扫出是git泄露，但是第一次我只扫出flag.php：</p><p><img src="/2021/09/13/buuctf30/image-20210919162449299.png" alt="image-20210919162449299"></p><p>再扫一次扫出index.php：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">include &#39;flag.php&#39;;</span><br><span class="line"></span><br><span class="line">$yds &#x3D; &quot;dog&quot;;</span><br><span class="line">$is &#x3D; &quot;cat&quot;;</span><br><span class="line">$handsome &#x3D; &#39;yds&#39;;</span><br><span class="line"></span><br><span class="line">foreach($_POST as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    $$x &#x3D; $y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach($_GET as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    $$x &#x3D; $$y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foreach($_GET as $x &#x3D;&gt; $y)&#123;</span><br><span class="line">    if($_GET[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; $x &amp;&amp; $x !&#x3D;&#x3D; &#39;flag&#39;)&#123;</span><br><span class="line">        exit($handsome);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if(!isset($_GET[&#39;flag&#39;]) &amp;&amp; !isset($_POST[&#39;flag&#39;]))&#123;</span><br><span class="line">    exit($yds);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">if($_POST[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; &#39;flag&#39;  || $_GET[&#39;flag&#39;] &#x3D;&#x3D;&#x3D; &#39;flag&#39;)&#123;</span><br><span class="line">    exit($is);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">echo &quot;the flag is: &quot;.$flag;</span><br></pre></td></tr></table></figure><h3 id="二-分析"><a href="#二-分析" class="headerlink" title="二.分析"></a>二.分析</h3><ul><li><p><strong>foreach()函数</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">foreach (iterable_expression as $value)</span><br><span class="line">    statement</span><br><span class="line">foreach (iterable_expression as $key &#x3D;&gt; $value)</span><br><span class="line">    statement</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">第一种格式遍历给定的 &#96;iterable_expression&#96;  迭代器。每次循环中，当前单元的值被赋给 &#96;$value&#96;。 </span><br><span class="line">第二种格式做同样的事，只除了当前单元的键名也会在每次循环中被赋给变量  &#96;$key&#96;。 </span><br></pre></td></tr></table></figure></li></ul><p>总之，foreach函数可以实现变量覆盖</p><ul><li><p>结合前面的flag.php文件可以看到变量$flag的参数值就是对应的flag了</p><p>因此有两种解法：一种是构造满足if判断的语句 利用exit($flag)输出flag</p><p>​                               另一种是绕过如有if语句判断  执行代码：echo “the flag is: “.$flag;</p></li></ul><h3 id="三-构造paylaod"><a href="#三-构造paylaod" class="headerlink" title="三.构造paylaod"></a>三.构造paylaod</h3><ul><li><p>第一种：</p><p>payload：<code>?yds=flag</code></p><p>经过第二个foreach()：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$x&#x3D; yds          $y&#x3D;flag </span><br><span class="line">$$x&#x3D;$yds         $$y&#x3D;$flag</span><br><span class="line">相当于$yds&#x3D;$flag</span><br></pre></td></tr></table></figure><p>这样就满足第二个if语句判断，执行代码：exit($yds)&lt;=&gt;exit($flag)</p><p>或  payload：<code>?is=flag&amp;flag=flag</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$x&#x3D;is           $y&#x3D;flag</span><br><span class="line">$$x&#x3D;$is         $$y&#x3D;$falg</span><br><span class="line">x相当于$is&#x3D;$flag</span><br></pre></td></tr></table></figure><p>flag=flag满足第三个if语句判断，执行代码：exit($is)&lt;=&gt;exit($flag)</p></li></ul><ul><li><p>第二种：</p><p>payload：<code>flag=1</code></p><p>但是在实际测试时发现echo为空：<img src="/2021/09/13/buuctf30/image-20210919171328613.png" alt="image-20210919171328613"></p></li></ul><p>​        为什么呢？原来是第二个foreach后，覆盖变量$flag=$1，但是我们没有给$1赋值，那么$flag就为空。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;BJDCTF2020-Mark-loves-cat&quot;&gt;&lt;a href=&quot;#BJDCTF2020-Mark-loves-cat&quot; class=&quot;headerlink&quot; title=&quot;[BJDCTF2020]Mark loves cat&quot;&gt;&lt;/a&gt;[BJDCTF202</summary>
+      
+    
+    
+    
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>i春秋4</title>
+    <link href="http://example.com/2021/09/07/i%E6%98%A5%E7%A7%8B4/"/>
+    <id>http://example.com/2021/09/07/i%E6%98%A5%E7%A7%8B4/</id>
+    <published>2021-09-07T14:56:06.000Z</published>
+    <updated>2021-09-07T15:01:32.331Z</updated>
+    
+    
+    
+    
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>i春秋3</title>
@@ -767,9 +826,9 @@
     <link href="http://example.com/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     <id>http://example.com/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</id>
     <published>2021-05-22T02:37:59.000Z</published>
-    <updated>2021-08-12T07:36:47.438Z</updated>
+    <updated>2021-09-19T07:22:49.344Z</updated>
     
-    <content type="html"><![CDATA[<h1 id="序列和反序列化："><a href="#序列和反序列化：" class="headerlink" title="序列和反序列化："></a>序列和反序列化：</h1><p>简单来说：</p><p>序列化——将变量或对象转换成字符串的过程。</p><p>反序列化——将字符串转换成变量或对象的过程。</p><p><img src="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210522104245613.png" alt="image-20210522104245613"></p><h2 id="常见的魔术方法："><a href="#常见的魔术方法：" class="headerlink" title="常见的魔术方法："></a>常见的魔术方法：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_construct()：创建对象时初始化</span><br><span class="line">_destruct()：结束时销毁对象</span><br><span class="line">_toString()：对象被当作字符串时使用</span><br><span class="line">_sleep()：序列化对象之前调用</span><br><span class="line">_wakeup()：反序列化对象之前调用；在序列化之后立即被调用</span><br><span class="line">_call()：调用对象不存在时使用</span><br><span class="line">_get()：调用私有属性时使用</span><br></pre></td></tr></table></figure><h2 id="常见的访问控制修饰符"><a href="#常见的访问控制修饰符" class="headerlink" title="常见的访问控制修饰符"></a>常见的访问控制修饰符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public(公有)</span><br><span class="line">protected(受保护)</span><br><span class="line">private(私有的)</span><br><span class="line">protected属性被序列化的时候属性值会变成：%00*%00属性名</span><br><span class="line">private属性被序列化的时候属性值会变成：%00类名%00属性名</span><br></pre></td></tr></table></figure><p>举个例子：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">O:3:&quot;Ctf&quot;:3&#123;s:4:&quot;flag&quot;;s:13:&quot;flag&#123;abedyui&#125;&quot;;s:4:&quot;name&quot;;s:7:&quot;Sch0lar&quot;;s:3:&quot;age&quot;;s:2:&quot;18&quot;;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">O代表对象 因为我们序列化的是一个对象 序列化数组则用A来表示</span><br><span class="line"></span><br><span class="line">3 代表类名字占三个字符 </span><br><span class="line"></span><br><span class="line">ctf 类名</span><br><span class="line"></span><br><span class="line">3 代表三个属性</span><br><span class="line"></span><br><span class="line">s代表字符串</span><br><span class="line"></span><br><span class="line">4代表属性名长度</span><br><span class="line"></span><br><span class="line">flag属性名</span><br><span class="line"></span><br><span class="line">s:13:&quot;flag&#123;abedyui&#125;&quot; 字符串 属性值长度 属性值</span><br></pre></td></tr></table></figure><h3 id="序列化中每个字母的表示"><a href="#序列化中每个字母的表示" class="headerlink" title="序列化中每个字母的表示"></a>序列化中每个字母的表示</h3><table><thead><tr><th>a</th><th>array数组</th></tr></thead><tbody><tr><td>b</td><td>boolean判断类型</td></tr><tr><td>d</td><td>double浮点数</td></tr><tr><td>i</td><td>integer整数型</td></tr><tr><td>o</td><td>common object 一般的对象</td></tr><tr><td>r</td><td>reference引用类型</td></tr><tr><td>s</td><td>string字符串类型</td></tr><tr><td>C</td><td>custom object</td></tr><tr><td>O</td><td>class</td></tr><tr><td>N</td><td>null</td></tr><tr><td>R</td><td>pointer reference</td></tr><tr><td>U</td><td>unicode string</td></tr></tbody></table><p>借阅资料：</p><p><a href="https://blog.csdn.net/bmth666/article/details/104737025">https://blog.csdn.net/bmth666/article/details/104737025</a></p><p><a href="https://www.cnblogs.com/HelloCTF/p/13044403.html">https://www.cnblogs.com/HelloCTF/p/13044403.html</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="序列和反序列化："><a href="#序列和反序列化：" class="headerlink" title="序列和反序列化："></a>序列和反序列化：</h1><p>简单来说：</p><p>序列化——将变量或对象转换成字符串的过程。</p><p>反序列化——将字符串转换成变量或对象的过程。</p><p><img src="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210522104245613.png" alt="image-20210522104245613"></p><h2 id="常见的魔术方法："><a href="#常见的魔术方法：" class="headerlink" title="常见的魔术方法："></a>常见的魔术方法：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">_construct()：创建对象时初始化，会被赋值覆盖</span><br><span class="line">_destruct()：结束时销毁对象</span><br><span class="line">_toString()：对象被当作字符串时使用</span><br><span class="line">_sleep()：序列化对象之前调用</span><br><span class="line">_wakeup()：反序列化对象之前调用；在序列化之后立即被调用，不会被赋值覆盖</span><br><span class="line">_call()：调用对象不存在时使用</span><br><span class="line">_get()：调用私有属性时使用</span><br></pre></td></tr></table></figure><h2 id="常见的访问控制修饰符"><a href="#常见的访问控制修饰符" class="headerlink" title="常见的访问控制修饰符"></a>常见的访问控制修饰符</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public(公有)</span><br><span class="line">protected(受保护)</span><br><span class="line">private(私有的)</span><br><span class="line">protected属性被序列化的时候属性值会变成：%00*%00属性名</span><br><span class="line">private属性被序列化的时候属性值会变成：%00类名%00属性名</span><br></pre></td></tr></table></figure><p>举个例子：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">O:3:&quot;Ctf&quot;:3&#123;s:4:&quot;flag&quot;;s:13:&quot;flag&#123;abedyui&#125;&quot;;s:4:&quot;name&quot;;s:7:&quot;Sch0lar&quot;;s:3:&quot;age&quot;;s:2:&quot;18&quot;;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">O代表对象 因为我们序列化的是一个对象 序列化数组则用A来表示</span><br><span class="line"></span><br><span class="line">3 代表类名字占三个字符 </span><br><span class="line"></span><br><span class="line">ctf 类名</span><br><span class="line"></span><br><span class="line">3 代表三个属性</span><br><span class="line"></span><br><span class="line">s代表字符串</span><br><span class="line"></span><br><span class="line">4代表属性名长度</span><br><span class="line"></span><br><span class="line">flag属性名</span><br><span class="line"></span><br><span class="line">s:13:&quot;flag&#123;abedyui&#125;&quot; 字符串 属性值长度 属性值</span><br></pre></td></tr></table></figure><h3 id="序列化中每个字母的表示"><a href="#序列化中每个字母的表示" class="headerlink" title="序列化中每个字母的表示"></a>序列化中每个字母的表示</h3><table><thead><tr><th>a</th><th>array数组</th></tr></thead><tbody><tr><td>b</td><td>boolean判断类型</td></tr><tr><td>d</td><td>double浮点数</td></tr><tr><td>i</td><td>integer整数型</td></tr><tr><td>o</td><td>common object 一般的对象</td></tr><tr><td>r</td><td>reference引用类型</td></tr><tr><td>s</td><td>string字符串类型</td></tr><tr><td>C</td><td>custom object</td></tr><tr><td>O</td><td>class</td></tr><tr><td>N</td><td>null</td></tr><tr><td>R</td><td>pointer reference</td></tr><tr><td>U</td><td>unicode string</td></tr></tbody></table><h3 id="常用的函数"><a href="#常用的函数" class="headerlink" title="常用的函数"></a>常用的函数</h3><p><img src="/2021/05/22/%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210919142939577.png" alt="image-20210919142939577"></p><p>借阅资料：</p><p><a href="https://blog.csdn.net/bmth666/article/details/104737025">https://blog.csdn.net/bmth666/article/details/104737025</a></p><p><a href="https://www.cnblogs.com/HelloCTF/p/13044403.html">https://www.cnblogs.com/HelloCTF/p/13044403.html</a></p>]]></content>
     
     
       
@@ -1702,29 +1761,6 @@
     
     
     <category term="web渗透" scheme="http://example.com/tags/web%E6%B8%97%E9%80%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>PHP语法</title>
-    <link href="http://example.com/2021/01/25/PHP%E8%AF%AD%E6%B3%95/"/>
-    <id>http://example.com/2021/01/25/PHP%E8%AF%AD%E6%B3%95/</id>
-    <published>2021-01-25T04:18:49.000Z</published>
-    <updated>2021-02-03T03:45:18.625Z</updated>
-    
-    <content type="html"><![CDATA[<h5 id="PHP标记："><a href="#PHP标记：" class="headerlink" title="PHP标记："></a>PHP标记：</h5><p>我们主要使用&lt; ?php ?&gt; ；</p><h5 id="PHP中的分隔符："><a href="#PHP中的分隔符：" class="headerlink" title="PHP中的分隔符："></a>PHP中的分隔符：</h5><p>1、PHP中的“结构定义语句”（分支，循环，类，函数等{}结尾），不需要使用分号结尾。<br>2、PHP中的“功能执行语句”，不用{}结尾的，必须使用分号结尾。</p><h5 id="PHP中的变量："><a href="#PHP中的变量：" class="headerlink" title="PHP中的变量："></a>PHP中的变量：</h5><p>1.PHP是一种弱类型语言。变量无需声明，直接给变量赋值即可，并且可以在后续赋值过程中随时修改变量的数据类型。</p><p>2.PHP中可以使用连等同时声明多个变量，而不能使用逗号分隔。eg：$a=$b=$c=10</p><p>sp：PHP语法学习详情参考：<a href="https://www.cnblogs.com/suitongyu/p/7748153.html">https://www.cnblogs.com/suitongyu/p/7748153.html</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h5 id=&quot;PHP标记：&quot;&gt;&lt;a href=&quot;#PHP标记：&quot; class=&quot;headerlink&quot; title=&quot;PHP标记：&quot;&gt;&lt;/a&gt;PHP标记：&lt;/h5&gt;&lt;p&gt;我们主要使用&amp;lt; ?php ?&amp;gt; ；&lt;/p&gt;
-&lt;h5 id=&quot;PHP中的分隔符：&quot;&gt;&lt;a href</summary>
-      
-    
-    
-    
-    
-    <category term="PHP" scheme="http://example.com/tags/PHP/"/>
     
   </entry>
   
