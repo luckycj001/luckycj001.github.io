@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-09-22T03:06:38.946Z</updated>
+  <updated>2021-09-22T12:28:08.204Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,21 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>buuctf32</title>
+    <link href="http://example.com/2021/09/22/buuctf32/"/>
+    <id>http://example.com/2021/09/22/buuctf32/</id>
+    <published>2021-09-22T12:26:55.000Z</published>
+    <updated>2021-09-22T12:28:08.204Z</updated>
+    
+    
+    
+    
+    
+    <category term="刷题" scheme="http://example.com/tags/%E5%88%B7%E9%A2%98/"/>
+    
+  </entry>
   
   <entry>
     <title>buuctf31</title>
