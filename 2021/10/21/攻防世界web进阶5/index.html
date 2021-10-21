@@ -64,9 +64,9 @@
 <p>3.if判断变量num的参数是否有数字</p>
 <p>4.过滤了一些字符：<code>sh|wget|nc|python|php|perl|\?|flag|&#125;|cat|echo|\*|\^|\]|\\\\|&#39;|\&quot;|\|</code></p>
 <h3 id="二-思路构建"><a href="#二-思路构建" class="headerlink" title="二.思路构建"></a>二.思路构建</h3><p>我们先绕过第一个if语句，根据php的版本号我们找到有关数组下标整型溢出的漏洞，根据官方文档：</p>
-<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65.assets/image-20211021204856742.png" alt="image-20211021204856742"></p>
+<p><img src="/2021/10/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65/image-20211021204856742.png" alt="image-20211021204856742"></p>
 <p>将0x100000000转化为十进制：</p>
-<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65.assets/image-20211021205004787.png" alt="image-20211021205004787"></p>
+<p><img src="/2021/10/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65/image-20211021205004787.png" alt="image-20211021205004787"></p>
 <p>也就说如果索引array[0]和array[4294967296]得结果是一样的</p>
 <p>那么绕过第一个if语句的paylaod：<code>stuff[4294967296]=admin&amp;stuff[1]=user</code></p>
 <p>接着来绕第二个if语句：</p>
@@ -74,11 +74,11 @@
 <p>但是我们直接用<code>1ls</code> system是执行不了的 可以用换行符<code>%0a</code>来分割</p>
 <p>所以第二个的payloa是：num=1%ls</p>
 <p>完整的payload：<code>stuff[4294967296]=admin&amp;stuff[1]=user&amp;num=1%ls</code></p>
-<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65.assets/image-20211021211738020.png" alt="image-20211021211738020"></p>
+<p><img src="/2021/10/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65/image-20211021211738020.png" alt="image-20211021211738020"></p>
 <p>这边他把那个字符串flag过滤了，所以我们可以查查flag的inode：</p>
-<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65.assets/image-20211021211923685.png" alt="image-20211021211923685"></p>
+<p><img src="/2021/10/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65/image-20211021211923685.png" alt="image-20211021211923685"></p>
 <p>然后根据inode号读取文件：</p>
-<p><img src="/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65.assets/image-20211021212827026.png" alt="image-20211021212827026"></p>
+<p><img src="/2021/10/21/%E6%94%BB%E9%98%B2%E4%B8%96%E7%95%8Cweb%E8%BF%9B%E9%98%B65/image-20211021212827026.png" alt="image-20211021212827026"></p>
 <h3 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44604541/article/details/109365511">https://blog.csdn.net/weixin_44604541/article/details/109365511</a></p>
 <p>关于inode的解释：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xuz0917/article/details/79473562">https://blog.csdn.net/xuz0917/article/details/79473562</a></p>
