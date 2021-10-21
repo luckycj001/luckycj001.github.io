@@ -14,13 +14,14 @@
 nmapnmap常见的指令
  nmap -v 详细信息输出 nmap -p 指定端口 nmap -iL 扫,"> 
     <meta name="author" content="linbei"> 
-    <link rel="alternative" href="atom.xml" title="林北" type="application/atom+xml"> 
+    
     <link rel="icon" href="/img/3.jpg"> 
     
     
 <link rel="stylesheet" href="/css/diaspora.css">
 
-<meta name="generator" content="Hexo 5.2.0"></head>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="林北" type="application/atom+xml">
+</head>
 
 <body class="loading">
     <span id="config-title" style="display:none">林北</span>
@@ -63,6 +64,8 @@ nmapnmap常见的指令
 <h1 id="git-extract"><a href="#git-extract" class="headerlink" title="git_extract"></a>git_extract</h1><p>指令：<code>python2 git_extract.py 127.0.0.1/.git/</code></p>
 <p>git泄露扫描</p>
 <h1 id="flask-session-manager"><a href="#flask-session-manager" class="headerlink" title="flask_session_manager"></a>flask_session_manager</h1><p>指令：解密:<code>python flask_session_manager.py decode -c&quot;**&quot; -s&quot;**&quot; # -c是flask cookie里的session值 -s参数是SECRET_KEY</code><br>           加密:<code>python flask_session_manager.py encode -s&quot;**&quot; -t&quot;**&quot; # -s参数是SECRET_KEY -t参数是session的参照格式，也就是session解密后的格式</code></p>
+<h1 id="fscan-awd-扫描内网网段"><a href="#fscan-awd-扫描内网网段" class="headerlink" title="fscan(awd 扫描内网网段)"></a>fscan(awd 扫描内网网段)</h1><p>指令：.\fscan -h 127.0.0.1-127.0.0.100%20/24</p>
+<p>详见：<a target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd5826a">https://jishuin.proginn.com/p/763bfbd5826a</a></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
